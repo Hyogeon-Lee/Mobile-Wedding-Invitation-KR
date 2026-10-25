@@ -40,7 +40,7 @@ function Sprig() {
           fillOpacity="0.85"
         />
       ))}
-      <circle cx="60" cy="20.5" r="2.4" fill="var(--fx-petal-blush)" />
+      <circle cx="60" cy="20.5" r="2.4" fill="var(--color-orange)" />
     </>
   )
 }
@@ -66,7 +66,7 @@ function Dots() {
   return (
     <>
       <circle cx="46" cy="14" r="2.2" fill="var(--fx-petal-sage)" fillOpacity="0.8" />
-      <circle cx="60" cy="14" r="3" fill="var(--fx-petal-blush)" />
+      <circle cx="60" cy="14" r="3" fill="var(--color-orange)" />
       <circle cx="74" cy="14" r="2.2" fill="var(--fx-petal-mint)" />
     </>
   )
