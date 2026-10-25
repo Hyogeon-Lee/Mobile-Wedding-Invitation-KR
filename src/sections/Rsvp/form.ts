@@ -29,8 +29,8 @@ export interface RsvpErrors {
 export type RsvpField = keyof RsvpErrors
 
 export const SIDE_OPTIONS = [
-  { value: 'groom', label: '신랑측' },
-  { value: 'bride', label: '신부측' },
+  { value: 'groom', label: '신랑 측' },
+  { value: 'bride', label: '신부 측' },
 ] as const satisfies readonly { value: Side; label: string }[]
 
 export const ATTENDING_OPTIONS = [
@@ -113,7 +113,7 @@ export function toRsvpInput(form: RsvpForm): RsvpInput {
 
 const MEAL_SUMMARY: Record<Meal, string> = { yes: '식사 함', no: '식사 안 함', '': '식사 미정' }
 
-/** "신랑측 · 이OO · 참석 2명 · 식사 함" / "신부측 · 박OO · 불참" shown in the success state. */
+/** "신랑 측 · 이OO · 참석 2명 · 식사 함" / "신부 측 · 박OO · 불참" shown in the success state. */
 export function summaryLine(input: RsvpInput): string {
   const side = SIDE_OPTIONS.find((o) => o.value === input.side)?.label ?? ''
   const parts = [side, input.name]

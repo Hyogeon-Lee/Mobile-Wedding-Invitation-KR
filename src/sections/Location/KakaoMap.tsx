@@ -18,7 +18,8 @@ const LEVEL = 3
 /**
  * Loaded through React.lazy so react-kakao-maps-sdk and the Kakao script stay out of
  * the initial bundle. The SDK's Map waits for the script itself; `loading` only drives
- * the placeholder overlay.
+ * the placeholder overlay. Dragging and zooming are off so a swipe that starts on the
+ * full-width map scrolls the page; the nav links below handle interactive use.
  */
 export default function KakaoMap({ appkey, lat, lng, title, placeholder, onError }: KakaoMapProps) {
   const [loading, error] = useKakaoLoader({ appkey })
@@ -34,7 +35,9 @@ export default function KakaoMap({ appkey, lat, lng, title, placeholder, onError
       <KakaoMapView
         center={{ lat, lng }}
         level={LEVEL}
-        draggable={true}
+        draggable={false}
+        zoomable={false}
+        disableDoubleClickZoom={true}
         style={{ width: '100%', height: '100%' }}
         role="region"
         aria-label={`${title} 지도`}

@@ -36,7 +36,7 @@ describe('kakaoFeedPayload', () => {
 
 describe('fallbackCopyMessage', () => {
   it('explains the missing key when none is configured', () => {
-    expect(fallbackCopyMessage(false)).toBe('카카오 API 키가 없어 링크를 복사했습니다')
+    expect(fallbackCopyMessage(false)).toBe('링크를 복사했습니다')
   })
   it('reports a load failure when a key exists', () => {
     expect(fallbackCopyMessage(true)).toContain('불러오지 못해')

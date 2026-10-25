@@ -2,13 +2,16 @@ import { useRef, useState, type ChangeEvent, type FormEvent, type RefObject } fr
 import Button from '@/components/Button'
 import { useToast } from '@/components/toast-context'
 import { addGuestbook, type GuestbookEntry } from '@/lib/sheets'
+import FieldError from './FieldError'
 import {
+  describedBy,
   EMPTY_FORM,
   MESSAGE_MAX,
   NAME_MAX,
   PASSWORD_MIN,
   normalizeForm,
   validateForm,
+  type FormError,
   type GuestbookField,
   type GuestbookFormValues,
 } from './guestbook'
@@ -17,10 +20,12 @@ const ADD_FAILED = '메시지를 남기지 못했습니다. 잠시 후 다시 �
 const ADDED = '소중한 마음 감사합니다'
 // 16px on inputs keeps iOS Safari from zooming the page on focus.
 const FIELD =
-  'w-full rounded-none border-0 border-b border-line bg-transparent px-0 py-2 text-[16px] text-ink ' +
-  'placeholder:text-ink-muted/60 transition-colors focus:border-accent focus:outline-none aria-invalid:border-accent'
-const LABEL = 'block text-[13px] text-ink-muted'
-const HINT = 'mt-1.5 text-[13px] text-ink-muted'
+  'w-full rounded-none border-0 border-b border-line bg-transparent px-0 py-2 text-[1rem] text-ink ' +
+  'placeholder:text-ink-muted transition-colors focus:border-accent focus:outline-none aria-invalid:border-accent'
+const LABEL = 'block text-[0.8125rem] text-ink-muted'
+const HINT = 'mt-1.5 text-[0.8125rem] text-ink-muted'
+const errorId = (field: GuestbookField) => `guestbook-${field}-error`
+const SERVER_ERROR_ID = 'guestbook-server-error'
 
 interface GuestbookFormProps {
   /** Called with the entry the backend stored, so the list can show it at once. */
@@ -30,7 +35,9 @@ interface GuestbookFormProps {
 export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
   const toast = useToast()
   const [values, setValues] = useState<GuestbookFormValues>(EMPTY_FORM)
-  const [invalid, setInvalid] = useState<GuestbookField | null>(null)
+  // Errors stay inline: a bottom toast sits behind the iOS keyboard and hides after 1.8 s.
+  const [error, setError] = useState<FormError | null>(null)
+  const [serverError, setServerError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const nameRef = useRef<HTMLInputElement>(null)
   const messageRef = useRef<HTMLTextAreaElement>(null)
@@ -44,24 +51,24 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
   const update = (field: GuestbookField) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value
     setValues((v) => ({ ...v, [field]: value }))
-    if (invalid === field) setInvalid(null)
+    setError((err) => (err?.field === field ? null : err))
   }
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (submitting) return
-    const error = validateForm(values)
-    if (error) {
-      setInvalid(error.field)
-      toast.show(error.message)
-      fieldRefs[error.field].current?.focus()
+    const invalid = validateForm(values)
+    setError(invalid)
+    setServerError(null)
+    if (invalid) {
+      fieldRefs[invalid.field].current?.focus()
       return
     }
     setSubmitting(true)
     const res = await addGuestbook(normalizeForm(values))
     setSubmitting(false)
     if (!res.ok) {
-      toast.show(res.error || ADD_FAILED)
+      setServerError(res.error || ADD_FAILED)
       return
     }
     onAdded(res.entry)
@@ -70,6 +77,7 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
   }
 
   const count = values.message.length
+  const fieldError = (field: GuestbookField) => (error?.field === field ? error.message : null)
 
   return (
     <form
@@ -80,7 +88,7 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
     >
       <div>
         <label htmlFor="guestbook-name" className={LABEL}>
-          이름
+          성함
         </label>
         <input
           ref={nameRef}
@@ -93,10 +101,11 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
           required
           autoComplete="name"
           enterKeyHint="next"
-          placeholder="성함"
-          aria-invalid={invalid === 'name' || undefined}
+          aria-invalid={error?.field === 'name' || undefined}
+          aria-describedby={describedBy(fieldError('name') && errorId('name'))}
           className={FIELD}
         />
+        <FieldError id={errorId('name')} message={fieldError('name')} className="mt-1.5" />
       </div>
 
       <div className="mt-5">
@@ -113,8 +122,8 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
           maxLength={MESSAGE_MAX}
           required
           placeholder="두 사람에게 전하고 싶은 축하의 말을 남겨 주세요."
-          aria-describedby="guestbook-message-count"
-          aria-invalid={invalid === 'message' || undefined}
+          aria-describedby={describedBy(fieldError('message') && errorId('message'), 'guestbook-message-count')}
+          aria-invalid={error?.field === 'message' || undefined}
           className={`${FIELD} resize-none leading-relaxed`}
         />
         <p
@@ -123,6 +132,7 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
         >
           {count}/{MESSAGE_MAX}
         </p>
+        <FieldError id={errorId('message')} message={fieldError('message')} className="mt-1.5" />
       </div>
 
       <div className="mt-3">
@@ -140,21 +150,24 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
           required
           autoComplete="off"
           enterKeyHint="done"
-          placeholder={`${PASSWORD_MIN}자 이상`}
-          aria-describedby="guestbook-password-help"
-          aria-invalid={invalid === 'password' || undefined}
+          aria-describedby={describedBy(fieldError('password') && errorId('password'), 'guestbook-password-help')}
+          aria-invalid={error?.field === 'password' || undefined}
           className={FIELD}
         />
         <p id="guestbook-password-help" className={HINT}>
-          삭제 시 필요합니다
+          {PASSWORD_MIN}자 이상 · 삭제 시 필요합니다
         </p>
+        <FieldError id={errorId('password')} message={fieldError('password')} className="mt-1.5" />
       </div>
+
+      <FieldError id={SERVER_ERROR_ID} message={serverError} className="mt-6" />
 
       <Button
         type="submit"
         variant="primary"
         aria-disabled={submitting}
-        className="mt-6 w-full aria-disabled:opacity-50"
+        aria-describedby={serverError ? SERVER_ERROR_ID : undefined}
+        className={`${serverError ? 'mt-3' : 'mt-6'} w-full aria-disabled:opacity-50`}
       >
         {submitting ? '남기는 중…' : '남기기'}
       </Button>

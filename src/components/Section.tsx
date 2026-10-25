@@ -21,7 +21,7 @@ export default function Section({ id, eyebrow, title, badge, children, className
       {(eyebrow || title || badge) && (
         <header className="mb-10 text-center">
           {eyebrow && (
-            <p className="font-display text-[11px] tracking-[0.35em] text-accent uppercase mb-3">{eyebrow}</p>
+            <p className="font-display text-[0.6875rem] tracking-[0.35em] text-accent uppercase mb-3">{eyebrow}</p>
           )}
           {title && (
             <h2 id={`${id}-title`} className="font-serif text-2xl font-normal leading-snug text-ink">

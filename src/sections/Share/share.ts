@@ -42,7 +42,7 @@ export function kakaoFeedPayload({ title, description, imageUrl, url }: ShareCon
  * "no key configured" (expected in preview) from "SDK failed to load" (network/key error).
  */
 export function fallbackCopyMessage(hasKey: boolean): string {
-  return hasKey ? '카카오톡 공유를 불러오지 못해 링크를 복사했습니다' : '카카오 API 키가 없어 링크를 복사했습니다'
+  return hasKey ? '카카오톡 공유를 불러오지 못해 링크를 복사했습니다' : '링크를 복사했습니다'
 }
 
 /** A user-dismissed native share sheet is not an error and must not fall through to copying. */

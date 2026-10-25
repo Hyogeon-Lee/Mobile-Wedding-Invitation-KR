@@ -12,19 +12,31 @@ export function loadKakaoSdk(): Promise<boolean> {
   if (!kakaoKey) return Promise.resolve(false)
   if (window.Kakao?.isInitialized?.()) return Promise.resolve(true)
   if (loading) return loading
+  // A failed or hung load must not be cached: clear `loading` so a later tap can retry.
   loading = new Promise<boolean>((resolve) => {
     const s = document.createElement('script')
+    const fail = () => {
+      window.clearTimeout(timer)
+      s.remove()
+      loading = null
+      resolve(false)
+    }
+    const timer = window.setTimeout(fail, 8000)
     s.src = SDK_URL
     s.async = true
     s.onload = () => {
+      window.clearTimeout(timer)
       try {
         if (window.Kakao && !window.Kakao.isInitialized()) window.Kakao.init(kakaoKey)
-        resolve(Boolean(window.Kakao?.isInitialized()))
+        const ok = Boolean(window.Kakao?.isInitialized())
+        if (!ok) loading = null
+        resolve(ok)
       } catch {
+        loading = null
         resolve(false)
       }
     }
-    s.onerror = () => resolve(false)
+    s.onerror = fail
     document.head.appendChild(s)
   })
   return loading

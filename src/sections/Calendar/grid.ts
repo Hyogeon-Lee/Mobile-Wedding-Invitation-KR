@@ -25,3 +25,8 @@ export function calendarWeeks(year: number, month: number): CalendarCell[][] {
   for (let i = 0; i < cells.length; i += DAYS_PER_WEEK) weeks.push(cells.slice(i, i + DAYS_PER_WEEK))
   return weeks
 }
+
+/** Whether a cell is the wedding day. Never true while the date is a placeholder, so no day is singled out. */
+export function isWeddingCell(cell: CalendarCell, weddingDay: number, placeholder: boolean): boolean {
+  return !placeholder && cell === weddingDay
+}

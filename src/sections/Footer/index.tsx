@@ -47,7 +47,7 @@ export default function Footer() {
         <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
           {groom.name} · {bride.name}
         </p>
-        <p className="mt-2 font-display text-[11px] tracking-[0.3em] text-ink-muted uppercase">{credit}</p>
+        <p className="mt-2 font-display text-[0.6875rem] tracking-[0.3em] text-ink-muted uppercase">{credit}</p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
           <Button

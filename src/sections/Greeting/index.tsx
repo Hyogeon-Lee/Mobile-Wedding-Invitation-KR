@@ -13,7 +13,7 @@ export default function Greeting() {
 
   return (
     <Section id="greeting" eyebrow="INVITATION" title={greeting.title}>
-      <Reveal className="text-center font-serif text-[17px] leading-loose text-ink">
+      <Reveal className="text-center font-serif text-[1.0625rem] leading-loose text-ink">
         {paragraphs.map((lines, pi) => (
           <p key={pi} className={pi > 0 ? 'mt-6' : undefined}>
             {lines.map((line, li) => (
@@ -29,9 +29,9 @@ export default function Greeting() {
       {quote && (
         <Reveal delay={REVEAL_STEP} className="mt-12">
           <blockquote className="border-y border-line py-6 text-center">
-            <p className="text-[15px] leading-relaxed text-ink-muted">{quote.text}</p>
+            <p className="text-[0.9375rem] leading-relaxed text-ink-muted">{quote.text}</p>
             {quote.source && (
-              <footer className="mt-3 font-display text-[11px] tracking-[0.3em] text-ink-muted uppercase">
+              <footer className="mt-3 font-display text-[0.6875rem] tracking-[0.3em] text-ink-muted uppercase">
                 {quote.source}
               </footer>
             )}
@@ -40,7 +40,7 @@ export default function Greeting() {
       )}
 
       <Reveal delay={quote ? REVEAL_STEP * 2 : REVEAL_STEP} className="mt-12 text-center">
-        <p className="font-serif text-[17px] leading-relaxed text-ink">
+        <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
           <span className="text-ink-muted">신랑</span> {couple.groom.name}
           <span aria-hidden="true" className="mx-3 text-ink-muted">
             ·

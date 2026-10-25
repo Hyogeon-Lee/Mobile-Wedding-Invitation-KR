@@ -126,13 +126,13 @@ describe('toRsvpInput', () => {
 
 describe('summaryLine', () => {
   it('describes an attending guest with count and meal', () => {
-    expect(summaryLine(toRsvpInput(base))).toBe('신랑측 · 이OO · 참석 2명 · 식사 함')
-    expect(summaryLine(toRsvpInput({ ...base, meal: '' }))).toBe('신랑측 · 이OO · 참석 2명 · 식사 미정')
-    expect(summaryLine(toRsvpInput({ ...base, meal: 'no' }))).toBe('신랑측 · 이OO · 참석 2명 · 식사 안 함')
+    expect(summaryLine(toRsvpInput(base))).toBe('신랑 측 · 이OO · 참석 2명 · 식사 함')
+    expect(summaryLine(toRsvpInput({ ...base, meal: '' }))).toBe('신랑 측 · 이OO · 참석 2명 · 식사 미정')
+    expect(summaryLine(toRsvpInput({ ...base, meal: 'no' }))).toBe('신랑 측 · 이OO · 참석 2명 · 식사 안 함')
   })
   it('describes a declining guest without count or meal', () => {
     expect(summaryLine(toRsvpInput({ ...base, side: 'bride', name: '박OO', attending: false }))).toBe(
-      '신부측 · 박OO · 불참',
+      '신부 측 · 박OO · 불참',
     )
   })
 })

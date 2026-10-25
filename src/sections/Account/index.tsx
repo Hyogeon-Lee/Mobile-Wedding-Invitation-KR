@@ -2,22 +2,25 @@ import { ExternalLink } from 'lucide-react'
 import CopyButton from '@/components/CopyButton'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
+import { useToast } from '@/components/toast-context'
+import { openAppScheme } from '@/lib/openApp'
 import { accounts, isSampleData, type Account } from '@/lib/private'
 import Accordion from './Accordion'
 import { accountGroups, copyValue, payLinks } from './accounts'
 
 const REVEAL_STEP = 0.12
-const INTRO = ['참석이 어려우신 분들을 위해 계좌번호를 안내드립니다.', '전해주시는 마음은 소중하게 간직하겠습니다.']
+const INTRO = ['참석이 어려우신 분들을 위해 계좌번호를 안내드립니다.', '전해 주시는 마음은 소중하게 간직하겠습니다.']
 const groups = accountGroups(accounts)
 
 function AccountRow({ account }: { account: Account }) {
   const links = payLinks(account)
+  const toast = useToast()
   return (
     <li className="py-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[15px] font-medium text-ink">{account.holder}</p>
-          <p className="mt-0.5 text-[15px] text-ink-muted tabular-nums">
+          <p className="text-[0.9375rem] font-medium text-ink">{account.holder}</p>
+          <p className="mt-0.5 text-[0.9375rem] text-ink-muted tabular-nums">
             {account.bank} {account.number}
           </p>
         </div>
@@ -29,13 +32,24 @@ function AccountRow({ account }: { account: Account }) {
             <a
               key={link.key}
               href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-8 items-center gap-1 rounded-full px-2 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              onClick={
+                link.external
+                  ? undefined
+                  : (e) => {
+                      // App schemes give no failure signal; infer "not installed" from the page staying visible.
+                      e.preventDefault()
+                      openAppScheme(link.href, {
+                        timeoutMs: 2500,
+                        onFail: () => toast.show(`${link.label} 앱이 설치되어 있어야 합니다`),
+                      })
+                    }
+              }
+              className="inline-flex h-8 items-center gap-1 rounded-full px-2 text-[0.8125rem] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               {link.label}
               <ExternalLink size={12} aria-hidden="true" />
-              <span className="sr-only">로 송금 (새 창)</span>
+              <span className="sr-only">{link.external ? '로 송금 (새 창)' : '로 송금 (앱 열림)'}</span>
             </a>
           ))}
         </div>
@@ -46,17 +60,22 @@ function AccountRow({ account }: { account: Account }) {
 
 export default function Account() {
   return (
-    <Section id="account" eyebrow="GIFT" title="마음 전하실 곳" tone="tinted">
-      {isSampleData && (
-        <p className="-mt-6 mb-8 text-center">
-          <span className="rounded-full border border-line bg-bg-elevated px-2.5 py-0.5 text-[12px] font-medium tracking-wide text-accent">
+    <Section
+      id="account"
+      eyebrow="GIFT"
+      title="마음 전하실 곳"
+      tone="tinted"
+      badge={
+        isSampleData ? (
+          <span className="rounded-full border border-line bg-bg-elevated px-2.5 py-0.5 text-[0.75rem] font-medium text-accent">
             예시 계좌
           </span>
-        </p>
-      )}
+        ) : undefined
+      }
+    >
 
       <Reveal>
-        <p className="text-center text-[15px] leading-relaxed text-ink-muted">
+        <p className="text-center text-[0.9375rem] leading-relaxed text-ink-muted">
           {INTRO[0]}
           <br />
           {INTRO[1]}

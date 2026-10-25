@@ -28,9 +28,9 @@ import {
 
 const REVEAL_STEP = 0.12
 const FOCUS_RING = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
-const LABEL = 'mb-2 block text-[13px] font-medium tracking-wide text-ink-muted'
+const LABEL = 'mb-2 block text-[0.8125rem] font-medium tracking-wide text-ink-muted'
 const FIELD =
-  'w-full rounded-[12px] border bg-bg-elevated px-4 text-[16px] text-ink placeholder:text-ink-muted/70 ' +
+  'w-full rounded-[12px] border bg-bg-elevated px-4 text-[1rem] text-ink placeholder:text-ink-muted ' +
   `transition-colors disabled:opacity-50 ${FOCUS_RING}`
 const STEP_BUTTON =
   `flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-ink transition-colors ${FOCUS_RING} ` +
@@ -45,7 +45,7 @@ function fieldClass(invalid: boolean, extra = ''): string {
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null
   return (
-    <p id={id} role="alert" className="mt-2 flex items-start gap-1.5 text-[14px] leading-relaxed text-ink">
+    <p id={id} role="alert" className="mt-2 flex items-start gap-1.5 text-[0.9375rem] leading-relaxed text-ink">
       <AlertCircle size={15} aria-hidden="true" className="mt-[4px] shrink-0 text-accent" />
       <span>{message}</span>
     </p>
@@ -132,14 +132,14 @@ export default function Rsvp() {
   return (
     <Section id="rsvp" eyebrow="RSVP" title="참석 의사 전달">
       <Reveal className="text-center">
-        <p className="text-[15px] leading-relaxed text-ink-muted">
-          귀한 발걸음을 미리 알려주시면
+        <p className="text-[0.9375rem] leading-relaxed text-ink-muted">
+          귀한 발걸음을 미리 알려 주시면
           <br />
           정성껏 준비하는 데 큰 도움이 됩니다.
           <br />
           참석이 어려우셔도 편하게 전해 주세요.
         </p>
-        <p className="mt-4 font-serif text-[16px] leading-relaxed text-ink">{rsvpEventLine(event)}</p>
+        <p className="mt-4 font-serif text-[1rem] leading-relaxed text-ink">{rsvpEventLine(event)}</p>
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-10">
@@ -149,8 +149,8 @@ export default function Rsvp() {
               <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent">
                 <Check size={22} aria-hidden="true" />
               </span>
-              <p className="mt-5 font-serif text-[18px] leading-snug text-ink">전달되었습니다. 감사합니다.</p>
-              {sent && <p className="mt-2 text-[15px] leading-relaxed text-ink-muted">{summaryLine(sent)}</p>}
+              <p className="mt-5 font-serif text-[1.125rem] leading-snug text-ink">전달되었습니다. 감사합니다.</p>
+              {sent && <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-muted">{summaryLine(sent)}</p>}
             </div>
             <Button variant="outline" size="sm" className="mt-7" onClick={reset}>
               다시 작성
@@ -161,10 +161,10 @@ export default function Rsvp() {
             {isPreviewBackend && (
               <p
                 role="note"
-                className="flex items-start gap-2 rounded-[12px] border border-line bg-bg-elevated px-4 py-3 text-[13px] leading-relaxed text-ink-muted"
+                className="flex items-start gap-2 rounded-[12px] border border-line bg-bg-elevated px-4 py-3 text-[0.8125rem] leading-relaxed text-ink-muted"
               >
                 <Info size={14} aria-hidden="true" className="mt-[4px] shrink-0 text-accent" />
-                <span>미리보기 모드 · Google 연동 전에는 전송 내용이 저장되지 않습니다</span>
+                <span>미리보기 모드 · 지금은 전송 내용이 저장되지 않습니다</span>
               </p>
             )}
 
@@ -246,7 +246,7 @@ export default function Rsvp() {
                         disabled={submitting}
                         aria-invalid={errors.count ? true : undefined}
                         aria-describedby={errors.count ? countErrorId : undefined}
-                        className={`h-12 w-14 bg-transparent text-center text-[16px] text-ink tabular-nums ${FOCUS_RING} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+                        className={`h-12 w-14 bg-transparent text-center text-[1rem] text-ink tabular-nums ${FOCUS_RING} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
                       />
                       <button
                         type="button"
@@ -258,7 +258,7 @@ export default function Rsvp() {
                         <Plus size={16} aria-hidden="true" />
                       </button>
                     </div>
-                    <span className="text-[15px] text-ink-muted">명</span>
+                    <span className="text-[0.9375rem] text-ink-muted">명</span>
                   </div>
                   <FieldError id={countErrorId} message={errors.count} />
                 </div>
@@ -292,7 +292,7 @@ export default function Rsvp() {
                 aria-describedby={errors.note ? `${noteErrorId} ${noteHintId}` : noteHintId}
                 className={fieldClass(Boolean(errors.note), 'resize-none py-3 leading-relaxed')}
               />
-              <p id={noteHintId} className="mt-1.5 text-right text-[12px] text-ink-muted tabular-nums">
+              <p id={noteHintId} className="mt-1.5 text-right text-[0.75rem] text-ink-muted tabular-nums">
                 {form.note.length} / {NOTE_MAX}
               </p>
               <FieldError id={noteErrorId} message={errors.note} />
@@ -303,7 +303,7 @@ export default function Rsvp() {
                 <p
                   id={serverErrorId}
                   role="alert"
-                  className="mb-3 flex items-start gap-1.5 text-[14px] leading-relaxed text-ink"
+                  className="mb-3 flex items-start gap-1.5 text-[0.9375rem] leading-relaxed text-ink"
                 >
                   <AlertCircle size={15} aria-hidden="true" className="mt-[4px] shrink-0 text-accent" />
                   <span>{serverError}</span>

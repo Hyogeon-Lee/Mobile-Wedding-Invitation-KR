@@ -2,13 +2,14 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import Button from '@/components/Button'
 import { useToast } from '@/components/toast-context'
 import { deleteGuestbook, type GuestbookEntry } from '@/lib/sheets'
-import { formatEntryDate, PASSWORD_MIN } from './guestbook'
+import FieldError from './FieldError'
+import { entryDomId, formatEntryDate, PASSWORD_MIN } from './guestbook'
 
 const DELETE_FAILED = '삭제하지 못했습니다. 잠시 후 다시 시도해 주세요.'
 const DELETED = '메시지를 삭제했습니다'
 const FIELD =
-  'min-w-0 flex-1 rounded-none border-0 border-b border-line bg-transparent px-0 py-1.5 text-[16px] text-ink ' +
-  'placeholder:text-ink-muted/60 transition-colors focus:border-accent focus:outline-none aria-invalid:border-accent'
+  'min-w-0 flex-1 rounded-none border-0 border-b border-line bg-transparent px-0 py-1.5 text-[1rem] text-ink ' +
+  'placeholder:text-ink-muted transition-colors focus:border-accent focus:outline-none aria-invalid:border-accent'
 
 interface DeletePromptProps {
   id: string
@@ -93,11 +94,7 @@ function DeletePrompt({ id, entry, onCancel, onDeleted }: DeletePromptProps) {
           취소
         </Button>
       </div>
-      {error && (
-        <p id={errorId} role="alert" className="mt-2 text-[13px] text-accent">
-          {error}
-        </p>
-      )}
+      <FieldError id={errorId} message={error} />
     </form>
   )
 }
@@ -121,16 +118,20 @@ export default function EntryCard({ entry, prompting, onPrompt, onDeleted }: Ent
   }
 
   return (
-    <li className="py-5">
+    <li
+      id={entryDomId(entry.id)}
+      tabIndex={-1}
+      className="py-5 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+    >
       <div className="flex items-baseline justify-between gap-3">
-        <p className="min-w-0 truncate text-[15px] font-medium text-ink">{entry.name}</p>
+        <p className="min-w-0 truncate text-[0.9375rem] font-medium text-ink">{entry.name}</p>
         {date && (
-          <time dateTime={entry.ts} className="shrink-0 text-[13px] text-ink-muted tabular-nums">
+          <time dateTime={entry.ts} className="shrink-0 text-[0.8125rem] text-ink-muted tabular-nums">
             {date}
           </time>
         )}
       </div>
-      <p className="mt-2 text-[15px] leading-relaxed whitespace-pre-line text-ink">{entry.message}</p>
+      <p className="mt-2 text-[0.9375rem] leading-relaxed whitespace-pre-line text-ink">{entry.message}</p>
       <div className="mt-1 flex justify-end">
         <button
           ref={deleteRef}
@@ -139,7 +140,7 @@ export default function EntryCard({ entry, prompting, onPrompt, onDeleted }: Ent
           aria-expanded={prompting}
           aria-controls={promptId}
           onClick={() => onPrompt(prompting ? null : entry.id)}
-          className="-mr-2 h-8 px-2 text-[13px] text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="-mr-2 h-8 px-2 text-[0.8125rem] text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           삭제
         </button>

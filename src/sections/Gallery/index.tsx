@@ -127,7 +127,7 @@ export default function Gallery() {
 
   return (
     <Section id="gallery" eyebrow="GALLERY" title="우리의 순간">
-      <Reveal>
+      <Reveal amount="some">
         <div className={GRID}>{tiles(head, 0)}</div>
 
         <AnimatePresence initial={false}>
@@ -135,11 +135,11 @@ export default function Gallery() {
             <motion.div
               id={tailId}
               key="tail"
-              className="overflow-hidden"
-              initial={reduce ? false : { height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={reduce ? undefined : { height: 0, opacity: 0 }}
-              transition={{ duration: reduce ? 0 : 0.6, ease: EASE }}
+              // Opacity/transform only: animating height would relayout every section below on each frame.
+              initial={reduce ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0 }}
+              transition={{ duration: reduce ? 0 : 0.4, ease: EASE }}
             >
               <div className={`${GRID} pt-2`}>{tiles(tail, head.length)}</div>
             </motion.div>
@@ -159,7 +159,7 @@ export default function Gallery() {
           </div>
         )}
 
-        <p className="mt-6 text-center text-[15px] leading-relaxed text-ink-muted">사진을 누르면 크게 볼 수 있습니다</p>
+        <p className="mt-6 text-center text-[0.9375rem] leading-relaxed text-ink-muted">사진을 누르면 크게 볼 수 있습니다</p>
       </Reveal>
     </Section>
   )

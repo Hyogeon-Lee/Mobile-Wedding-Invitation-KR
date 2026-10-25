@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { calendarCells, calendarWeeks } from './grid'
+import { calendarCells, calendarWeeks, isWeddingCell } from './grid'
 
 describe('calendarCells', () => {
   it('pads leading blanks up to the first weekday and trailing blanks to a full week', () => {
@@ -33,5 +33,17 @@ describe('calendarWeeks', () => {
     expect(weeks[0]).toEqual([null, null, null, null, null, null, 1])
     expect(weeks[2]).toEqual([9, 10, 11, 12, 13, 14, 15])
     expect(weeks[5]).toEqual([30, 31, null, null, null, null, null])
+  })
+})
+
+describe('isWeddingCell', () => {
+  it('marks only the wedding day once the date is confirmed', () => {
+    expect(isWeddingCell(15, 15, false)).toBe(true)
+    expect(isWeddingCell(14, 15, false)).toBe(false)
+    expect(isWeddingCell(null, 15, false)).toBe(false)
+  })
+  it('marks no cell while the date is a placeholder', () => {
+    const marked = calendarCells(2027, 5).filter((cell) => isWeddingCell(cell, 15, true))
+    expect(marked).toEqual([])
   })
 })

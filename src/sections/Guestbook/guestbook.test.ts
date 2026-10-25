@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import type { GuestbookEntry } from '@/lib/sheets'
 import {
+  describedBy,
+  entryDomId,
   formatEntryDate,
   MESSAGE_MAX,
   NAME_MAX,
@@ -12,12 +14,25 @@ import {
   validateForm,
 } from './guestbook'
 
-const valid = { name: ' 이OO ', message: ' 결혼 축하해요!\n행복하세요 ', password: ' 1234 ' }
-const entry = (id: string): GuestbookEntry => ({ id, ts: '2027-05-01T12:00:00+09:00', name: `n${id}`, message: 'm' })
+const valid = {
+  name: ' 이OO ',
+  message: ' 결혼 축하해요!\n행복하세요 ',
+  password: ' 1234 ',
+}
+const entry = (id: string): GuestbookEntry => ({
+  id,
+  ts: '2027-05-01T12:00:00+09:00',
+  name: `n${id}`,
+  message: 'm',
+})
 
 describe('normalizeForm', () => {
   it('trims name and message but keeps the password verbatim', () => {
-    expect(normalizeForm(valid)).toEqual({ name: '이OO', message: '결혼 축하해요!\n행복하세요', password: ' 1234 ' })
+    expect(normalizeForm(valid)).toEqual({
+      name: '이OO',
+      message: '결혼 축하해요!\n행복하세요',
+      password: ' 1234 ',
+    })
   })
 })
 
@@ -26,7 +41,10 @@ describe('validateForm', () => {
     expect(validateForm(valid)).toBeNull()
   })
   it('reports the first failing field in display order', () => {
-    expect(validateForm({ name: '  ', message: '', password: '' })?.field).toBe('name')
+    expect(validateForm({ name: '  ', message: '', password: '' })).toEqual({
+      field: 'name',
+      message: '성함을 입력해 주세요.',
+    })
     expect(validateForm({ ...valid, message: '  ' })?.field).toBe('message')
     expect(validateForm({ ...valid, password: '123' })).toEqual({
       field: 'password',
@@ -35,7 +53,10 @@ describe('validateForm', () => {
   })
   it('enforces the maximum lengths after trimming', () => {
     expect(validateForm({ ...valid, name: ` ${'가'.repeat(NAME_MAX)} ` })).toBeNull()
-    expect(validateForm({ ...valid, name: '가'.repeat(NAME_MAX + 1) })?.field).toBe('name')
+    expect(validateForm({ ...valid, name: '가'.repeat(NAME_MAX + 1) })).toEqual({
+      field: 'name',
+      message: `성함은 ${NAME_MAX}자 이내로 입력해 주세요.`,
+    })
     expect(validateForm({ ...valid, message: '가'.repeat(MESSAGE_MAX) })).toBeNull()
     expect(validateForm({ ...valid, message: '가'.repeat(MESSAGE_MAX + 1) })?.field).toBe('message')
   })
@@ -95,5 +116,20 @@ describe('paginate', () => {
   it('tolerates an empty list and a non-positive page size', () => {
     expect(paginate([], 10)).toEqual({ visible: [], remaining: 0 })
     expect(paginate(list, -1)).toEqual({ visible: [], remaining: 12 })
+  })
+})
+
+describe('describedBy', () => {
+  it('joins the present ids in order and skips falsy ones', () => {
+    expect(describedBy('a-error', 'a-help')).toBe('a-error a-help')
+    expect(describedBy(null, 'a-help')).toBe('a-help')
+    expect(describedBy(false, undefined, '')).toBeUndefined()
+    expect(describedBy()).toBeUndefined()
+  })
+})
+
+describe('entryDomId', () => {
+  it('prefixes the entry id', () => {
+    expect(entryDomId('1700000000-abc')).toBe('guestbook-entry-1700000000-abc')
   })
 })

@@ -30,9 +30,9 @@ function FamilyRow({ side, person }: { side: Side; person: Person }) {
   const parents = presentParents(person)
   return (
     <div className="py-7 text-center">
-      <p className="text-[12px] font-medium tracking-[0.3em] text-accent">{SIDE_LABEL[side]}</p>
+      <p className="text-[0.75rem] font-medium text-accent">{SIDE_LABEL[side]}</p>
       {parents.length > 0 && (
-        <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">
+        <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted">
           {parents.map((parent, i) => (
             <Fragment key={i}>
               {i > 0 && (
@@ -46,7 +46,7 @@ function FamilyRow({ side, person }: { side: Side; person: Person }) {
           <span>의 {person.relation}</span>
         </p>
       )}
-      <p className={`${parents.length > 0 ? 'mt-1' : 'mt-3'} font-serif text-[22px] leading-snug text-ink`}>
+      <p className={`${parents.length > 0 ? 'mt-1' : 'mt-3'} font-serif text-[1.375rem] leading-snug text-ink`}>
         {person.name}
       </p>
     </div>

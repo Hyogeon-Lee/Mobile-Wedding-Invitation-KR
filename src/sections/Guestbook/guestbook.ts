@@ -19,24 +19,42 @@ export interface FormError {
   message: string
 }
 
-export const EMPTY_FORM: GuestbookFormValues = { name: '', message: '', password: '' }
+export const EMPTY_FORM: GuestbookFormValues = {
+  name: '',
+  message: '',
+  password: '',
+}
 
 /** Trims the public fields. The password is kept verbatim: the server hashes it exactly as typed. */
 export function normalizeForm(values: GuestbookFormValues): GuestbookFormValues {
-  return { name: values.name.trim(), message: values.message.trim(), password: values.password }
+  return {
+    name: values.name.trim(),
+    message: values.message.trim(),
+    password: values.password,
+  }
 }
 
 /** First failing field in display order with its Korean message, or null when the form is valid. */
 export function validateForm(values: GuestbookFormValues): FormError | null {
   const v = normalizeForm(values)
-  if (!v.name) return { field: 'name', message: '이름을 입력해 주세요.' }
-  if (v.name.length > NAME_MAX) return { field: 'name', message: `이름은 ${NAME_MAX}자 이내로 입력해 주세요.` }
+  if (!v.name) return { field: 'name', message: '성함을 입력해 주세요.' }
+  if (v.name.length > NAME_MAX)
+    return {
+      field: 'name',
+      message: `성함은 ${NAME_MAX}자 이내로 입력해 주세요.`,
+    }
   if (!v.message) return { field: 'message', message: '메시지를 입력해 주세요.' }
   if (v.message.length > MESSAGE_MAX) {
-    return { field: 'message', message: `메시지는 ${MESSAGE_MAX}자 이내로 입력해 주세요.` }
+    return {
+      field: 'message',
+      message: `메시지는 ${MESSAGE_MAX}자 이내로 입력해 주세요.`,
+    }
   }
   if (v.password.length < PASSWORD_MIN) {
-    return { field: 'password', message: `비밀번호는 ${PASSWORD_MIN}자 이상 입력해 주세요.` }
+    return {
+      field: 'password',
+      message: `비밀번호는 ${PASSWORD_MIN}자 이상 입력해 주세요.`,
+    }
   }
   return null
 }
@@ -78,6 +96,17 @@ export function prependEntry(entries: GuestbookEntry[], entry: GuestbookEntry): 
 
 export function removeEntry(entries: GuestbookEntry[], id: string): GuestbookEntry[] {
   return entries.filter((e) => e.id !== id)
+}
+
+/** Joins the ids that are present into an aria-describedby value; undefined when none are. */
+export function describedBy(...ids: (string | false | null | undefined)[]): string | undefined {
+  const list = ids.filter((id): id is string => Boolean(id))
+  return list.length > 0 ? list.join(' ') : undefined
+}
+
+/** DOM id of an entry's <li>, used to move focus to the first entry revealed by "더 보기". */
+export function entryDomId(id: string): string {
+  return `guestbook-entry-${id}`
 }
 
 /** The first `shown` entries and how many remain behind the "더 보기" button. */

@@ -1,7 +1,7 @@
 /**
  * Pure URL builders for the three navigation apps. Coordinates are WGS84 (lat, lng).
  * Kakao is a web link usable everywhere; Naver and T map are app schemes that need
- * a fallback when the app is missing (see openApp.ts).
+ * a fallback when the app is missing: an Android intent URL on Android, openApp.ts elsewhere.
  */
 export interface Place {
   name: string
@@ -30,6 +30,29 @@ export function naverWebUrl(address: string): string {
 /** T map route scheme (app only; goalx is longitude, goaly is latitude). */
 export function tmapUrl({ name, lat, lng }: Place): string {
   return `tmap://route?goalname=${encodeURIComponent(name)}&goaly=${lat}&goalx=${lng}`
+}
+
+export const NAVER_MAP_PACKAGE = 'com.nhn.android.nmap'
+export const TMAP_PACKAGE = 'com.skt.tmap.ku'
+export const TMAP_STORE_URL = `https://play.google.com/store/apps/details?id=${TMAP_PACKAGE}`
+
+/**
+ * Rewrites `scheme://rest` as an Android intent URL. Chrome and Android WebViews open the
+ * app when installed and otherwise load `fallbackUrl`, with no timer on the page side.
+ */
+export function androidIntentUrl(schemeUrl: string, pkg: string, fallbackUrl: string): string {
+  const sep = schemeUrl.indexOf('://')
+  const scheme = schemeUrl.slice(0, sep)
+  const rest = schemeUrl.slice(sep + 3)
+  return (
+    `intent://${rest}#Intent;scheme=${scheme};action=android.intent.action.VIEW;` +
+    `category=android.intent.category.BROWSABLE;package=${pkg};` +
+    `S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`
+  )
+}
+
+export function isAndroidUserAgent(ua: string): boolean {
+  return /Android/i.test(ua)
 }
 
 /** "example.com" from "https://example.com/path"; "" when the input is not a URL. */

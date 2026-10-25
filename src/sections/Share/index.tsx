@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useInView } from 'motion/react'
 import CopyButton from '@/components/CopyButton'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
@@ -9,6 +10,8 @@ import { kakaoKey, loadKakaoSdk, siteUrl } from '@/lib/kakao'
 import { fallbackCopyMessage, isShareAbort, kakaoFeedPayload, shareImageUrl } from './share'
 
 const REVEAL_STEP = 0.12
+/** Start fetching the Kakao SDK this far before the buttons scroll in, so a tap calls sendDefault without a network wait. */
+const SDK_PRELOAD_MARGIN = '400px 0px'
 const INTRO = '청첩장을 소중한 분들께 전해 주세요.'
 
 /** Speech-bubble glyph in Kakao's style; colour comes from the button text. */
@@ -25,6 +28,12 @@ export default function Share() {
   const [busy, setBusy] = useState(false)
   const { share } = wedding
   const url = siteUrl()
+  const actionsRef = useRef<HTMLDivElement>(null)
+  const actionsNear = useInView(actionsRef, { once: true, margin: SDK_PRELOAD_MARGIN })
+
+  useEffect(() => {
+    if (actionsNear && kakaoKey) void loadKakaoSdk()
+  }, [actionsNear])
 
   const shareViaKakao = async () => {
     if (busy) return
@@ -32,15 +41,20 @@ export default function Share() {
     try {
       const ready = await loadKakaoSdk()
       if (ready && window.Kakao) {
-        window.Kakao.Share.sendDefault(
-          kakaoFeedPayload({
-            title: share.title,
-            description: share.description,
-            imageUrl: shareImageUrl(url, share.imagePath),
-            url,
-          }),
-        )
-        return
+        try {
+          window.Kakao.Share.sendDefault(
+            kakaoFeedPayload({
+              title: share.title,
+              description: share.description,
+              imageUrl: shareImageUrl(url, share.imagePath),
+              url,
+            }),
+          )
+          return
+        } catch (error) {
+          // KakaoError (invalid settings/template) is thrown synchronously; fall through to Web Share / copy.
+          console.warn('[share] Kakao sendDefault failed', error)
+        }
       }
       if (typeof navigator.share === 'function') {
         try {
@@ -60,17 +74,17 @@ export default function Share() {
   return (
     <Section id="share" eyebrow="SHARE" title="청첩장 전하기">
       <Reveal>
-        <p className="text-center text-[15px] leading-relaxed text-ink-muted">{INTRO}</p>
+        <p className="text-center text-[0.9375rem] leading-relaxed text-ink-muted">{INTRO}</p>
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-10">
-        <div className="flex flex-col gap-3">
+        <div ref={actionsRef} className="flex flex-col gap-3">
           <button
             type="button"
             onClick={shareViaKakao}
             disabled={busy}
             aria-busy={busy}
-            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FEE500] px-6 text-[15px] font-medium text-[#191919] transition-colors select-none hover:bg-[#F6DD00] active:bg-[#EDD500] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FEE500] px-6 text-[0.9375rem] font-medium text-[#191919] transition-colors select-none hover:bg-[#F6DD00] active:bg-[#EDD500] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
           >
             <KakaoBubble />
             {share.buttonLabel}
@@ -83,7 +97,7 @@ export default function Share() {
             className="w-full"
           />
         </div>
-        <p className="mt-4 text-center text-[13px] leading-relaxed break-all text-ink-muted">{url}</p>
+        <p className="mt-4 text-center text-[0.8125rem] leading-relaxed break-all text-ink-muted">{url}</p>
       </Reveal>
     </Section>
   )

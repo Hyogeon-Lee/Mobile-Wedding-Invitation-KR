@@ -36,7 +36,7 @@ export default function Segmented<T extends string>({ label, value, options, onC
 
   return (
     <div>
-      <span id={labelId} className="mb-2 block text-[13px] font-medium tracking-wide text-ink-muted">
+      <span id={labelId} className="mb-2 block text-[0.8125rem] font-medium text-ink-muted">
         {label}
       </span>
       <div
@@ -57,7 +57,7 @@ export default function Segmented<T extends string>({ label, value, options, onC
               tabIndex={checked ? 0 : -1}
               disabled={disabled}
               onClick={() => onChange(option.value)}
-              className={`h-10 flex-1 rounded-full text-[15px] transition-colors disabled:opacity-50 ${FOCUS_RING} ${
+              className={`h-10 flex-1 rounded-full text-[0.9375rem] transition-colors disabled:opacity-50 ${FOCUS_RING} ${
                 checked ? 'bg-ink font-medium text-bg' : 'text-ink-muted hover:text-ink'
               }`}
             >

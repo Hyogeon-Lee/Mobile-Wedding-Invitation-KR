@@ -9,8 +9,8 @@ describe('accountGroups', () => {
   it('lists groom then bride with Korean titles', () => {
     const groups = accountGroups({ groom: [groomRow], bride: [brideRow] })
     expect(groups.map((g) => [g.side, g.title])).toEqual([
-      ['groom', '신랑측 계좌번호'],
-      ['bride', '신부측 계좌번호'],
+      ['groom', '신랑 측 계좌번호'],
+      ['bride', '신부 측 계좌번호'],
     ])
     expect(groups[0].entries).toEqual([groomRow])
   })
@@ -58,6 +58,12 @@ describe('payLinks', () => {
       ['kakaopay', '카카오페이', 'https://qr.kakaopay.com/y'],
       ['toss', '토스', 'https://toss.me/x'],
     ])
+  })
+  it('marks http(s) links external and app schemes as in-place', () => {
+    const web = payLinks({ ...groomRow, kakaopayUrl: 'HTTPS://qr.kakaopay.com/y', tossUrl: 'http://toss.me/x' })
+    expect(web.map((l) => l.external)).toEqual([true, true])
+    const app = payLinks({ ...groomRow, kakaopayUrl: 'kakaotalk://kakaopay/money/to/bank', tossUrl: 'supertoss://send?a=1' })
+    expect(app.map((l) => l.external)).toEqual([false, false])
   })
   it('is empty when no link is set or the link is unsafe', () => {
     expect(payLinks(groomRow)).toEqual([])

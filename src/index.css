@@ -71,7 +71,7 @@ img {
   max-width: var(--content-max);
   margin: 0 auto;
   background: var(--color-bg);
-  min-height: 100dvh;
+  min-height: 100svh;
   padding-bottom: env(safe-area-inset-bottom);
 }
 @media (min-width: 560px) {

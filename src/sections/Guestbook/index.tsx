@@ -1,15 +1,15 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Button from '@/components/Button'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { isPreviewBackend } from '@/lib/sheets'
 import EntryCard from './EntryCard'
 import GuestbookForm from './GuestbookForm'
-import { PAGE_SIZE, paginate } from './guestbook'
+import { entryDomId, PAGE_SIZE, paginate } from './guestbook'
 import { useGuestbook } from './useGuestbook'
 
 const REVEAL_STEP = 0.12
-const PREVIEW_NOTICE = '미리보기 모드 · 이 기기에만 저장됩니다 (Google 연동 전)'
+const PREVIEW_NOTICE = '미리보기 모드 · 메시지가 이 기기에만 저장됩니다'
 const SKELETON_ROWS = 3
 
 function Skeleton() {
@@ -35,10 +35,30 @@ function Skeleton() {
 }
 
 export default function Guestbook() {
-  const { entries, loading, insert, remove } = useGuestbook()
+  const { entries, loading, error, reload, insert, remove } = useGuestbook()
   const [shown, setShown] = useState(PAGE_SIZE)
   const [promptId, setPromptId] = useState<string | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
+  // Entry to focus once "더 보기" has rendered the next page (the button may unmount).
+  const focusAfterMore = useRef<string | null>(null)
+
+  useEffect(() => {
+    const id = focusAfterMore.current
+    if (!id) return
+    focusAfterMore.current = null
+    document.getElementById(entryDomId(id))?.focus({ preventScroll: true })
+  }, [shown])
+
+  const showMore = () => {
+    focusAfterMore.current = entries[shown]?.id ?? null
+    setShown((s) => s + PAGE_SIZE)
+  }
+
+  // The retry button unmounts while the skeleton shows; keep focus inside the list.
+  const retry = () => {
+    listRef.current?.focus({ preventScroll: true })
+    reload()
+  }
 
   // The deleted card unmounts with the focused prompt inside it; park focus on the list.
   const handleDeleted = useCallback(
@@ -56,7 +76,7 @@ export default function Guestbook() {
     <Section id="guestbook" eyebrow="GUESTBOOK" title="축하의 한마디">
       {isPreviewBackend && (
         <p role="note" className="-mt-6 mb-8 text-center">
-          <span className="inline-block rounded-full border border-line bg-bg-elevated px-3 py-1 text-[13px] font-medium text-accent">
+          <span className="inline-block rounded-full border border-line bg-bg-elevated px-3 py-1 text-[0.8125rem] font-medium text-accent">
             {PREVIEW_NOTICE}
           </span>
         </p>
@@ -66,21 +86,17 @@ export default function Guestbook() {
         <GuestbookForm onAdded={insert} />
       </Reveal>
 
-      <Reveal delay={REVEAL_STEP} className="mt-12">
+      <Reveal delay={REVEAL_STEP} amount="some" className="mt-12">
         <div ref={listRef} tabIndex={-1} aria-busy={loading} className="outline-none">
           <h3 className="sr-only">남겨진 메시지</h3>
           {loading ? (
             <Skeleton />
           ) : (
             <>
-              {entries.length > 0 && (
-                <p className="mb-2 text-right text-[13px] text-ink-muted tabular-nums">{entries.length}개의 메시지</p>
+              {entries.length > 0 && !error && (
+                <p className="mb-2 text-right text-[0.8125rem] text-ink-muted tabular-nums">{entries.length}개의 메시지</p>
               )}
-              <ul
-                aria-live="polite"
-                aria-relevant="additions"
-                className={entries.length > 0 ? 'divide-y divide-line border-y border-line' : undefined}
-              >
+              <ul className={entries.length > 0 ? 'divide-y divide-line border-y border-line' : undefined}>
                 {visible.map((entry) => (
                   <EntryCard
                     key={entry.id}
@@ -91,15 +107,28 @@ export default function Guestbook() {
                   />
                 ))}
               </ul>
-              {entries.length === 0 && (
-                <p className="border-y border-line py-10 text-center text-[15px] leading-relaxed text-ink-muted">
-                  아직 남겨진 메시지가 없습니다.
-                  <br />첫 번째 축하를 전해 주세요.
-                </p>
+              {error ? (
+                <div className={`border-y border-line py-10 text-center ${entries.length > 0 ? 'mt-6' : ''}`}>
+                  <p role="alert" className="text-[0.9375rem] leading-relaxed text-ink-muted">
+                    {error}
+                    <br />
+                    잠시 후 다시 시도해 주세요.
+                  </p>
+                  <Button variant="outline" size="sm" onClick={retry} className="mt-4">
+                    다시 시도
+                  </Button>
+                </div>
+              ) : (
+                entries.length === 0 && (
+                  <p className="border-y border-line py-10 text-center text-[0.9375rem] leading-relaxed text-ink-muted">
+                    아직 남겨진 메시지가 없습니다.
+                    <br />첫 번째 축하를 전해 주세요.
+                  </p>
+                )
               )}
               {remaining > 0 && (
                 <div className="mt-6 flex justify-center">
-                  <Button variant="outline" size="sm" onClick={() => setShown((s) => s + PAGE_SIZE)}>
+                  <Button variant="outline" size="sm" onClick={showMore}>
                     더 보기 ({remaining})
                   </Button>
                 </div>

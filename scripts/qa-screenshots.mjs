@@ -62,7 +62,7 @@ for (const t of targets) {
       await page.keyboard.press('Escape'); await page.waitForTimeout(500)
     }
     // account accordion
-    const acc = page.getByRole('button', { name: /신랑측 계좌/ }).first()
+    const acc = page.getByRole('button', { name: /신랑 ?측 계좌/ }).first()
     if (await acc.count()) {
       await acc.scrollIntoViewIfNeeded(); await acc.click(); await page.waitForTimeout(700)
       await page.locator('#account').screenshot({ path: `${out}/${t.name}-state-account-open.png` })

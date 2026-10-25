@@ -27,7 +27,7 @@ export function accountGroups(accounts: Accounts): AccountGroup[] {
     const entries = (Array.isArray(list) ? (list as Partial<Account>[]) : []).filter(
       (a): a is Account => Boolean(a) && isFilled(a.holder) && isFilled(a.bank) && isFilled(a.number),
     )
-    return { side, title: `${SIDE_LABEL[side]}측 계좌번호`, entries }
+    return { side, title: `${SIDE_LABEL[side]} 측 계좌번호`, entries }
   }).filter((group) => group.entries.length > 0)
 }
 
@@ -40,6 +40,8 @@ export interface PayLink {
   key: 'kakaopay' | 'toss'
   label: string
   href: string
+  /** true for http(s) links (open in a new tab); false for app schemes (navigate in place). */
+  external: boolean
 }
 
 const ALLOWED_PROTOCOLS = new Set(['http:', 'https:', 'kakaotalk:', 'kakaopay:', 'supertoss:'])
@@ -54,11 +56,19 @@ export function isSafeHref(url: string | undefined): url is string {
   }
 }
 
+function isWebHref(href: string): boolean {
+  return /^https?:/i.test(href)
+}
+
+function payLink(key: PayLink['key'], label: string, url: string): PayLink {
+  const href = url.trim()
+  return { key, label, href, external: isWebHref(href) }
+}
+
 /** Kakao Pay first, then Toss; only links that pass `isSafeHref`. */
 export function payLinks(account: Account): PayLink[] {
   const links: PayLink[] = []
-  if (isSafeHref(account.kakaopayUrl))
-    links.push({ key: 'kakaopay', label: '카카오페이', href: account.kakaopayUrl.trim() })
-  if (isSafeHref(account.tossUrl)) links.push({ key: 'toss', label: '토스', href: account.tossUrl.trim() })
+  if (isSafeHref(account.kakaopayUrl)) links.push(payLink('kakaopay', '카카오페이', account.kakaopayUrl))
+  if (isSafeHref(account.tossUrl)) links.push(payLink('toss', '토스', account.tossUrl))
   return links
 }

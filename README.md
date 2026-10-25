@@ -3,7 +3,8 @@
 한국 예비 신랑·신부를 위한 모바일 청첩장. 정형화된 템플릿이 아닌 두 사람의 취향이 드러나는 청첩장을 직접 개발하는 것이 목표이며, 링크 하나로 Android·iOS·웹에 전달한다.
 
 - 개발 계획서: [docs/PLAN.md](docs/PLAN.md)
-- 현재 상태: 계획 수립 단계. 코드 스캐폴딩은 계획서 8장의 단계 1에서 시작한다.
+- 결정 기록: [docs/DECISIONS.md](docs/DECISIONS.md)
+- 현재 상태: 초안(schematic draft). 11개 섹션이 임시 데이터(이OO·박OO, 2027년 OO월 OO일, 노블발렌티 삼성, 생성형 플레이스홀더 사진)로 동작한다.
 
 ## 계획 요약
 
@@ -13,3 +14,16 @@
 - 연동: 카카오맵, 카카오톡 공유, 네비 딥링크, Firebase Firestore(방명록·RSVP, 선택).
 - 배포: GitHub Actions → GitHub Pages(1안), Vercel(2안).
 - 개인정보: 전화번호·계좌번호는 환경 변수로 주입하고 원본 사진은 저장소에 두지 않는다.
+
+## 실행
+
+```bash
+npm install
+npm run placeholders   # public/images/*.svg 플레이스홀더 생성
+npm run dev            # http://localhost:5173
+npm run build && npm run preview
+npm run qa:shots       # vite preview 위에서 기기별 스크린샷 (qa/, Playwright 필요)
+npm run og             # public/og-image.png 생성 (카카오톡 공유 썸네일)
+```
+
+내용은 `src/config/wedding.ts`, 전화·계좌는 `.env.local`의 `VITE_CONTACTS`·`VITE_ACCOUNTS`(`.env.example` 참고), 방명록·RSVP 백엔드는 `google-apps-script/Code.gs`를 배포한 뒤 `VITE_APPS_SCRIPT_URL`에 설정한다. URL이 비어 있으면 미리보기 모드로 동작한다.

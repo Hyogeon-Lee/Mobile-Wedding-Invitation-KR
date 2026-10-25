@@ -1,5 +1,6 @@
 import { Bus, BusFront, Car, ParkingCircle, TrainFront, type LucideIcon } from 'lucide-react'
-import { lazy, Suspense, useCallback, useMemo, useState, type MouseEvent } from 'react'
+import { useInView } from 'motion/react'
+import { lazy, Suspense, useCallback, useMemo, useRef, useState, type MouseEvent } from 'react'
 import CopyButton from '@/components/CopyButton'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
@@ -8,8 +9,19 @@ import { wedding } from '@/config/wedding'
 import { asset } from '@/lib/env'
 import { siteUrl } from '@/lib/kakao'
 import MapBoundary from './MapBoundary'
-import { hostOf, kakaoNaviUrl, naverAppUrl, naverWebUrl, tmapUrl } from './links'
-import { openAppScheme, openWebUrl } from './openApp'
+import {
+  androidIntentUrl,
+  hostOf,
+  isAndroidUserAgent,
+  kakaoNaviUrl,
+  NAVER_MAP_PACKAGE,
+  naverAppUrl,
+  naverWebUrl,
+  TMAP_PACKAGE,
+  TMAP_STORE_URL,
+  tmapUrl,
+} from './links'
+import { openAppScheme } from '@/lib/openApp'
 import { transportEntries, type TransportKey } from './transport'
 
 const KakaoMap = lazy(() => import('./KakaoMap'))
@@ -17,10 +29,17 @@ const KakaoMap = lazy(() => import('./KakaoMap'))
 const REVEAL_STEP = 0.12
 const KAKAO_KEY = import.meta.env.VITE_KAKAO_JS_KEY ?? ''
 const FALLBACK_IMAGE = 'images/map-fallback.svg'
-const NO_KEY_LABEL = '지도는 카카오 API 키 설정 후 표시됩니다'
+const NO_KEY_LABEL = '지도 준비 중입니다'
+const MAP_FAILED_LABEL = '지도를 불러오지 못했습니다'
 const LOADING_LABEL = '지도를 불러오는 중'
-const PLACEHOLDER_COORDS_LABEL = '임시 좌표 · 예식장 확정 후 교정'
+const PLACEHOLDER_COORDS_LABEL = '지도 위치는 예식장 확정 후 정확히 표시됩니다'
 const TMAP_MISSING = '티맵 앱이 설치되어 있어야 합니다'
+const NAVER_MISSING = '네이버지도 앱이 설치되어 있어야 합니다'
+/** iOS can keep the page visible while it asks "Open in app?", so wait longer than the default. */
+const APP_TIMEOUT_MS = 2500
+/** Start loading the map chunk, SDK and tiles shortly before the box scrolls into view. */
+const MAP_PRELOAD_MARGIN = '300px 0px'
+const IS_ANDROID = typeof navigator !== 'undefined' && isAndroidUserAgent(navigator.userAgent)
 
 const TRANSPORT_ICON: Record<TransportKey, LucideIcon> = {
   subway: TrainFront,
@@ -32,15 +51,17 @@ const TRANSPORT_ICON: Record<TransportKey, LucideIcon> = {
 
 const navLinkClass =
   'inline-flex h-11 w-full items-center justify-center rounded-full border border-line bg-bg-elevated px-1 ' +
-  'text-[15px] font-medium text-ink transition-colors select-none hover:bg-accent-soft/60 active:bg-accent-soft ' +
+  'text-[0.9375rem] font-medium text-ink transition-colors select-none hover:bg-accent-soft/60 active:bg-accent-soft ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+/** App-scheme links: an iOS long-press "Open in New Tab" would open a dead scheme URL. */
+const appLinkClass = `${navLinkClass} [-webkit-touch-callout:none]`
 
 function MapFallback({ label }: { label: string }) {
   return (
     <div className="relative size-full">
       <img src={asset(FALLBACK_IMAGE)} alt="" className="size-full object-cover" />
       <div className="absolute inset-0 flex items-center justify-center p-6">
-        <p className="rounded-full border border-line bg-bg-elevated/90 px-4 py-2 text-center text-[15px] text-ink">
+        <p className="rounded-full border border-line bg-bg-elevated/90 px-4 py-2 text-center text-[0.9375rem] text-ink">
           {label}
         </p>
       </div>
@@ -54,6 +75,8 @@ export default function Location() {
   const toast = useToast()
   const [mapFailed, setMapFailed] = useState(false)
   const onMapError = useCallback(() => setMapFailed(true), [])
+  const mapBoxRef = useRef<HTMLDivElement>(null)
+  const mapNear = useInView(mapBoxRef, { once: true, margin: MAP_PRELOAD_MARGIN })
 
   const place = useMemo(() => ({ name: venueName, lat: coords.lat, lng: coords.lng }), [venueName, coords.lat, coords.lng])
   const appName = useMemo(() => hostOf(siteUrl()) || window.location.host, [])
@@ -63,33 +86,45 @@ export default function Location() {
   const tmapHref = tmapUrl(place)
   const entries = transportEntries(transport)
 
+  // On Android the OS picks app or fallback from the intent URL; elsewhere a timer guesses.
   const openNaver = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    openAppScheme(naverHref, { onFail: () => openWebUrl(naverWebHref) })
+    openAppScheme(naverHref, { timeoutMs: APP_TIMEOUT_MS, onFail: () => toast.show(NAVER_MISSING) })
   }
   const openTmap = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    openAppScheme(tmapHref, { onFail: () => toast.show(TMAP_MISSING) })
+    openAppScheme(tmapHref, { timeoutMs: APP_TIMEOUT_MS, onFail: () => toast.show(TMAP_MISSING) })
   }
+  const naverLinkProps = IS_ANDROID
+    ? { href: androidIntentUrl(naverHref, NAVER_MAP_PACKAGE, naverWebHref) }
+    : { href: naverHref, onClick: openNaver }
+  const tmapLinkProps = IS_ANDROID
+    ? { href: androidIntentUrl(tmapHref, TMAP_PACKAGE, TMAP_STORE_URL) }
+    : { href: tmapHref, onClick: openTmap }
 
-  const showMap = KAKAO_KEY.length > 0 && !mapFailed
+  const hasKey = KAKAO_KEY.length > 0
+  const showMap = hasKey && !mapFailed
 
   return (
     <Section id="location" eyebrow="LOCATION" title="오시는 길">
       <Reveal className="text-center">
-        <p className="font-serif text-[20px] leading-snug text-ink">{venueName}</p>
-        <p className="mt-1 text-[15px] text-ink">{hall}</p>
-        <p className="mt-4 text-[15px] leading-relaxed text-ink-muted">{address}</p>
-        {addressJibun && <p className="mt-0.5 text-[14px] leading-relaxed text-ink-muted">(지번) {addressJibun}</p>}
+        <p className="font-serif text-[1.25rem] leading-snug text-ink">{venueName}</p>
+        <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>
+        <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-muted">{address}</p>
+        {addressJibun && <p className="mt-0.5 text-[0.875rem] leading-relaxed text-ink-muted">(지번) {addressJibun}</p>}
         <div className="mt-4 flex justify-center">
           <CopyButton text={address} label="주소 복사" successMessage="주소가 복사되었습니다" />
         </div>
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-10">
-        <div className="relative aspect-4/3 overflow-hidden rounded-xl border border-line bg-accent-soft/30" data-lenis-prevent>
-          {showMap ? (
-            <MapBoundary fallback={<MapFallback label={NO_KEY_LABEL} />}>
+        <div
+          ref={mapBoxRef}
+          className="relative aspect-4/3 overflow-hidden rounded-xl border border-line bg-accent-soft/30"
+          data-lenis-prevent
+        >
+          {showMap && mapNear ? (
+            <MapBoundary fallback={<MapFallback label={MAP_FAILED_LABEL} />}>
               <Suspense fallback={<MapFallback label={LOADING_LABEL} />}>
                 <KakaoMap
                   appkey={KAKAO_KEY}
@@ -102,10 +137,10 @@ export default function Location() {
               </Suspense>
             </MapBoundary>
           ) : (
-            <MapFallback label={NO_KEY_LABEL} />
+            <MapFallback label={showMap ? LOADING_LABEL : hasKey ? MAP_FAILED_LABEL : NO_KEY_LABEL} />
           )}
         </div>
-        {coords.placeholder && <p className="mt-3 text-center text-[14px] text-ink-muted">{PLACEHOLDER_COORDS_LABEL}</p>}
+        {coords.placeholder && <p className="mt-3 text-center text-[0.875rem] text-ink-muted">{PLACEHOLDER_COORDS_LABEL}</p>}
 
         <ul className="mt-4 grid grid-cols-3 gap-2" aria-label="길찾기">
           <li>
@@ -114,16 +149,28 @@ export default function Location() {
             </a>
           </li>
           <li>
-            <a href={naverHref} target="_blank" rel="noopener noreferrer" className={navLinkClass} onClick={openNaver}>
+            <a {...naverLinkProps} className={appLinkClass}>
               네이버지도
             </a>
           </li>
           <li>
-            <a href={tmapHref} target="_blank" rel="noopener noreferrer" className={navLinkClass} onClick={openTmap}>
+            <a {...tmapLinkProps} className={appLinkClass}>
               티맵
             </a>
           </li>
         </ul>
+        {!IS_ANDROID && (
+          <p className="mt-3 text-center">
+            <a
+              href={naverWebHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block py-1 text-[0.9375rem] text-ink-muted underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              네이버지도 웹에서 보기
+            </a>
+          </p>
+        )}
       </Reveal>
 
       {entries.length > 0 && (
@@ -133,13 +180,13 @@ export default function Location() {
               const Icon = TRANSPORT_ICON[key]
               return (
                 <div key={key} className="flex gap-4 py-5">
-                  <dt className="flex w-18 shrink-0 items-center gap-2 self-start text-[15px] font-medium text-ink">
+                  <dt className="flex w-18 shrink-0 items-center gap-2 self-start text-[0.9375rem] font-medium text-ink">
                     <Icon size={18} aria-hidden="true" className="shrink-0 text-accent" />
                     {label}
                   </dt>
                   <dd className="min-w-0 flex-1">
                     {lines.map((line, i) => (
-                      <p key={i} className="text-[15px] leading-relaxed text-ink-muted">
+                      <p key={i} className="text-[0.9375rem] leading-relaxed text-ink-muted">
                         {line}
                       </p>
                     ))}

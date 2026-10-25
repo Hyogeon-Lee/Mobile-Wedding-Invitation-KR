@@ -79,16 +79,3 @@ export function openAppScheme(
 
   deps.navigate(url)
 }
-
-/**
- * Opens a web URL in a new tab from outside a user gesture (after the app-scheme timeout).
- * Falls back to navigating the current page when the popup is blocked.
- */
-export function openWebUrl(url: string): void {
-  const win = window.open(url, '_blank')
-  if (win) {
-    win.opener = null
-    return
-  }
-  window.location.assign(url)
-}
