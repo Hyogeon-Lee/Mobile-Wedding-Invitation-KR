@@ -63,6 +63,7 @@ export interface WeddingConfig {
     /** Phone number of the venue, optional */
     venuePhone?: string
   }
+  /** Greeting copy. Keep it secular: no scripture, prayers or religious wording (owner direction 2026-10-25). */
   greeting: { title: string; body: string; quote?: { text: string; source?: string } }
   cover: { image: GalleryImage; eyebrow?: string }
   gallery: GalleryImage[]

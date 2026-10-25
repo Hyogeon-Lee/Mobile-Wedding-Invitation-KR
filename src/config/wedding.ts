@@ -52,13 +52,9 @@ export const wedding: WeddingConfig = {
       '이제 같은 길을 걸어가려 합니다.',
       '',
       '저희의 시작을 지켜봐 주시고',
-      '따뜻한 마음으로 축복해 주시면',
+      '따뜻한 마음으로 축하해 주시면',
       '큰 기쁨으로 간직하겠습니다.',
     ].join('\n'),
-    quote: {
-      text: '사랑은 오래 참고 사랑은 온유하며',
-      source: '고린도전서 13:4',
-    },
   },
   cover: {
     image: { src: 'images/cover.svg', width: 1200, height: 1600, alt: '메인 사진' },
