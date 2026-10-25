@@ -12,7 +12,8 @@ import { fallbackCopyMessage, isShareAbort, kakaoFeedPayload, shareImageUrl } fr
 
 /** Start fetching the Kakao SDK this far before the buttons scroll in, so a tap calls sendDefault without a network wait. */
 const SDK_PRELOAD_MARGIN = '400px 0px'
-const INTRO = '청첩장을 소중한 분들께 전해 주세요.'
+/** Preview image under public/; regenerate with `npm run og`. */
+const OG_IMAGE_PATH = 'og-image.png'
 
 /** Speech-bubble glyph in Kakao's style; colour comes from the button text. */
 function KakaoBubble() {
@@ -44,9 +45,9 @@ export default function Share() {
         try {
           window.Kakao.Share.sendDefault(
             kakaoFeedPayload({
-              title: share.title,
-              description: share.description,
-              imageUrl: shareImageUrl(url, share.imagePath),
+              title: share.kakaoTitle,
+              description: share.kakaoDescription,
+              imageUrl: shareImageUrl(url, OG_IMAGE_PATH),
               url,
             }),
           )
@@ -58,7 +59,7 @@ export default function Share() {
       }
       if (typeof navigator.share === 'function') {
         try {
-          await navigator.share({ title: share.title, text: share.description, url })
+          await navigator.share({ title: share.kakaoTitle, text: share.kakaoDescription, url })
           return
         } catch (error) {
           if (isShareAbort(error)) return
@@ -72,9 +73,9 @@ export default function Share() {
   }
 
   return (
-    <Section id="share" eyebrow="SHARE" title="청첩장 전하기">
+    <Section id="share" eyebrow={share.eyebrow} title={share.title}>
       <Reveal>
-        <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">{INTRO}</p>
+        <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">{share.intro}</p>
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-10">

@@ -15,7 +15,19 @@ import Share from '@/sections/Share'
 import Footer from '@/sections/Footer'
 import { BotanicalDivider } from '@/effects'
 
-const s = wedding.sections
+const s = {
+  cover: wedding.cover.enabled,
+  greeting: wedding.greeting.enabled,
+  family: wedding.family.enabled,
+  calendar: wedding.calendar.enabled,
+  gallery: wedding.gallery.enabled,
+  location: wedding.location.enabled,
+  account: wedding.account.enabled,
+  rsvp: wedding.rsvp.enabled,
+  guestbook: wedding.guestbook.enabled,
+  share: wedding.share.enabled,
+  footer: wedding.footer.enabled,
+}
 
 // Page order. Sections stay direct children of <main>; the cover's scroll cue targets the next sibling that is not aria-hidden,
 // so the decorative dividers between sections are skipped.

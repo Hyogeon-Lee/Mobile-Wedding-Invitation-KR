@@ -1,6 +1,6 @@
 import { AlertCircle, Check, Loader2, Minus, Plus, Send } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { useCallback, useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { Fragment, useCallback, useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import Button from '@/components/Button'
 import { FIELD, FIELD_INVALID_RING, FIELD_SURFACE } from '@/components/field'
 import PreviewNotice from '@/components/PreviewNotice'
@@ -126,17 +126,18 @@ export default function Rsvp() {
     if (round > 0) nameRef.current?.focus({ preventScroll: true })
   }, [round])
 
-  const { event } = wedding
+  const { event, rsvp } = wedding
 
   return (
-    <Section id="rsvp" eyebrow="RSVP" title="참석 의사 전달">
+    <Section id="rsvp" eyebrow={rsvp.eyebrow} title={rsvp.title}>
       <Reveal className="text-center">
         <p className="text-[0.9375rem] leading-[1.8] text-ink-muted">
-          귀한 발걸음을 미리 알려 주시면
-          <br />
-          정성껏 준비하는 데 큰 도움이 됩니다.
-          <br />
-          참석이 어려우셔도 편하게 전해 주세요.
+          {rsvp.intro.map((line, i) => (
+            <Fragment key={i}>
+              {i > 0 && <br />}
+              {line}
+            </Fragment>
+          ))}
         </p>
         <p className="mt-4 font-serif text-[1rem] leading-relaxed text-ink">{rsvpEventLine(event)}</p>
       </Reveal>

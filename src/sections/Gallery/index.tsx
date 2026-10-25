@@ -9,7 +9,6 @@ import { useToast } from '@/components/toast-context'
 import type { GalleryImage } from '@/config/types'
 import { wedding } from '@/config/wedding'
 import { CurtainLight } from '@/effects'
-import { asset } from '@/lib/env'
 import { EASE_OUT } from '@/lib/motion'
 import { hasMore, spansBothColumns, splitTiles, tileTilt, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
@@ -42,7 +41,7 @@ function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
       className={`${FRAME} ${tileTilt(index)} ${spansBothColumns(index) ? 'col-span-2' : ''} ${busy ? 'opacity-70' : ''}`}
     >
       <img
-        src={asset(image.src)}
+        src={image.src}
         width={image.width}
         height={image.height}
         alt={image.alt}
@@ -56,7 +55,7 @@ function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
 }
 
 export default function Gallery() {
-  const images = wedding.gallery
+  const { eyebrow, title, images } = wedding.gallery
   const reduce = useReducedMotion()
   const toast = useToast()
   const lenis = useLenis()
@@ -70,7 +69,7 @@ export default function Gallery() {
   const tilesRef = useRef<(HTMLButtonElement | null)[]>([])
 
   const { head, tail } = splitTiles(images)
-  const slides = useMemo(() => toSlides(images, asset), [images])
+  const slides = useMemo(() => toSlides(images), [images])
 
   const setTileRef = useCallback((index: number, el: HTMLButtonElement | null) => {
     tilesRef.current[index] = el
@@ -144,7 +143,7 @@ export default function Gallery() {
     ))
 
   return (
-    <Section id="gallery" eyebrow="GALLERY" title="우리의 순간">
+    <Section id="gallery" eyebrow={eyebrow} title={title}>
       <Reveal amount="some">
         {/* Warm curtain light pooling over the first rows, as if from a window above the top-right frame.
             The light box is capped at 60rem: rotated bands shift sideways by (h/2)·tan θ at the edges, so on the

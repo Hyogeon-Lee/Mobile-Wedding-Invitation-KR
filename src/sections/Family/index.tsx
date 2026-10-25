@@ -58,7 +58,7 @@ export default function Family() {
   const close = useCallback(() => setOpen(false), [])
 
   return (
-    <Section id="family" eyebrow="FAMILY" title="양가 혼주">
+    <Section id="family" eyebrow={wedding.family.eyebrow} title={wedding.family.title}>
       <Reveal>
         <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-bg-elevated px-6 py-2">
           {SIDES.map((side) => (

@@ -8,11 +8,11 @@ import { splitParagraphs } from './paragraphs'
 
 export default function Greeting() {
   const { greeting, couple } = wedding
-  const paragraphs = splitParagraphs(greeting.body)
+  const paragraphs = splitParagraphs(greeting.body.join('\n'))
   const quote = greeting.quote
 
   return (
-    <Section id="greeting" eyebrow="INVITATION" title={greeting.title}>
+    <Section id="greeting" eyebrow={greeting.eyebrow} title={greeting.title}>
       {/* Full-bleed light stage under the heading; edges are masked so the bloom fades out instead of being clipped. */}
       <div className="relative isolate -mx-6 overflow-hidden px-6 py-10">
         <LightBloom palette={['mint', 'butter']} intensity="soft" className="mask-x-from-88% mask-y-from-80%" />

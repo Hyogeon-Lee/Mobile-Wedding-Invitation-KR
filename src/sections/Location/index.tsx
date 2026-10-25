@@ -78,7 +78,8 @@ function MapFallback({ label }: { label: string }) {
 }
 
 export default function Location() {
-  const { event, transport } = wedding
+  const { event, location } = wedding
+  const { transport } = location
   const { venueName, hall, address, addressJibun, coords } = event
   const toast = useToast()
   const [mapFailed, setMapFailed] = useState(false)
@@ -114,7 +115,7 @@ export default function Location() {
   const showMap = hasKey && !mapFailed
 
   return (
-    <Section id="location" eyebrow="LOCATION" title="오시는 길" className="relative isolate overflow-hidden">
+    <Section id="location" eyebrow={location.eyebrow} title={location.title} className="relative isolate overflow-hidden">
       <LightBloom palette={['butter', 'mint']} intensity="soft" className={BLOOM_CLASS} />
       <Reveal className="text-center">
         <p className="font-serif text-[1.25rem] leading-snug text-ink">{venueName}</p>

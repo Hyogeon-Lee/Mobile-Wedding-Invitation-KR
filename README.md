@@ -19,11 +19,11 @@
 
 ```bash
 npm install
-npm run placeholders   # public/images/*.svg 플레이스홀더 생성
+npm run placeholders   # config/images/ 임시 사진(JPEG) 다시 생성 (현재 사진을 덮어씀)
 npm run dev            # http://localhost:5173
 npm run build && npm run preview
 npm run qa:shots       # vite preview 위에서 기기별 스크린샷 (qa/, Playwright 필요)
 npm run og             # public/og-image.png 생성 (카카오톡 공유 썸네일)
 ```
 
-내용은 `src/config/wedding.ts`, 전화·계좌는 `.env.local`의 `VITE_CONTACTS`·`VITE_ACCOUNTS`(`.env.example` 참고), 방명록·RSVP 백엔드는 `google-apps-script/Code.gs`를 배포한 뒤 `VITE_APPS_SCRIPT_URL`에 설정한다. URL이 비어 있으면 미리보기 모드로 동작한다.
+글은 `config/wedding.json`, 사진은 `config/images/`(첫 화면 `cover.jpg`, 갤러리 `gallery/` 폴더의 파일 이름 순서)에서 바꾼다. 항목별 설명과 사진 규격은 [config/README.md](config/README.md)에 있다. 전화·계좌는 `.env.local`의 `VITE_CONTACTS`·`VITE_ACCOUNTS`(`.env.example` 참고), 방명록·RSVP 백엔드는 `google-apps-script/Code.gs`를 배포한 뒤 `VITE_APPS_SCRIPT_URL`에 설정한다. URL이 비어 있으면 미리보기 모드로 동작한다.

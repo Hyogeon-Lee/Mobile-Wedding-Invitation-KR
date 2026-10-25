@@ -1,9 +1,10 @@
 import { ExternalLink } from 'lucide-react'
-import type { CSSProperties } from 'react'
+import { Fragment, type CSSProperties } from 'react'
 import CopyButton from '@/components/CopyButton'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
+import { wedding } from '@/config/wedding'
 import { LightBloom } from '@/effects'
 import { REVEAL_STEP } from '@/lib/motion'
 import { openAppScheme } from '@/lib/openApp'
@@ -11,7 +12,6 @@ import { accounts, isSampleData, type Account } from '@/lib/private'
 import Accordion from './Accordion'
 import { accountGroups, copyValue, payLinks } from './accounts'
 
-const INTRO = ['참석이 어려우신 분들을 위해 계좌번호를 안내드립니다.', '전해 주시는 마음은 소중하게 간직하겠습니다.']
 const groups = accountGroups(accounts)
 
 /**
@@ -86,8 +86,8 @@ export default function Account() {
   return (
     <Section
       id="account"
-      eyebrow="GIFT"
-      title="마음 전하실 곳"
+      eyebrow={wedding.account.eyebrow}
+      title={wedding.account.title}
       tone="plain"
       className="relative isolate overflow-hidden"
       badge={
@@ -102,9 +102,12 @@ export default function Account() {
 
       <Reveal>
         <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">
-          {INTRO[0]}
-          <br />
-          {INTRO[1]}
+          {wedding.account.intro.map((line, i) => (
+            <Fragment key={i}>
+              {i > 0 && <br />}
+              {line}
+            </Fragment>
+          ))}
         </p>
       </Reveal>
 

@@ -3,7 +3,6 @@ import { motion, useInView, useReducedMotion, type TargetAndTransition, type Var
 import { ChevronDown } from 'lucide-react'
 import { wedding } from '@/config/wedding'
 import { CurtainLight, GlowPulse, LightLeak, PetalDrift } from '@/effects'
-import { asset } from '@/lib/env'
 import { EASE_OUT } from '@/lib/motion'
 import { burstConfetti } from './confetti'
 import { coverDateLine, coverVenueLine } from './format'
@@ -66,7 +65,7 @@ export default function Cover() {
 
   const photoImg = (
     <img
-      src={asset(cover.image.src)}
+      src={cover.image.src}
       width={cover.image.width}
       height={cover.image.height}
       alt={cover.image.alt}

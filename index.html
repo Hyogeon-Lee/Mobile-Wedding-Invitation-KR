@@ -8,13 +8,14 @@
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <title>이OO ♥ 박OO 결혼합니다</title>
-    <meta name="description" content="2027년 OO월 OO일, 노블발렌티 삼성에서 결혼합니다." />
+    <!-- Double-brace tokens are filled from config/wedding.json (share.kakaoTitle, share.kakaoDescription) by vite/content-images.ts. -->
+    <title>{{title}}</title>
+    <meta name="description" content="{{description}}" />
 
     <!-- Open Graph: KakaoTalk reads these statically. Bump ?v= when the image changes (KakaoTalk caches by URL). -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="이OO ♥ 박OO 결혼합니다" />
-    <meta property="og:description" content="2027년 OO월 OO일, 노블발렌티 삼성" />
+    <meta property="og:title" content="{{title}}" />
+    <meta property="og:description" content="{{description}}" />
     <meta property="og:image" content="/og-image.png?v=2" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />

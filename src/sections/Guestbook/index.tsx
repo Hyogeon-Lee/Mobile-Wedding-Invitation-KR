@@ -4,6 +4,7 @@ import Button from '@/components/Button'
 import PreviewNotice from '@/components/PreviewNotice'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
+import { wedding } from '@/config/wedding'
 import { REVEAL_STEP } from '@/lib/motion'
 import { isPreviewBackend } from '@/lib/sheets'
 import EntryCard from './EntryCard'
@@ -75,7 +76,7 @@ export default function Guestbook() {
   const { visible, remaining } = paginate(entries, shown)
 
   return (
-    <Section id="guestbook" eyebrow="GUESTBOOK" title="축하의 한마디">
+    <Section id="guestbook" eyebrow={wedding.guestbook.eyebrow} title={wedding.guestbook.title}>
       {isPreviewBackend && <PreviewNotice className="-mt-6 mb-8">{PREVIEW_NOTICE}</PreviewNotice>}
 
       <Reveal>

@@ -1,4 +1,8 @@
-/** All wedding content lives in `wedding.ts`; private data (phones, accounts) comes from `lib/private.ts`. */
+/**
+ * `WeddingContent` mirrors config/wedding.json as written by hand; `WeddingConfig` is the same data after
+ * `wedding.ts` resolved image file names into URLs and filled defaults. Private data (phones, accounts)
+ * comes from `lib/private.ts`, never from the JSON.
+ */
 
 export interface Parent {
   name: string
@@ -43,32 +47,68 @@ export type SectionId =
   | 'share'
   | 'footer'
 
-export interface WeddingConfig {
+export interface SectionHeading {
+  enabled: boolean
+  /** Small uppercase label above the title */
+  eyebrow: string
+  title: string
+}
+
+export interface EventInfo {
+  /** ISO 8601 with +09:00 offset. Used for calendar, weekday and D-day. */
+  startsAt: string
+  /**
+   * true while the date is still "OO월 OO일": formatters print placeholders
+   * and the D-day counter prints "D-OOO" instead of a number.
+   */
+  datePlaceholder: boolean
+  venueName: string
+  hall: string
+  address: string
+  /** Legacy lot-number address, shown as secondary line when present */
+  addressJibun?: string
+  /** Coordinates for the map. Mark placeholder=true until confirmed on Kakao Map. */
+  coords: { lat: number; lng: number; placeholder?: boolean }
+  /** Phone number of the venue, optional */
+  venuePhone?: string
+}
+
+export interface WeddingContent {
   couple: { groom: Person; bride: Person }
-  event: {
-    /** ISO 8601 with +09:00 offset. Used for calendar, weekday and D-day. */
-    startsAt: string
-    /**
-     * true while the date is still "OO월 OO일": formatters print placeholders
-     * and the D-day counter prints "D-OOO" instead of a number.
-     */
-    datePlaceholder: boolean
-    venueName: string
-    hall: string
-    address: string
-    /** Legacy lot-number address, shown as secondary line when present */
-    addressJibun?: string
-    /** Coordinates for the map. Mark placeholder=true until confirmed on Kakao Map. */
-    coords: { lat: number; lng: number; placeholder?: boolean }
-    /** Phone number of the venue, optional */
-    venuePhone?: string
+  event: EventInfo
+  cover: { enabled: boolean; eyebrow?: string; /** file name under config/images/ */ image: string; alt: string }
+  /** Keep it secular: no scripture, prayers or religious wording (owner direction 2026-10-25). */
+  greeting: SectionHeading & {
+    /** One entry per line; "" starts a new paragraph. */
+    body: string[]
+    quote?: { text: string; source?: string }
   }
-  /** Greeting copy. Keep it secular: no scripture, prayers or religious wording (owner direction 2026-10-25). */
-  greeting: { title: string; body: string; quote?: { text: string; source?: string } }
-  cover: { image: GalleryImage; eyebrow?: string }
-  gallery: GalleryImage[]
-  transport: TransportInfo
-  sections: Record<SectionId, boolean>
-  share: { title: string; description: string; imagePath: string; buttonLabel: string }
-  footer: { credit: string }
+  family: SectionHeading
+  /** The title is derived from the date. */
+  calendar: { enabled: boolean; eyebrow: string }
+  gallery: SectionHeading & {
+    /** Base alt text; the photo number is appended ("신랑 신부 사진 3"). */
+    alt: string
+    /** Alt text per file name in config/images/gallery/, e.g. { "03.jpg": "..." } */
+    captions?: Record<string, string>
+  }
+  location: SectionHeading & { transport: TransportInfo }
+  account: SectionHeading & { intro: string[] }
+  rsvp: SectionHeading & { intro: string[] }
+  guestbook: SectionHeading
+  share: SectionHeading & {
+    intro: string
+    /** Title of the KakaoTalk card, the browser tab and og:title */
+    kakaoTitle: string
+    /** Defaults to "<dateLine> · <venueName>" */
+    kakaoDescription?: string
+    buttonLabel: string
+  }
+  footer: { enabled: boolean; credit: string }
+}
+
+export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'gallery' | 'share'> {
+  cover: Omit<WeddingContent['cover'], 'image' | 'alt'> & { image: GalleryImage }
+  gallery: Omit<WeddingContent['gallery'], 'alt' | 'captions'> & { images: GalleryImage[] }
+  share: WeddingContent['share'] & { kakaoDescription: string }
 }

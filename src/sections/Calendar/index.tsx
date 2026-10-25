@@ -36,7 +36,7 @@ export default function Calendar() {
   }, [startsAt])
 
   return (
-    <Section id="calendar" eyebrow="SAVE THE DATE" title={calendarTitle(event)}>
+    <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)}>
       <Reveal className="mx-auto max-w-[340px]">
         <div className="relative isolate overflow-hidden rounded-2xl border border-line bg-bg-elevated px-2.5 pt-6 pb-5">
           {/* Dimmed so the peak mint tint keeps text-accent / text-ink-muted at or above 4.5:1 on this card. */}

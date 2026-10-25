@@ -1,17 +1,16 @@
-// Renders public/og-image.png (1200x630) from the config using Playwright (pre-installed).
-// Usage: node scripts/make-og.mjs   — bump ?v= in index.html afterwards (KakaoTalk caches by URL).
+// Renders public/og-image.png (1200x630) from config/wedding.json using Playwright (pre-installed).
+// Usage: node scripts/make-og.mjs [--dry-run]   — bump ?v= in index.html afterwards (KakaoTalk caches by URL).
+// --dry-run prints the text lines without launching a browser or writing the file.
 import { createRequire } from 'node:module'
-const { chromium } = createRequire(import.meta.url)('playwright')
 import { readFileSync, writeFileSync } from 'node:fs'
 
-const cfg = readFileSync('src/config/wedding.ts', 'utf8')
-const pick = (re, fallback) => (cfg.match(re) ?? [])[1] ?? fallback
-const groom = pick(/groom:\s*\{\s*name:\s*'([^']+)'/, '신랑')
-const bride = pick(/bride:\s*\{\s*name:\s*'([^']+)'/, '신부')
-const venue = pick(/const venueName = '([^']+)'/, '')
-const startsAt = pick(/const startsAt = '([^']+)'/, '')
-const placeholder = /const datePlaceholder = true/.test(cfg)
-// Same rule as src/config/wedding.ts: "YYYY년 OO월 OO일" until the date is confirmed, then the KST date.
+const cfg = JSON.parse(readFileSync('config/wedding.json', 'utf8'))
+const groom = cfg.couple?.groom?.name || '신랑'
+const bride = cfg.couple?.bride?.name || '신부'
+const venue = cfg.event?.venueName ?? ''
+const startsAt = cfg.event?.startsAt ?? ''
+const placeholder = cfg.event?.datePlaceholder === true
+// Same rule as dateLineOf in src/config/resolve.ts: "YYYY년 OO월 OO일" until the date is confirmed, then the KST date.
 const dateLine = (() => {
   if (!startsAt) return ''
   if (placeholder) return `${startsAt.slice(0, 4)}년 OO월 OO일`
@@ -19,10 +18,16 @@ const dateLine = (() => {
   const w = ['일', '월', '화', '수', '목', '금', '토'][d.getUTCDay()]
   return `${d.getUTCFullYear()}년 ${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일 ${w}요일`
 })()
-const desc = [dateLine, venue].filter(Boolean).join(' · ')
-// Skip the venue line when the share description already names it.
-const venueLine = venue && !desc.includes(venue) ? `${venueLine}` : ''
+const desc = cfg.share?.kakaoDescription?.trim() || [dateLine, venue].filter(Boolean).join(' · ')
+// Skip the venue line when the description already names it.
+const venueLine = venue && !desc.includes(venue) ? `<div class="venue">${venue}</div>` : ''
 
+if (process.argv.includes('--dry-run')) {
+  console.log({ groom, bride, desc, venue: venueLine ? venue : '(in description)' })
+  process.exit(0)
+}
+
+const { chromium } = createRequire(import.meta.url)('playwright')
 const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap">
@@ -36,7 +41,7 @@ const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
   .desc{font-size:26px;color:#5f6f66}
   .venue{font-size:22px;color:#5f6f66;letter-spacing:.05em}
 </style></head><body><div class="wrap"><div class="frame"></div>
-<div class="eyebrow">WEDDING INVITATION</div>
+<div class="eyebrow">${cfg.cover?.eyebrow || 'WEDDING INVITATION'}</div>
 <div class="names">${groom}<span>&</span>${bride}</div>
 <div class="desc">${desc}</div>
 ${venueLine}

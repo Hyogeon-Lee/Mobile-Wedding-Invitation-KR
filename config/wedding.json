@@ -1,0 +1,107 @@
+{
+  "couple": {
+    "groom": {
+      "name": "이OO",
+      "relation": "아들",
+      "father": { "name": "이OO" },
+      "mother": { "name": "김OO" }
+    },
+    "bride": {
+      "name": "박OO",
+      "relation": "딸",
+      "father": { "name": "박OO" },
+      "mother": { "name": "최OO" }
+    }
+  },
+  "event": {
+    "startsAt": "2027-05-15T12:00:00+09:00",
+    "datePlaceholder": true,
+    "venueName": "노블발렌티 삼성",
+    "hall": "OO홀",
+    "address": "서울특별시 강남구 봉은사로 637",
+    "addressJibun": "삼성동 109-6",
+    "coords": { "lat": 37.5094, "lng": 127.0623, "placeholder": true }
+  },
+  "cover": {
+    "enabled": true,
+    "eyebrow": "WEDDING INVITATION",
+    "image": "cover.jpg",
+    "alt": "메인 사진"
+  },
+  "greeting": {
+    "enabled": true,
+    "eyebrow": "INVITATION",
+    "title": "소중한 분들을 초대합니다",
+    "body": [
+      "서로의 하루를 함께 걷던 두 사람이",
+      "이제 같은 길을 걸어가려 합니다.",
+      "",
+      "저희의 시작을 지켜봐 주시고",
+      "따뜻한 마음으로 축하해 주시면",
+      "큰 기쁨으로 간직하겠습니다."
+    ]
+  },
+  "family": {
+    "enabled": true,
+    "eyebrow": "FAMILY",
+    "title": "양가 혼주"
+  },
+  "calendar": {
+    "enabled": true,
+    "eyebrow": "SAVE THE DATE"
+  },
+  "gallery": {
+    "enabled": true,
+    "eyebrow": "GALLERY",
+    "title": "우리의 순간",
+    "alt": "신랑 신부 사진",
+    "captions": {}
+  },
+  "location": {
+    "enabled": true,
+    "eyebrow": "LOCATION",
+    "title": "오시는 길",
+    "transport": {
+      "subway": ["OO호선 OO역 O번 출구에서 도보 O분"],
+      "bus": ["간선 OOO, 지선 OOOO · OO정류장 하차"],
+      "car": ["내비게이션에 \"노블발렌티 삼성\" 또는 \"봉은사로 637\" 입력"],
+      "parking": ["건물 내 주차 O시간 무료 (안내데스크 등록)"]
+    }
+  },
+  "account": {
+    "enabled": true,
+    "eyebrow": "GIFT",
+    "title": "마음 전하실 곳",
+    "intro": [
+      "참석이 어려우신 분들을 위해 계좌번호를 안내드립니다.",
+      "전해 주시는 마음은 소중하게 간직하겠습니다."
+    ]
+  },
+  "rsvp": {
+    "enabled": true,
+    "eyebrow": "RSVP",
+    "title": "참석 의사 전달",
+    "intro": [
+      "귀한 발걸음을 미리 알려 주시면",
+      "정성껏 준비하는 데 큰 도움이 됩니다.",
+      "참석이 어려우셔도 편하게 전해 주세요."
+    ]
+  },
+  "guestbook": {
+    "enabled": true,
+    "eyebrow": "GUESTBOOK",
+    "title": "축하의 한마디"
+  },
+  "share": {
+    "enabled": true,
+    "eyebrow": "SHARE",
+    "title": "청첩장 전하기",
+    "intro": "청첩장을 소중한 분들께 전해 주세요.",
+    "kakaoTitle": "이OO ♥ 박OO 결혼합니다",
+    "buttonLabel": "카카오톡으로 공유하기"
+  },
+  "footer": {
+    "enabled": true,
+    "credit": "이OO · 박OO 2027"
+  }
+}

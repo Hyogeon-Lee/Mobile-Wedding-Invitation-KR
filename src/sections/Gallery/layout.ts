@@ -35,8 +35,8 @@ export interface Slide {
   alt: string
 }
 
-/** PhotoSwipe data-source items; `resolve` maps a public path to its served URL. */
-export function toSlides(images: readonly GalleryImage[], resolve: (path: string) => string): Slide[] {
+/** PhotoSwipe data-source items; `resolve` maps `src` to its served URL (sources from config/images are final already). */
+export function toSlides(images: readonly GalleryImage[], resolve: (src: string) => string = (src) => src): Slide[] {
   return images.map(({ src, width, height, alt }) => ({ src: resolve(src), width, height, alt }))
 }
 
