@@ -8,8 +8,18 @@ const cfg = readFileSync('src/config/wedding.ts', 'utf8')
 const pick = (re, fallback) => (cfg.match(re) ?? [])[1] ?? fallback
 const groom = pick(/groom:\s*\{\s*name:\s*'([^']+)'/, '신랑')
 const bride = pick(/bride:\s*\{\s*name:\s*'([^']+)'/, '신부')
-const venue = pick(/venueName:\s*'([^']+)'/, '')
-const desc = pick(/description:\s*'([^']+)'/, '')
+const venue = pick(/const venueName = '([^']+)'/, '')
+const startsAt = pick(/const startsAt = '([^']+)'/, '')
+const placeholder = /const datePlaceholder = true/.test(cfg)
+// Same rule as src/config/wedding.ts: "YYYY년 OO월 OO일" until the date is confirmed, then the KST date.
+const dateLine = (() => {
+  if (!startsAt) return ''
+  if (placeholder) return `${startsAt.slice(0, 4)}년 OO월 OO일`
+  const d = new Date(new Date(startsAt).getTime() + 9 * 3600 * 1000)
+  const w = ['일', '월', '화', '수', '목', '금', '토'][d.getUTCDay()]
+  return `${d.getUTCFullYear()}년 ${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일 ${w}요일`
+})()
+const desc = [dateLine, venue].filter(Boolean).join(' · ')
 // Skip the venue line when the share description already names it.
 const venueLine = venue && !desc.includes(venue) ? `${venueLine}` : ''
 
