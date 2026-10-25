@@ -2,18 +2,24 @@
 
 /* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
 :root {
-  /* Pastel greenery palette: airy ivory-green background, soft sage text, pale mint and blush tints */
-  --color-bg: #f8f9f4;
+  /*
+   * Palette derived from the Arove Studio feed (2026-10-25): cream off-white walls, warm sunlight through
+   * sheer curtains, glimpses of trees through glass, a light serif wordmark. Warm neutrals carry the page;
+   * sage is the greenery accent; butter/sand/sky are light tints for effects only.
+   */
+  --color-bg: #f9f7f2;
   --color-bg-elevated: #ffffff;
-  --color-ink: #4b5447; /* soft sage-gray, 7.5:1 on bg */
-  --color-ink-muted: #667164; /* 4.9:1 on bg */
-  --color-line: #e1e7dc;
-  --color-accent: #527457; /* text-safe sage, 5.1:1 on bg, white on it 5.0:1 */
-  --color-accent-soft: #e4eee0; /* pale mint tint */
-  --color-sage: #8fa892; /* decorative sage (not for small text) */
-  --color-blush: #f6e6e4; /* pastel blush tint */
-  --color-butter: #fbf3dc; /* warm sunlight tint */
-  --color-mint: #edf4e8; /* light mint tint */
+  --color-ink: #4f4e47; /* warm soft charcoal, 7.9:1 on bg */
+  --color-ink-muted: #716e66; /* 4.6:1 on bg */
+  --color-line: #e6e2da;
+  --color-accent: #587460; /* muted sage, 4.9:1 on bg, white on it 5.1:1 */
+  --color-accent-soft: #e8ede3; /* pale sage tint */
+  --color-sage: #9bb09a; /* decorative sage (not for small text) */
+  --color-blush: #f7ece4; /* warm peach-cream tint */
+  --color-butter: #fbf0d5; /* golden sunlight tint */
+  --color-mint: #ecf1e7; /* light sage-mint tint */
+  --color-sand: #f2ece2; /* cream/sand wall tint */
+  --color-sky: #e4eaee; /* window light, gray-blue tint */
 
   --font-sans: 'Gowun Dodum', 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
     'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
@@ -37,6 +43,8 @@
   --color-blush: var(--color-blush);
   --color-butter: var(--color-butter);
   --color-mint: var(--color-mint);
+  --color-sand: var(--color-sand);
+  --color-sky: var(--color-sky);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-display: var(--font-display);
@@ -83,7 +91,7 @@ img {
 }
 @media (min-width: 560px) {
   body {
-    background: linear-gradient(160deg, #eef3ea 0%, #f5f1ec 100%);
+    background: linear-gradient(160deg, #f2ede4 0%, #eceff0 100%);
   }
   .app-frame {
     box-shadow: 0 0 0 1px var(--color-line), 0 20px 60px rgba(0, 0, 0, 0.08);
