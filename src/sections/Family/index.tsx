@@ -31,7 +31,7 @@ function FamilyRow({ side, person }: { side: Side; person: Person }) {
   const parents = presentParents(person)
   return (
     <div className="py-6 text-center">
-      <p className="font-sans text-[0.8125rem] tracking-[0.2em] text-accent">{SIDE_LABEL[side]}</p>
+      <p className="font-sans text-[0.8125rem] text-accent">{SIDE_LABEL[side]}</p>
       {parents.length > 0 && (
         <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted">
           {parents.map((parent, i) => (

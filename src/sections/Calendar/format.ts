@@ -8,8 +8,9 @@ type EventInfo = Pick<WeddingConfig['event'], 'startsAt' | 'datePlaceholder'>
  * year comes from `startsAt`; everything else prints as "OO".
  */
 export function calendarTitle(event: EventInfo): string {
-  if (event.datePlaceholder) return `${toKstParts(event.startsAt).year}년 OO월 OO일 OO요일 오후 OO시`
-  return `${formatDateKo(event.startsAt)} ${formatTimeKo(event.startsAt)}`
+  // Date and time on separate lines (Section renders the title with whitespace-pre-line) so the title never wraps mid-phrase.
+  if (event.datePlaceholder) return `${toKstParts(event.startsAt).year}년 OO월 OO일 OO요일\n오후 OO시`
+  return `${formatDateKo(event.startsAt)}\n${formatTimeKo(event.startsAt)}`
 }
 
 /** Caption above the grid: "2027년 5월", or "2027년 OO월" while the date is a placeholder. */

@@ -5,10 +5,10 @@ const startsAt = '2027-05-15T12:00:00+09:00'
 
 describe('calendarTitle', () => {
   it('prints placeholders (year only) while the date is unconfirmed', () => {
-    expect(calendarTitle({ startsAt, datePlaceholder: true })).toBe('2027년 OO월 OO일 OO요일 오후 OO시')
+    expect(calendarTitle({ startsAt, datePlaceholder: true })).toBe('2027년 OO월 OO일 OO요일\n오후 OO시')
   })
   it('prints the KST date and time once confirmed', () => {
-    expect(calendarTitle({ startsAt, datePlaceholder: false })).toBe('2027년 5월 15일 토요일 오후 12시')
+    expect(calendarTitle({ startsAt, datePlaceholder: false })).toBe('2027년 5월 15일 토요일\n오후 12시')
   })
 })
 
