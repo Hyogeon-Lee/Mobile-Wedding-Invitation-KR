@@ -22,7 +22,7 @@ const ADDED = '소중한 마음 감사합니다'
 const FIELD =
   'w-full rounded-none border-0 border-b border-line bg-transparent px-0 py-2 text-[1rem] text-ink ' +
   'placeholder:text-ink-muted transition-colors focus:border-accent focus:outline-none aria-invalid:border-accent'
-const LABEL = 'block text-[0.8125rem] text-ink-muted'
+const LABEL = 'block text-[0.8125rem] tracking-[0.02em] text-ink-muted'
 const HINT = 'mt-1.5 text-[0.8125rem] text-ink-muted'
 const errorId = (field: GuestbookField) => `guestbook-${field}-error`
 const SERVER_ERROR_ID = 'guestbook-server-error'

@@ -182,7 +182,7 @@ export default function Gallery() {
           </div>
         )}
 
-        <p className="mt-6 text-center text-[0.9375rem] leading-relaxed text-ink-muted">사진을 누르면 크게 볼 수 있습니다</p>
+        <p className="mt-6 text-center text-[0.9375rem] leading-[1.8] text-ink-muted">사진을 누르면 크게 볼 수 있습니다</p>
       </Reveal>
     </Section>
   )

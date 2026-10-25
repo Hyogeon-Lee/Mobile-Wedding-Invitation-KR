@@ -36,9 +36,9 @@ export default function Greeting() {
           {quote && (
             <Reveal delay={REVEAL_STEP} className="mt-12">
               <blockquote className="rounded-2xl border border-line bg-bg-elevated/75 px-6 py-7 text-center">
-                <p className="text-[0.9375rem] leading-relaxed text-ink-muted">{quote.text}</p>
+                <p className="font-serif text-[1.0625rem] leading-loose text-ink">{quote.text}</p>
                 {quote.source && (
-                  <footer className="mt-3 font-display text-[0.8125rem] font-medium tracking-[0.28em] text-ink-muted uppercase">
+                  <footer className="mt-3 font-serif text-[0.875rem] text-ink-muted">
                     {quote.source}
                   </footer>
                 )}
@@ -48,11 +48,11 @@ export default function Greeting() {
 
           <Reveal delay={quote ? REVEAL_STEP * 2 : REVEAL_STEP} className="mt-12 text-center">
             <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
-              <span className="text-ink-muted">신랑</span> {couple.groom.name}
+              <span className="mr-1 text-[0.875rem] text-ink-muted">신랑</span> {couple.groom.name}
               <span aria-hidden="true" className="mx-3 text-ink-muted">
                 ·
               </span>
-              <span className="text-ink-muted">신부</span> {couple.bride.name}
+              <span className="mr-1 text-[0.875rem] text-ink-muted">신부</span> {couple.bride.name}
             </p>
           </Reveal>
         </div>

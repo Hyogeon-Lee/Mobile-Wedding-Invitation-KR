@@ -138,15 +138,15 @@ export default function Cover() {
 
         <motion.div variants={line} className="mt-8 grid w-full place-items-center">
           <GlowPulse color="butter" size={220}>
-            <h1 className="font-serif text-[1.75rem] leading-snug font-normal tracking-[0.04em] text-ink">
+            <h1 className="font-serif text-[1.75rem] leading-snug text-ink">
               {couple.groom.name} · {couple.bride.name}
             </h1>
           </GlowPulse>
         </motion.div>
 
         <motion.div variants={line} className={`${lightPool} mt-3`}>
-          <p className="text-[0.95rem] leading-relaxed tracking-[0.02em] text-ink-muted">{coverDateLine(event)}</p>
-          <p className="mt-1 text-[0.95rem] leading-relaxed tracking-[0.02em] text-ink-muted">{coverVenueLine(event)}</p>
+          <p className="text-[0.9375rem] leading-relaxed tracking-[0.02em] text-ink-muted tabular-nums">{coverDateLine(event)}</p>
+          <p className="mt-1 text-[0.9375rem] leading-relaxed tracking-[0.02em] text-ink-muted">{coverVenueLine(event)}</p>
         </motion.div>
       </motion.div>
 
@@ -164,7 +164,7 @@ export default function Cover() {
           className="flex flex-col items-center gap-1"
           animate={reduce || !cueInView ? cueRest : cueBob}
         >
-          <span className="font-display text-[0.8125rem] font-medium tracking-[0.28em] uppercase">Scroll</span>
+          <span className="font-display text-[0.875rem] tracking-[0.28em] uppercase">Scroll</span>
           <ChevronDown size={18} strokeWidth={1.5} aria-hidden="true" />
         </motion.span>
       </motion.button>

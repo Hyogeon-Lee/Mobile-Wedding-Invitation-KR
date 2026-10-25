@@ -124,14 +124,14 @@ export default function EntryCard({ entry, prompting, onPrompt, onDeleted }: Ent
       className="py-5 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <div className="flex items-baseline justify-between gap-3">
-        <p className="min-w-0 truncate text-[0.9375rem] font-medium text-ink">{entry.name}</p>
+        <p className="min-w-0 truncate font-serif text-[1rem] text-ink">{entry.name}</p>
         {date && (
           <time dateTime={entry.ts} className="shrink-0 text-[0.8125rem] text-ink-muted tabular-nums">
             {date}
           </time>
         )}
       </div>
-      <p className="mt-2 text-[0.9375rem] leading-relaxed whitespace-pre-line text-ink">{entry.message}</p>
+      <p className="mt-2 text-[0.9375rem] leading-[1.8] whitespace-pre-line text-ink">{entry.message}</p>
       <div className="mt-1 flex justify-end">
         <button
           ref={deleteRef}

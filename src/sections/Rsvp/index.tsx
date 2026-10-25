@@ -28,7 +28,7 @@ import {
 
 const REVEAL_STEP = 0.12
 const FOCUS_RING = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
-const LABEL = 'mb-2 block text-[0.8125rem] font-medium tracking-wide text-ink-muted'
+const LABEL = 'mb-2 block text-[0.8125rem] tracking-[0.02em] text-ink-muted'
 const FIELD =
   'w-full rounded-2xl border bg-bg-elevated px-4 text-[1rem] text-ink placeholder:text-ink-muted ' +
   `transition-colors disabled:opacity-50 ${FOCUS_RING}`
@@ -132,7 +132,7 @@ export default function Rsvp() {
   return (
     <Section id="rsvp" eyebrow="RSVP" title="참석 의사 전달">
       <Reveal className="text-center">
-        <p className="text-[0.9375rem] leading-relaxed text-ink-muted">
+        <p className="text-[0.9375rem] leading-[1.8] text-ink-muted">
           귀한 발걸음을 미리 알려 주시면
           <br />
           정성껏 준비하는 데 큰 도움이 됩니다.
@@ -150,7 +150,7 @@ export default function Rsvp() {
                 <Check size={22} aria-hidden="true" />
               </span>
               <p className="mt-5 font-serif text-[1.125rem] leading-snug text-ink">전달되었습니다. 감사합니다.</p>
-              {sent && <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-muted">{summaryLine(sent)}</p>}
+              {sent && <p className="mt-2 text-[0.9375rem] leading-[1.8] text-ink-muted">{summaryLine(sent)}</p>}
             </div>
             <Button variant="outline" size="sm" className="mt-7" onClick={reset}>
               다시 작성
@@ -215,7 +215,7 @@ export default function Rsvp() {
                 <div>
                   <label htmlFor={countId} className={LABEL}>
                     참석 인원
-                    <span className="ml-1 font-normal">(본인 포함)</span>
+                    <span className="ml-1">(본인 포함)</span>
                   </label>
                   <div className="flex items-center gap-3">
                     <div
@@ -276,7 +276,7 @@ export default function Rsvp() {
             <div>
               <label htmlFor={noteId} className={LABEL}>
                 전하실 말씀
-                <span className="ml-1 font-normal">(선택)</span>
+                <span className="ml-1">(선택)</span>
               </label>
               <textarea
                 ref={noteRef}
@@ -292,8 +292,8 @@ export default function Rsvp() {
                 aria-describedby={errors.note ? `${noteErrorId} ${noteHintId}` : noteHintId}
                 className={fieldClass(Boolean(errors.note), 'resize-none py-3 leading-relaxed')}
               />
-              <p id={noteHintId} className="mt-1.5 text-right text-[0.75rem] text-ink-muted tabular-nums">
-                {form.note.length} / {NOTE_MAX}
+              <p id={noteHintId} className="mt-1.5 text-right text-[0.8125rem] text-ink-muted tabular-nums">
+                {form.note.length}/{NOTE_MAX}
               </p>
               <FieldError id={noteErrorId} message={errors.note} />
             </div>

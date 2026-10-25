@@ -46,10 +46,10 @@ export default function Footer() {
       <LightBloom palette={['butter']} intensity="soft" className="opacity-70" />
       <Reveal className="relative z-10">
         <BotanicalDivider variant="sprig" className="mb-2" />
-        <p className="font-serif text-[1.0625rem] leading-relaxed tracking-[0.02em] text-ink">
+        <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
           {groom.name} · {bride.name}
         </p>
-        <p className="mt-2 font-display text-[0.8125rem] tracking-[0.16em] text-ink-muted italic">{credit}</p>
+        <p className="mt-2 font-serif text-[0.875rem] text-ink-muted">{credit}</p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
           <Button

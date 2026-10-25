@@ -25,10 +25,10 @@ export default function Section({ id, eyebrow, title, badge, backdrop, children,
       {(eyebrow || title || badge) && (
         <header className="relative z-10 mb-10 text-center">
           {eyebrow && (
-            <p className="font-display text-[0.8125rem] font-medium tracking-[0.28em] text-accent uppercase mb-3">{eyebrow}</p>
+            <p className="font-display text-[0.875rem] tracking-[0.28em] text-accent uppercase mb-3">{eyebrow}</p>
           )}
           {title && (
-            <h2 id={`${id}-title`} className="font-serif text-2xl font-normal leading-snug whitespace-pre-line text-ink">
+            <h2 id={`${id}-title`} className="font-serif text-2xl leading-snug whitespace-pre-line text-ink">
               {title}
             </h2>
           )}

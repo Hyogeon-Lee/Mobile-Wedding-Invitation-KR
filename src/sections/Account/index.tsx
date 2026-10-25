@@ -92,7 +92,7 @@ export default function Account() {
       className="relative isolate overflow-hidden"
       badge={
         isSampleData ? (
-          <span className="rounded-full border border-line bg-bg-elevated px-3 py-0.5 text-[0.75rem] tracking-wide text-accent">
+          <span className="rounded-full border border-line bg-bg-elevated px-3 py-0.5 text-[0.75rem] tracking-[0.02em] text-accent">
             예시 계좌
           </span>
         ) : undefined
@@ -101,7 +101,7 @@ export default function Account() {
       <AccountBackdrop />
 
       <Reveal>
-        <p className="text-center text-[0.9375rem] leading-[1.85] text-ink-muted">
+        <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">
           {INTRO[0]}
           <br />
           {INTRO[1]}

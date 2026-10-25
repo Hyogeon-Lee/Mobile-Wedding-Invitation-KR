@@ -5,10 +5,10 @@
  * only a fallback when the stylesheet is absent.
  */
 const FALLBACK: Record<string, string> = {
-  '--color-accent': '#587460',
-  '--color-sage': '#9bb09a',
-  '--fx-petal-mint': '#b4d1ac',
-  '--fx-petal-blush': '#efc39a',
+  '--color-accent': '#2f6b4f',
+  '--color-sage': '#9fcfa9',
+  '--fx-petal-mint': '#a9d9b6',
+  '--color-orange': '#d9671f',
 }
 
 function token(name: string): string {
@@ -35,7 +35,7 @@ export async function burstConfetti(origin: BurstOrigin): Promise<void> {
     scalar: 0.9,
     ticks: 180,
     origin,
-    colors: [token('--color-accent'), token('--color-sage'), token('--fx-petal-mint'), token('--fx-petal-blush')],
+    colors: [token('--color-accent'), token('--color-sage'), token('--fx-petal-mint'), token('--color-orange')],
     disableForReducedMotion: true,
     zIndex: 60,
   })

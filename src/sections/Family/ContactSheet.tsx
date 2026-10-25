@@ -102,7 +102,7 @@ export default function ContactSheet({ open, onClose, groups, sample }: ContactS
                 연락하기
               </h3>
               {sample && (
-                <span className="rounded-full border border-line bg-bg-elevated px-2 py-0.5 font-sans text-[0.75rem] text-accent">
+                <span className="rounded-full border border-line bg-bg-elevated px-2 py-0.5 text-[0.75rem] tracking-[0.02em] text-accent">
                   예시 번호
                 </span>
               )}
@@ -119,7 +119,7 @@ export default function ContactSheet({ open, onClose, groups, sample }: ContactS
 
           {groups.map((group) => (
             <section key={group.side} aria-label={`${group.label} 측 연락처`} className="mt-4">
-              <h4 className="font-sans text-[0.75rem] tracking-[0.15em] text-accent">{group.label} 측</h4>
+              <h4 className="text-[0.8125rem] tracking-[0.02em] text-accent">{group.label} 측</h4>
               <ul className="mt-1 divide-y divide-line">
                 {group.entries.map((entry) => (
                   <li key={entry.key} className="flex items-center justify-between gap-3 py-3">

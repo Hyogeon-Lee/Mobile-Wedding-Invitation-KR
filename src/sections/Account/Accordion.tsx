@@ -28,9 +28,9 @@ export default function Accordion({ id, title, children, defaultOpen = false }: 
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between gap-3 rounded-2xl px-5 py-4 text-left text-[0.9375rem] text-ink transition-colors hover:bg-mint/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="flex w-full items-center justify-between gap-3 rounded-2xl px-5 py-4 text-left text-ink transition-colors hover:bg-mint/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
-          <span>{title}</span>
+          <span className="font-serif text-[1.0625rem]">{title}</span>
           <ChevronDown
             size={18}
             aria-hidden="true"

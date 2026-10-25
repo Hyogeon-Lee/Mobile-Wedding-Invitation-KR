@@ -74,7 +74,7 @@ export default function Share() {
   return (
     <Section id="share" eyebrow="SHARE" title="청첩장 전하기">
       <Reveal>
-        <p className="text-center text-[0.9375rem] leading-relaxed text-ink-muted">{INTRO}</p>
+        <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">{INTRO}</p>
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-10">

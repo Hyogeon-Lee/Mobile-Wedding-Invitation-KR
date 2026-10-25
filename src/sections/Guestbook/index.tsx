@@ -76,7 +76,7 @@ export default function Guestbook() {
     <Section id="guestbook" eyebrow="GUESTBOOK" title="축하의 한마디">
       {isPreviewBackend && (
         <p role="note" className="-mt-6 mb-8 text-center">
-          <span className="inline-block rounded-full border border-line bg-bg-elevated px-3 py-1 text-[0.8125rem] font-medium text-accent">
+          <span className="inline-block rounded-full border border-line bg-bg-elevated px-3 py-0.5 text-[0.75rem] tracking-[0.02em] text-accent">
             {PREVIEW_NOTICE}
           </span>
         </p>
@@ -109,7 +109,7 @@ export default function Guestbook() {
               </ul>
               {error ? (
                 <div className={`border-y border-line py-10 text-center ${entries.length > 0 ? 'mt-6' : ''}`}>
-                  <p role="alert" className="text-[0.9375rem] leading-relaxed text-ink-muted">
+                  <p role="alert" className="text-[0.9375rem] leading-[1.8] text-ink-muted">
                     {error}
                     <br />
                     잠시 후 다시 시도해 주세요.
@@ -120,7 +120,7 @@ export default function Guestbook() {
                 </div>
               ) : (
                 entries.length === 0 && (
-                  <p className="border-y border-line py-10 text-center text-[0.9375rem] leading-relaxed text-ink-muted">
+                  <p className="border-y border-line py-10 text-center text-[0.9375rem] leading-[1.8] text-ink-muted">
                     아직 남겨진 메시지가 없습니다.
                     <br />첫 번째 축하를 전해 주세요.
                   </p>

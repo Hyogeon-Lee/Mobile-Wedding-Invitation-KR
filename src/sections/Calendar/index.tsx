@@ -54,7 +54,7 @@ export default function Calendar() {
                     key={w}
                     scope="col"
                     abbr={`${w}요일`}
-                    className={`pb-3 text-center text-[0.8125rem] font-normal tracking-wide ${i === 0 ? 'text-accent' : 'text-ink-muted'}`}
+                    className={`pb-3 text-center text-[0.8125rem] font-normal tracking-[0.02em] ${i === 0 ? 'text-accent' : 'text-ink-muted'}`}
                   >
                     {w}
                   </th>
@@ -67,7 +67,7 @@ export default function Calendar() {
                   {week.map((day, di) => {
                     const isWedding = isWeddingCell(day, target.day, datePlaceholder)
                     return (
-                      <td key={di} className="pt-2 text-center text-[0.9375rem] leading-none text-ink">
+                      <td key={di} className="pt-2 text-center font-display text-[1.0625rem] leading-none tabular-nums text-ink">
                         {day !== null && !isWedding && (
                           <span
                             className={`inline-flex size-9 items-center justify-center rounded-full ${di === 0 ? 'text-accent' : ''}`}
@@ -98,12 +98,12 @@ export default function Calendar() {
 
       <Reveal delay={REVEAL_STEP} className="mt-14 text-center">
         <GlowPulse color="butter" size={DDAY_GLOW_PX}>
-          <p className="font-display text-[2.5rem] leading-none tracking-[0.06em] text-accent">
+          <p className="font-display text-[2.5rem] leading-none tracking-[0.06em] tabular-nums lining-nums text-orange">
             {formatDday(days, datePlaceholder)}
           </p>
         </GlowPulse>
         {/* Positioned so it paints above the D-day glow, which is itself a positioned layer. */}
-        <p className="relative mt-4 text-[0.9375rem] leading-relaxed text-ink">
+        <p className="relative mt-4 text-[0.9375rem] leading-[1.8] text-ink">
           {ddaySentence({ groom: couple.groom.name, bride: couple.bride.name, days, placeholder: datePlaceholder })}
         </p>
       </Reveal>
