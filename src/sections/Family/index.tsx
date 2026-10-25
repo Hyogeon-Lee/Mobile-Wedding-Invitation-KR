@@ -5,12 +5,11 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import type { Parent, Person } from '@/config/types'
 import { wedding } from '@/config/wedding'
-import { BotanicalDivider } from '@/effects'
+import { REVEAL_STEP } from '@/lib/motion'
 import { contacts, isSampleData } from '@/lib/private'
 import ContactSheet from './ContactSheet'
 import { buildContactGroups, DECEASED_MARK, presentParents, SIDE_LABEL, SIDES, THIN_SPACE, type Side } from './family'
 
-const REVEAL_STEP = 0.12
 const groups = buildContactGroups(wedding.couple, contacts)
 
 function ParentName({ parent }: { parent: Parent }) {
@@ -61,16 +60,9 @@ export default function Family() {
   return (
     <Section id="family" eyebrow="FAMILY" title="양가 혼주">
       <Reveal>
-        <div className="overflow-hidden rounded-2xl border border-line bg-bg-elevated/70 px-6 py-2">
-          {SIDES.map((side, i) => (
-            <Fragment key={side}>
-              {i > 0 && (
-                <div className="-my-4">
-                  <BotanicalDivider variant="leaf" />
-                </div>
-              )}
-              <FamilyRow side={side} person={wedding.couple[side]} />
-            </Fragment>
+        <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-bg-elevated px-6 py-2">
+          {SIDES.map((side) => (
+            <FamilyRow key={side} side={side} person={wedding.couple[side]} />
           ))}
         </div>
       </Reveal>

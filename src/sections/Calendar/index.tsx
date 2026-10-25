@@ -4,15 +4,13 @@ import Section from '@/components/Section'
 import { GlowPulse, LightBloom } from '@/effects'
 import { wedding } from '@/config/wedding'
 import { WEEKDAYS_KO, daysUntil, formatDday, toKstParts } from '@/lib/date'
+import { REVEAL_STEP } from '@/lib/motion'
 import { calendarTitle, ddaySentence, monthLabel } from './format'
 import { calendarWeeks, isWeddingCell } from './grid'
 
 const REFRESH_MS = 60_000
-const REVEAL_STEP = 0.12
 /** Mint glow behind the wedding-day circle; small enough to stay clear of neighbouring day numbers. */
 const DAY_GLOW_PX = 56
-/** Butter glow behind the D-day number; narrower than the narrowest content column (272px). */
-const DDAY_GLOW_PX = 190
 const BLOOM_CLASS = 'opacity-60'
 
 export default function Calendar() {
@@ -40,7 +38,7 @@ export default function Calendar() {
   return (
     <Section id="calendar" eyebrow="SAVE THE DATE" title={calendarTitle(event)}>
       <Reveal className="mx-auto max-w-[340px]">
-        <div className="relative isolate overflow-hidden rounded-2xl border border-line bg-white/45 px-2.5 pt-6 pb-5">
+        <div className="relative isolate overflow-hidden rounded-2xl border border-line bg-bg-elevated px-2.5 pt-6 pb-5">
           {/* Dimmed so the peak mint tint keeps text-accent / text-ink-muted at or above 4.5:1 on this card. */}
           <LightBloom palette={['mint', 'butter', 'mint']} className={BLOOM_CLASS} />
           <table className="relative z-10 w-full table-fixed border-collapse">
@@ -70,14 +68,14 @@ export default function Calendar() {
                       <td key={di} className="pt-2 text-center font-display text-[1.0625rem] leading-none tabular-nums text-ink">
                         {day !== null && !isWedding && (
                           <span
-                            className={`inline-flex size-9 items-center justify-center rounded-full ${di === 0 ? 'text-accent' : ''}`}
+                            className={`inline-flex aspect-square w-9 max-w-full items-center justify-center rounded-full ${di === 0 ? 'text-accent' : ''}`}
                           >
                             {day}
                           </span>
                         )}
                         {isWedding && (
                           <GlowPulse color="mint" size={DAY_GLOW_PX}>
-                            <span className="inline-flex size-9 items-center justify-center rounded-full bg-accent font-medium text-white">
+                            <span className="inline-flex aspect-square w-9 max-w-full items-center justify-center rounded-full bg-accent font-medium text-white">
                               {day}
                               <span className="sr-only"> 결혼식</span>
                             </span>
@@ -97,13 +95,10 @@ export default function Calendar() {
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-14 text-center">
-        <GlowPulse color="butter" size={DDAY_GLOW_PX}>
-          <p className="font-display text-[2.5rem] leading-none tracking-[0.06em] tabular-nums lining-nums text-orange">
-            {formatDday(days, datePlaceholder)}
-          </p>
-        </GlowPulse>
-        {/* Positioned so it paints above the D-day glow, which is itself a positioned layer. */}
-        <p className="relative mt-4 text-[0.9375rem] leading-[1.8] text-ink">
+        <p className="font-display text-[2.5rem] leading-none tracking-[-0.01em] tabular-nums lining-nums text-orange">
+          {formatDday(days, datePlaceholder)}
+        </p>
+        <p className="mt-4 text-[0.9375rem] leading-[1.8] text-ink">
           {ddaySentence({ groom: couple.groom.name, bride: couple.bride.name, days, placeholder: datePlaceholder })}
         </p>
       </Reveal>

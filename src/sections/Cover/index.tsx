@@ -4,23 +4,22 @@ import { ChevronDown } from 'lucide-react'
 import { wedding } from '@/config/wedding'
 import { CurtainLight, GlowPulse, LightLeak, PetalDrift } from '@/effects'
 import { asset } from '@/lib/env'
+import { EASE_OUT } from '@/lib/motion'
 import { burstConfetti } from './confetti'
 import { coverDateLine, coverVenueLine } from './format'
 
-const EASE = [0.22, 1, 0.36, 1] as const
-
-// Children animate in DOM order, each 0.1 s after the previous one.
+// Children animate in DOM order, each 0.07 s after the previous one.
 const stagger: Variants = {
   hidden: {},
-  shown: { transition: { staggerChildren: 0.1 } },
+  shown: { transition: { staggerChildren: 0.07 } },
 }
 const line: Variants = {
   hidden: { opacity: 0, y: 14 },
-  shown: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+  shown: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_OUT } },
 }
 const photo: Variants = {
   hidden: { opacity: 0, scale: 0.97 },
-  shown: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: EASE } },
+  shown: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: EASE_OUT } },
 }
 
 // A `transform` string (not `y`) lets Motion hand the loop to WAAPI, so it runs on the compositor.
@@ -28,7 +27,7 @@ const cueBob: TargetAndTransition = {
   transform: ['translateY(0px)', 'translateY(6px)', 'translateY(0px)'],
   transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
 }
-const cueRest: TargetAndTransition = { transform: 'translateY(0px)', transition: { duration: 0.4, ease: EASE } }
+const cueRest: TargetAndTransition = { transform: 'translateY(0px)', transition: { duration: 0.4, ease: EASE_OUT } }
 
 // Photo is 3:4 and at most 58svh tall. On short screens it shrinks to the height left after
 // ~22rem of text, frame ring, scroll cue and padding (rem, so large-text mode is covered too),
@@ -125,7 +124,7 @@ export default function Cover() {
               type="button"
               onClick={onPhotoClick}
               aria-describedby={photoHintId}
-              className={`${photoInner} focus-visible:outline-2 focus-visible:outline-offset-[8px] focus-visible:outline-accent`}
+              className={`${photoInner} pressable [--press-scale:0.985] focus-visible:outline-2 focus-visible:outline-offset-[8px] focus-visible:outline-accent`}
             >
               {photoImg}
               <span id={photoHintId} hidden>
@@ -154,10 +153,10 @@ export default function Cover() {
         type="button"
         onClick={scrollToNext}
         aria-label="Scroll, 다음 내용으로 이동"
-        className={`${lightPool} z-10 mt-10 flex flex-col items-center gap-1 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent`}
+        className={`${lightPool} pressable z-10 mt-10 flex min-h-11 flex-col items-center gap-1 px-3 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent`}
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.9, ease: EASE }}
+        transition={{ duration: 0.6, delay: 0.9, ease: EASE_OUT }}
       >
         <motion.span
           ref={cueRef}

@@ -1,5 +1,14 @@
 @import 'tailwindcss';
 
+/* Hover only for fine pointers, so a tap never leaves a stuck hover state (Android/stylus report hover:hover). */
+@custom-variant hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
 /* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
 :root {
   /*
@@ -9,10 +18,10 @@
    */
   --color-bg: #f5f8f3;
   --color-bg-elevated: #ffffff;
-  --color-ink: #36423b; /* deep green-charcoal, 10:1 on bg */
-  --color-ink-muted: #5f6f66; /* 4.9:1 on bg */
+  --color-ink: #36423b; /* deep green-charcoal, 9.8:1 on bg */
+  --color-ink-muted: #5f6f66; /* 4.96:1 on bg, 5.31:1 on white */
   --color-line: #dbe5da;
-  --color-accent: #2f6b4f; /* fresh deep green, text-safe: 6.4:1 on bg, white on it 6.9:1 */
+  --color-accent: #2f6b4f; /* fresh deep green, 5.87:1 on bg, 6.29:1 on white; white on it 6.29:1 */
   --color-accent-soft: #dcecdb; /* pale fresh green tint */
   --color-green: #3f7a5a; /* mid greenery green for icons and labels, 4.7:1 on bg */
   --color-sage: #9fcfa9; /* pastel leaf green (decorative) */
@@ -32,6 +41,10 @@
   --gutter: 24px;
   --radius: 16px;
   --shadow-soft: 0 16px 40px -24px rgb(47 107 79 / 0.3);
+  /* Press feedback: respond on pointer-down, release a little slower */
+  --press-duration: 120ms;
+  --release-duration: 220ms;
+  color-scheme: only light;
 }
 
 @theme inline {
@@ -55,6 +68,13 @@
   --font-display: var(--font-display);
 }
 
+/* Plain @theme (not inline) so the vars land on :root; this also turns Tailwind's `ease-out` utility into the strong curve. */
+@theme {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 html {
   background: var(--color-bg);
   color: var(--color-ink);
@@ -64,6 +84,7 @@ html {
   line-height: 1.8;
   letter-spacing: -0.005em;
   -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
@@ -114,12 +135,125 @@ img {
   }
 }
 
+/* Platform baseline for controls. Layered (base) so utilities like touch-none still win. */
+@layer base {
+  a,
+  button,
+  label,
+  summary,
+  input,
+  textarea,
+  select,
+  [role='button'],
+  [role='radio'] {
+    touch-action: manipulation;
+  }
+  button,
+  [role='radio'] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/*
+ * Pressable recipe. Uses the individual `scale` property, so it composes with rotate-* and never fights a Motion transform.
+ * Per-element strength: add `[--press-scale:0.98]` (full-width) / `[--press-scale:0.92]` (small square). opacity is deliberately
+ * NOT in the list, so it never double-animates a Motion opacity.
+ */
+@utility pressable {
+  transition-property: scale, color, background-color, border-color, box-shadow;
+  transition-duration: var(--release-duration);
+  transition-timing-function: var(--ease-out);
+  &:active:not(:disabled, [aria-disabled='true']) {
+    scale: var(--press-scale, 0.97);
+    transition-duration: var(--press-duration);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:active:not(:disabled, [aria-disabled='true']) {
+      scale: none;
+    }
+  }
+}
+
+/* Floating functional material (sheet, toast). Never on content cards. Extra drop shadow via `[--material-shadow:...]`, denser surface via `[--material-bg:...]`. */
+@utility material {
+  background-color: var(--material-bg, rgb(255 255 255 / 0.8));
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 0 0 0.5px rgb(54 66 59 / 0.08),
+    var(--material-shadow, 0 0 #0000);
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    background-color: rgb(255 255 255 / 0.96);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    background-color: var(--color-bg-elevated);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Increased-contrast variant (hairlines reach 3.4:1 on white; muted text 6.8:1 on bg) */
+@media (prefers-contrast: more) {
+  :root {
+    --color-line: #7f8f85;
+    --color-ink-muted: #4c5a52;
+  }
+}
+
+/* PhotoSwipe in light mode (no near-black fill). Its stylesheet loads lazily AFTER this file, so the doubled class wins. */
+.pswp.pswp {
+  --pswp-bg: var(--color-bg);
+  --pswp-placeholder-bg: var(--color-mint);
+  --pswp-icon-color: var(--color-ink);
+  --pswp-icon-color-secondary: var(--color-bg-elevated);
+  --pswp-icon-stroke-color: var(--color-bg-elevated);
+  --pswp-error-text-color: var(--color-ink);
+}
+.pswp .pswp__top-bar {
+  box-sizing: border-box;
+  height: calc(60px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  background-color: rgb(255 255 255 / 0.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+  box-shadow: inset 0 -0.5px 0 rgb(54 66 59 / 0.12);
+}
+.pswp .pswp__counter {
+  color: var(--color-ink);
+  opacity: 1;
+  text-shadow: none;
+  font-variant-numeric: tabular-nums;
+}
+.pswp .pswp__button {
+  transition: scale var(--release-duration) var(--ease-out);
+}
+.pswp .pswp__button:active {
+  scale: 0.92;
+  transition-duration: var(--press-duration);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .pswp .pswp__top-bar {
+    background-color: var(--color-bg-elevated);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/*
+ * Transitions are not zeroed: colour/opacity cross-fades are the Apple reduced-motion behaviour, and transform motion is
+ * neutralised by pressable, MotionConfig and motion-reduce:*. Infinite CSS animations (animate-spin) stop instead of jittering.
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
+  }
+  .pswp .pswp__button:active {
+    scale: none;
   }
 }

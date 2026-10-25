@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { AnimatePresence } from 'motion/react'
 import Button from '@/components/Button'
+import PreviewNotice from '@/components/PreviewNotice'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
+import { REVEAL_STEP } from '@/lib/motion'
 import { isPreviewBackend } from '@/lib/sheets'
 import EntryCard from './EntryCard'
 import GuestbookForm from './GuestbookForm'
 import { entryDomId, PAGE_SIZE, paginate } from './guestbook'
 import { useGuestbook } from './useGuestbook'
 
-const REVEAL_STEP = 0.12
 const PREVIEW_NOTICE = '미리보기 모드 · 메시지가 이 기기에만 저장됩니다'
 const SKELETON_ROWS = 3
 
@@ -74,13 +76,7 @@ export default function Guestbook() {
 
   return (
     <Section id="guestbook" eyebrow="GUESTBOOK" title="축하의 한마디">
-      {isPreviewBackend && (
-        <p role="note" className="-mt-6 mb-8 text-center">
-          <span className="inline-block rounded-full border border-line bg-bg-elevated px-3 py-0.5 text-[0.75rem] tracking-[0.02em] text-accent">
-            {PREVIEW_NOTICE}
-          </span>
-        </p>
-      )}
+      {isPreviewBackend && <PreviewNotice className="-mt-6 mb-8">{PREVIEW_NOTICE}</PreviewNotice>}
 
       <Reveal>
         <GuestbookForm onAdded={insert} />
@@ -97,15 +93,17 @@ export default function Guestbook() {
                 <p className="mb-2 text-right text-[0.8125rem] text-ink-muted tabular-nums">{entries.length}개의 메시지</p>
               )}
               <ul className={entries.length > 0 ? 'divide-y divide-line border-y border-line' : undefined}>
-                {visible.map((entry) => (
-                  <EntryCard
-                    key={entry.id}
-                    entry={entry}
-                    prompting={promptId === entry.id}
-                    onPrompt={setPromptId}
-                    onDeleted={handleDeleted}
-                  />
-                ))}
+                <AnimatePresence initial={false}>
+                  {visible.map((entry) => (
+                    <EntryCard
+                      key={entry.id}
+                      entry={entry}
+                      prompting={promptId === entry.id}
+                      onPrompt={setPromptId}
+                      onDeleted={handleDeleted}
+                    />
+                  ))}
+                </AnimatePresence>
               </ul>
               {error ? (
                 <div className={`border-y border-line py-10 text-center ${entries.length > 0 ? 'mt-6' : ''}`}>

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react'
 import type { ReactNode } from 'react'
+import { EASE_OUT } from '@/lib/motion'
 
 interface RevealProps {
   children: ReactNode
@@ -28,10 +29,10 @@ export default function Reveal({ children, delay = 0, y = 16, className, as = 'd
   return (
     <Tag
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount, margin: amount === 'some' ? '0px 0px -10% 0px' : undefined }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
+      transition={{ duration: 0.6, ease: EASE_OUT, delay }}
     >
       {children}
     </Tag>

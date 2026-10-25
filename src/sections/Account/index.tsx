@@ -5,12 +5,12 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import { LightBloom } from '@/effects'
+import { REVEAL_STEP } from '@/lib/motion'
 import { openAppScheme } from '@/lib/openApp'
 import { accounts, isSampleData, type Account } from '@/lib/private'
 import Accordion from './Accordion'
 import { accountGroups, copyValue, payLinks } from './accounts'
 
-const REVEAL_STEP = 0.12
 const INTRO = ['참석이 어려우신 분들을 위해 계좌번호를 안내드립니다.', '전해 주시는 마음은 소중하게 간직하겠습니다.']
 const groups = accountGroups(accounts)
 
@@ -51,7 +51,7 @@ function AccountRow({ account }: { account: Account }) {
         <CopyButton text={copyValue(account)} successMessage="계좌번호가 복사되었습니다" className="shrink-0" />
       </div>
       {links.length > 0 && (
-        <div className="-ml-2 mt-2 flex flex-wrap gap-1">
+        <div className="-ml-3 mt-1 flex flex-wrap gap-x-2">
           {links.map((link) => (
             <a
               key={link.key}
@@ -69,7 +69,7 @@ function AccountRow({ account }: { account: Account }) {
                       })
                     }
               }
-              className="inline-flex h-8 items-center gap-1 rounded-full px-2 text-[0.8125rem] text-ink-muted transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className={`pressable inline-flex h-11 items-center gap-1 rounded-full px-3 text-[0.8125rem] text-ink-muted select-none hover:text-accent active:bg-mint/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${link.external ? '' : '[-webkit-touch-callout:none]'}`}
             >
               {link.label}
               <ExternalLink size={12} aria-hidden="true" />

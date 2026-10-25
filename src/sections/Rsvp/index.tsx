@@ -1,9 +1,14 @@
-import { AlertCircle, Check, Info, Loader2, Minus, Plus, Send } from 'lucide-react'
+import { AlertCircle, Check, Loader2, Minus, Plus, Send } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useCallback, useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import Button from '@/components/Button'
+import { FIELD, FIELD_INVALID_RING, FIELD_SURFACE } from '@/components/field'
+import PreviewNotice from '@/components/PreviewNotice'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { wedding } from '@/config/wedding'
+import { haptic } from '@/lib/haptic'
+import { EASE_OUT, REVEAL_STEP, SPRING, SPRING_FAST } from '@/lib/motion'
 import { addRsvp, isPreviewBackend, type RsvpInput } from '@/lib/sheets'
 import Segmented from './Segmented'
 import {
@@ -26,21 +31,13 @@ import {
   type RsvpForm,
 } from './form'
 
-const REVEAL_STEP = 0.12
 const FOCUS_RING = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 const LABEL = 'mb-2 block text-[0.8125rem] tracking-[0.02em] text-ink-muted'
-const FIELD =
-  'w-full rounded-2xl border bg-bg-elevated px-4 text-[1rem] text-ink placeholder:text-ink-muted ' +
-  `transition-colors disabled:opacity-50 ${FOCUS_RING}`
 const STEP_BUTTON =
-  `flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-ink transition-colors ${FOCUS_RING} ` +
-  'hover:bg-accent-soft/60 active:bg-accent-soft disabled:opacity-40 disabled:hover:bg-transparent'
+  `pressable flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-ink ${FOCUS_RING} ` +
+  'hover:bg-accent-soft/60 active:bg-accent-soft disabled:opacity-40 disabled:hover:bg-transparent [--press-scale:0.92]'
 
 type Status = 'idle' | 'submitting' | 'success'
-
-function fieldClass(invalid: boolean, extra = ''): string {
-  return `${FIELD} ${invalid ? 'border-accent' : 'border-line'} ${extra}`
-}
 
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null
@@ -60,6 +57,7 @@ export default function Rsvp() {
   const [sent, setSent] = useState<RsvpInput | null>(null)
   // Incremented by "다시 작성" so the effect below can move focus into the fresh form.
   const [round, setRound] = useState(0)
+  const reduce = useReducedMotion()
 
   const nameRef = useRef<HTMLInputElement>(null)
   const countRef = useRef<HTMLInputElement>(null)
@@ -104,6 +102,7 @@ export default function Rsvp() {
     if (result.ok) {
       setSent(input)
       setStatus('success')
+      haptic()
     } else {
       setServerError(result.error || '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.')
       setStatus('idle')
@@ -144,29 +143,38 @@ export default function Rsvp() {
 
       <Reveal delay={REVEAL_STEP} className="mt-10">
         {status === 'success' ? (
-          <div className="rounded-2xl border border-line bg-bg-elevated px-6 py-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, ease: EASE_OUT }}
+            className="rounded-2xl border border-line bg-bg-elevated px-6 py-10 text-center"
+          >
             <div ref={successRef} tabIndex={-1} role="status" className="outline-none">
-              <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent">
+              <motion.span
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ ...SPRING, delay: 0.08 }}
+                className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent"
+              >
                 <Check size={22} aria-hidden="true" />
-              </span>
+              </motion.span>
               <p className="mt-5 font-serif text-[1.125rem] leading-snug text-ink">전달되었습니다. 감사합니다.</p>
               {sent && <p className="mt-2 text-[0.9375rem] leading-[1.8] text-ink-muted">{summaryLine(sent)}</p>}
             </div>
             <Button variant="outline" size="sm" className="mt-7" onClick={reset}>
               다시 작성
             </Button>
-          </div>
+          </motion.div>
         ) : (
-          <form noValidate onSubmit={onSubmit} className="space-y-7">
-            {isPreviewBackend && (
-              <p
-                role="note"
-                className="flex items-start gap-2 rounded-2xl border border-line bg-bg-elevated px-4 py-3 text-[0.8125rem] leading-relaxed text-ink-muted"
-              >
-                <Info size={14} aria-hidden="true" className="mt-[4px] shrink-0 text-accent" />
-                <span>미리보기 모드 · 지금은 전송 내용이 저장되지 않습니다</span>
-              </p>
-            )}
+          <motion.form
+            noValidate
+            onSubmit={onSubmit}
+            initial={round > 0 ? { opacity: 0 } : false}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25, ease: EASE_OUT }}
+            className="space-y-7"
+          >
+            {isPreviewBackend && <PreviewNotice>미리보기 모드 · 지금은 전송 내용이 저장되지 않습니다</PreviewNotice>}
 
             <Segmented
               label="구분"
@@ -197,7 +205,8 @@ export default function Rsvp() {
                 aria-required="true"
                 aria-invalid={errors.name ? true : undefined}
                 aria-describedby={errors.name ? nameErrorId : undefined}
-                className={fieldClass(Boolean(errors.name), 'h-12')}
+                enterKeyHint="done"
+                className={`${FIELD} h-12`}
               />
               <FieldError id={nameErrorId} message={errors.name} />
             </div>
@@ -210,68 +219,79 @@ export default function Rsvp() {
               disabled={submitting}
             />
 
-            {form.attending && (
-              <>
-                <div>
-                  <label htmlFor={countId} className={LABEL}>
-                    참석 인원
-                    <span className="ml-1">(본인 포함)</span>
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`flex h-12 items-center rounded-full border bg-bg-elevated ${
-                        errors.count ? 'border-accent' : 'border-line'
-                      }`}
-                    >
-                      <button
-                        type="button"
-                        aria-label="인원 줄이기"
-                        onClick={() => update('count', clampCount(count - 1))}
-                        disabled={submitting || count <= COUNT_MIN}
-                        className={STEP_BUTTON}
-                      >
-                        <Minus size={16} aria-hidden="true" />
-                      </button>
-                      <input
-                        ref={countRef}
-                        id={countId}
-                        name="count"
-                        type="number"
-                        inputMode="numeric"
-                        min={COUNT_MIN}
-                        max={COUNT_MAX}
-                        step={1}
-                        value={form.count ?? ''}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => update('count', parseCount(e.target.value))}
-                        disabled={submitting}
-                        aria-invalid={errors.count ? true : undefined}
-                        aria-describedby={errors.count ? countErrorId : undefined}
-                        className={`h-12 w-14 bg-transparent text-center text-[1rem] text-ink tabular-nums ${FOCUS_RING} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
-                      />
-                      <button
-                        type="button"
-                        aria-label="인원 늘리기"
-                        onClick={() => update('count', clampCount(count + 1))}
-                        disabled={submitting || count >= COUNT_MAX}
-                        className={STEP_BUTTON}
-                      >
-                        <Plus size={16} aria-hidden="true" />
-                      </button>
+            <AnimatePresence initial={false}>
+              {form.attending && (
+                <motion.div
+                  key="attending"
+                  className="mb-0"
+                  initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0, overflow: 'hidden' }}
+                  animate={{ height: 'auto', opacity: 1, transitionEnd: { overflow: 'visible' } }}
+                  exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0, overflow: 'hidden' }}
+                  transition={reduce ? { duration: 0.2, ease: EASE_OUT } : SPRING_FAST}
+                >
+                  <div className="space-y-7 pb-7">
+                    <div>
+                      <label htmlFor={countId} className={LABEL}>
+                        참석 인원
+                        <span className="ml-1">(본인 포함)</span>
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`flex h-12 items-center rounded-full ${
+                            errors.count ? `bg-[rgb(47_107_79/0.05)] ${FIELD_INVALID_RING}` : FIELD_SURFACE
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            aria-label="인원 줄이기"
+                            onClick={() => update('count', clampCount(count - 1))}
+                            disabled={submitting || count <= COUNT_MIN}
+                            className={STEP_BUTTON}
+                          >
+                            <Minus size={16} aria-hidden="true" />
+                          </button>
+                          <input
+                            ref={countRef}
+                            id={countId}
+                            name="count"
+                            type="number"
+                            inputMode="numeric"
+                            min={COUNT_MIN}
+                            max={COUNT_MAX}
+                            step={1}
+                            value={form.count ?? ''}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => update('count', parseCount(e.target.value))}
+                            disabled={submitting}
+                            aria-invalid={errors.count ? true : undefined}
+                            aria-describedby={errors.count ? countErrorId : undefined}
+                            className={`h-12 w-14 bg-transparent text-center text-[1rem] text-ink tabular-nums ${FOCUS_RING} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+                          />
+                          <button
+                            type="button"
+                            aria-label="인원 늘리기"
+                            onClick={() => update('count', clampCount(count + 1))}
+                            disabled={submitting || count >= COUNT_MAX}
+                            className={STEP_BUTTON}
+                          >
+                            <Plus size={16} aria-hidden="true" />
+                          </button>
+                        </div>
+                        <span className="text-[0.9375rem] text-ink-muted">명</span>
+                      </div>
+                      <FieldError id={countErrorId} message={errors.count} />
                     </div>
-                    <span className="text-[0.9375rem] text-ink-muted">명</span>
-                  </div>
-                  <FieldError id={countErrorId} message={errors.count} />
-                </div>
 
-                <Segmented
-                  label="식사 여부"
-                  value={form.meal}
-                  options={MEAL_OPTIONS}
-                  onChange={(meal) => update('meal', meal)}
-                  disabled={submitting}
-                />
-              </>
-            )}
+                    <Segmented
+                      label="식사 여부"
+                      value={form.meal}
+                      options={MEAL_OPTIONS}
+                      onChange={(meal) => update('meal', meal)}
+                      disabled={submitting}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div>
               <label htmlFor={noteId} className={LABEL}>
@@ -290,7 +310,7 @@ export default function Rsvp() {
                 disabled={submitting}
                 aria-invalid={errors.note ? true : undefined}
                 aria-describedby={errors.note ? `${noteErrorId} ${noteHintId}` : noteHintId}
-                className={fieldClass(Boolean(errors.note), 'resize-none py-3 leading-relaxed')}
+                className={`${FIELD} resize-none py-3 leading-relaxed`}
               />
               <p id={noteHintId} className="mt-1.5 text-right text-[0.8125rem] text-ink-muted tabular-nums">
                 {form.note.length}/{NOTE_MAX}
@@ -312,14 +332,14 @@ export default function Rsvp() {
               <Button
                 type="submit"
                 variant="primary"
-                className="w-full"
-                disabled={submitting}
+                className="w-full [--press-scale:0.98] aria-disabled:cursor-progress"
+                aria-disabled={submitting || undefined}
                 aria-busy={submitting}
                 aria-describedby={serverError ? serverErrorId : undefined}
               >
                 {submitting ? (
                   <>
-                    <Loader2 size={16} aria-hidden="true" className="animate-spin" />
+                    <Loader2 size={16} aria-hidden="true" className="motion-safe:animate-spin" />
                     전송 중…
                   </>
                 ) : (
@@ -330,7 +350,7 @@ export default function Rsvp() {
                 )}
               </Button>
             </div>
-          </form>
+          </motion.form>
         )}
       </Reveal>
     </Section>

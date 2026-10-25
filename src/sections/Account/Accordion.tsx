@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useState, type ReactNode } from 'react'
+import { EASE_OUT, SPRING_FAST } from '@/lib/motion'
 
 interface AccordionProps {
   /** Prefix for the button/panel ids, e.g. "account-groom" */
@@ -9,8 +10,6 @@ interface AccordionProps {
   children: ReactNode
   defaultOpen?: boolean
 }
-
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 /** Disclosure card: heading button with aria-expanded, panel region animated on height. */
 export default function Accordion({ id, title, children, defaultOpen = false }: AccordionProps) {
@@ -28,14 +27,18 @@ export default function Accordion({ id, title, children, defaultOpen = false }: 
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between gap-3 rounded-2xl px-5 py-4 text-left text-ink transition-colors hover:bg-mint/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="flex w-full items-center justify-between gap-3 rounded-2xl px-5 py-4 text-left text-ink transition-colors hover:bg-mint/60 active:bg-mint/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <span className="font-serif text-[1.0625rem]">{title}</span>
-          <ChevronDown
-            size={18}
+          <motion.span
             aria-hidden="true"
-            className={`shrink-0 text-accent transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
-          />
+            className="flex shrink-0 text-accent"
+            initial={false}
+            animate={{ rotate: open ? 180 : 0 }}
+            transition={SPRING_FAST}
+          >
+            <ChevronDown size={18} />
+          </motion.span>
         </button>
       </h3>
       <AnimatePresence initial={false}>
@@ -46,10 +49,10 @@ export default function Accordion({ id, title, children, defaultOpen = false }: 
             role="region"
             aria-labelledby={buttonId}
             className="overflow-hidden"
-            initial={reduce ? false : { height: 0, opacity: 0 }}
+            initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            transition={{ duration: reduce ? 0 : 0.4, ease: EASE }}
+            transition={reduce ? { duration: 0.2, ease: EASE_OUT } : SPRING_FAST}
           >
             <div className="border-t border-line px-5">{children}</div>
           </motion.div>

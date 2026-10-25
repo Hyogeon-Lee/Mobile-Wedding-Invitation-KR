@@ -8,6 +8,7 @@ import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
 import { LightBloom } from '@/effects'
 import { asset } from '@/lib/env'
+import { REVEAL_STEP } from '@/lib/motion'
 import { siteUrl } from '@/lib/kakao'
 import MapBoundary from './MapBoundary'
 import {
@@ -27,7 +28,6 @@ import { transportEntries, type TransportKey } from './transport'
 
 const KakaoMap = lazy(() => import('./KakaoMap'))
 
-const REVEAL_STEP = 0.12
 const KAKAO_KEY = import.meta.env.VITE_KAKAO_JS_KEY ?? ''
 const FALLBACK_IMAGE = 'images/map-fallback.svg'
 const NO_KEY_LABEL = '지도 준비 중입니다'
@@ -58,8 +58,8 @@ const TRANSPORT_ICON: Record<TransportKey, LucideIcon> = {
 const BLOOM_CLASS = '-z-10! opacity-75 mask-y-from-80%'
 
 const navLinkClass =
-  'inline-flex h-11 w-full items-center justify-center rounded-full border border-line bg-white/80 px-1 ' +
-  'text-[0.9375rem] tracking-[0.02em] text-ink transition-colors select-none hover:bg-mint active:bg-mint ' +
+  'pressable inline-flex min-h-11 w-full items-center justify-center rounded-full border border-line bg-bg-elevated px-1 py-2 leading-tight ' +
+  'text-[0.9375rem] tracking-[0.02em] text-ink select-none hover:bg-mint active:bg-mint ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 /** App-scheme links: an iOS long-press "Open in New Tab" would open a dead scheme URL. */
 const appLinkClass = `${navLinkClass} [-webkit-touch-callout:none]`
@@ -174,7 +174,7 @@ export default function Location() {
               href={naverWebHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block py-1 text-[0.9375rem] text-ink-muted underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="pressable inline-flex min-h-11 items-center px-2 text-[0.9375rem] text-ink-muted underline underline-offset-4 active:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               네이버지도 웹에서 보기
             </a>
@@ -184,7 +184,7 @@ export default function Location() {
 
       {entries.length > 0 && (
         <Reveal delay={REVEAL_STEP * 2} className="mt-10">
-          <dl className="divide-y divide-line rounded-2xl border border-line bg-white/55 px-5">
+          <dl className="divide-y divide-line rounded-2xl border border-line bg-bg-elevated px-5">
             {entries.map(({ key, label, lines }) => {
               const Icon = TRANSPORT_ICON[key]
               return (

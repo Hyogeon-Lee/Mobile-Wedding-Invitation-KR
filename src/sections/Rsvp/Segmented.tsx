@@ -1,4 +1,6 @@
+import { motion, useReducedMotion } from 'motion/react'
 import { useId, useRef, type KeyboardEvent } from 'react'
+import { SPRING_FAST } from '@/lib/motion'
 
 export interface SegmentedOption<T extends string> {
   value: T
@@ -23,6 +25,8 @@ const FOCUS_RING = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus
 export default function Segmented<T extends string>({ label, value, options, onChange, disabled }: SegmentedProps<T>) {
   const labelId = useId()
   const groupRef = useRef<HTMLDivElement>(null)
+  const reduce = useReducedMotion()
+  const index = Math.max(0, options.findIndex((o) => o.value === value))
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
@@ -44,8 +48,16 @@ export default function Segmented<T extends string>({ label, value, options, onC
         role="radiogroup"
         aria-labelledby={labelId}
         onKeyDown={onKeyDown}
-        className="flex rounded-full border border-line bg-bg-elevated p-1"
+        className={`relative grid auto-cols-fr grid-flow-col rounded-full bg-[rgb(47_107_79/0.08)] p-0.5 ${disabled ? 'opacity-50' : ''}`}
       >
+        <motion.span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0.5 left-0.5 rounded-full bg-bg-elevated shadow-[0_1px_2px_rgb(54_66_59/0.16),0_0_0_0.5px_rgb(54_66_59/0.1)]"
+          style={{ width: `calc((100% - 4px) / ${options.length})` }}
+          initial={false}
+          animate={{ x: `${index * 100}%` }}
+          transition={reduce ? { duration: 0 } : SPRING_FAST}
+        />
         {options.map((option) => {
           const checked = option.value === value
           return (
@@ -57,8 +69,8 @@ export default function Segmented<T extends string>({ label, value, options, onC
               tabIndex={checked ? 0 : -1}
               disabled={disabled}
               onClick={() => onChange(option.value)}
-              className={`h-10 flex-1 rounded-full text-[0.9375rem] tracking-[0.02em] transition-colors disabled:opacity-50 ${FOCUS_RING} ${
-                checked ? 'bg-accent-soft text-accent' : 'text-ink-muted hover:text-ink'
+              className={`pressable relative z-10 h-11 rounded-full text-[0.9375rem] tracking-[0.02em] text-ink ${FOCUS_RING} ${
+                checked ? 'font-semibold' : 'font-normal'
               }`}
             >
               {option.label}

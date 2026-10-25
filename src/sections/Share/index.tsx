@@ -7,9 +7,9 @@ import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
 import { copyText } from '@/lib/clipboard'
 import { kakaoKey, loadKakaoSdk, siteUrl } from '@/lib/kakao'
+import { REVEAL_STEP } from '@/lib/motion'
 import { fallbackCopyMessage, isShareAbort, kakaoFeedPayload, shareImageUrl } from './share'
 
-const REVEAL_STEP = 0.12
 /** Start fetching the Kakao SDK this far before the buttons scroll in, so a tap calls sendDefault without a network wait. */
 const SDK_PRELOAD_MARGIN = '400px 0px'
 const INTRO = '청첩장을 소중한 분들께 전해 주세요.'
@@ -84,7 +84,7 @@ export default function Share() {
             onClick={shareViaKakao}
             disabled={busy}
             aria-busy={busy}
-            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FEE500] px-6 text-[0.9375rem] font-medium text-[#191919] transition-colors select-none hover:bg-[#F6DD00] active:bg-[#EDD500] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FEE500] px-6 text-[0.9375rem] font-medium text-[#191919] pressable [--press-scale:0.98] select-none hover:bg-[#F6DD00] active:bg-[#EDD500] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
           >
             <KakaoBubble />
             {share.buttonLabel}
@@ -94,7 +94,7 @@ export default function Share() {
             label="링크 복사하기"
             successMessage="링크가 복사되었습니다"
             size="md"
-            className="w-full"
+            className="w-full [--press-scale:0.98]"
           />
         </div>
         <p className="mt-4 text-center text-[0.8125rem] leading-relaxed break-all text-ink-muted">{url}</p>

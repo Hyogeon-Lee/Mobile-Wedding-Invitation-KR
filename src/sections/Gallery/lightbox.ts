@@ -32,7 +32,11 @@ export async function openLightbox({ dataSource, index, onDestroy }: OpenLightbo
   const pswp = new Ctor({
     dataSource,
     index,
-    bgOpacity: 0.95,
+    bgOpacity: 1,
+    easing: 'cubic-bezier(0.32, 0.72, 0, 1)',
+    showAnimationDuration: 320,
+    hideAnimationDuration: 260,
+    zoomAnimationDuration: 280,
     closeOnVerticalDrag: true,
     pinchToClose: true,
     escKey: true,

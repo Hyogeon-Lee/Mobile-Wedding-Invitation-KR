@@ -1,6 +1,9 @@
 import { useRef, useState, type ChangeEvent, type FormEvent, type RefObject } from 'react'
+import { Loader2 } from 'lucide-react'
 import Button from '@/components/Button'
+import { FIELD } from '@/components/field'
 import { useToast } from '@/components/toast-context'
+import { haptic } from '@/lib/haptic'
 import { addGuestbook, type GuestbookEntry } from '@/lib/sheets'
 import FieldError from './FieldError'
 import {
@@ -18,11 +21,7 @@ import {
 
 const ADD_FAILED = '메시지를 남기지 못했습니다. 잠시 후 다시 시도해 주세요.'
 const ADDED = '소중한 마음 감사합니다'
-// 16px on inputs keeps iOS Safari from zooming the page on focus.
-const FIELD =
-  'w-full rounded-none border-0 border-b border-line bg-transparent px-0 py-2 text-[1rem] text-ink ' +
-  'placeholder:text-ink-muted transition-colors focus:border-accent focus:outline-none aria-invalid:border-accent'
-const LABEL = 'block text-[0.8125rem] tracking-[0.02em] text-ink-muted'
+const LABEL = 'mb-2 block text-[0.8125rem] tracking-[0.02em] text-ink-muted'
 const HINT = 'mt-1.5 text-[0.8125rem] text-ink-muted'
 const errorId = (field: GuestbookField) => `guestbook-${field}-error`
 const SERVER_ERROR_ID = 'guestbook-server-error'
@@ -74,6 +73,7 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
     onAdded(res.entry)
     setValues(EMPTY_FORM)
     toast.show(ADDED)
+    haptic()
   }
 
   const count = values.message.length
@@ -84,7 +84,7 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
       onSubmit={submit}
       noValidate
       aria-label="축하 메시지 남기기"
-      className="rounded-[12px] border border-line bg-bg-elevated p-5"
+      className="rounded-2xl border border-line bg-bg-elevated p-5"
     >
       <div>
         <label htmlFor="guestbook-name" className={LABEL}>
@@ -103,7 +103,7 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
           enterKeyHint="next"
           aria-invalid={error?.field === 'name' || undefined}
           aria-describedby={describedBy(fieldError('name') && errorId('name'))}
-          className={FIELD}
+          className={`${FIELD} h-12`}
         />
         <FieldError id={errorId('name')} message={fieldError('name')} className="mt-1.5" />
       </div>
@@ -124,7 +124,7 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
           placeholder="두 사람에게 전하고 싶은 축하의 말을 남겨 주세요."
           aria-describedby={describedBy(fieldError('message') && errorId('message'), 'guestbook-message-count')}
           aria-invalid={error?.field === 'message' || undefined}
-          className={`${FIELD} resize-none leading-relaxed`}
+          className={`${FIELD} resize-none py-3 leading-relaxed`}
         />
         <p
           id="guestbook-message-count"
@@ -149,10 +149,10 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
           minLength={PASSWORD_MIN}
           required
           autoComplete="off"
-          enterKeyHint="done"
+          enterKeyHint="send"
           aria-describedby={describedBy(fieldError('password') && errorId('password'), 'guestbook-password-help')}
           aria-invalid={error?.field === 'password' || undefined}
-          className={FIELD}
+          className={`${FIELD} h-12`}
         />
         <p id="guestbook-password-help" className={HINT}>
           {PASSWORD_MIN}자 이상 · 삭제 시 필요합니다
@@ -167,9 +167,16 @@ export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
         variant="primary"
         aria-disabled={submitting}
         aria-describedby={serverError ? SERVER_ERROR_ID : undefined}
-        className={`${serverError ? 'mt-3' : 'mt-6'} w-full aria-disabled:opacity-50`}
+        className={`${serverError ? 'mt-3' : 'mt-6'} w-full [--press-scale:0.98] aria-disabled:cursor-progress`}
       >
-        {submitting ? '남기는 중…' : '남기기'}
+        {submitting ? (
+          <>
+            <Loader2 size={16} aria-hidden="true" className="motion-safe:animate-spin" />
+            남기는 중…
+          </>
+        ) : (
+          '남기기'
+        )}
       </Button>
     </form>
   )

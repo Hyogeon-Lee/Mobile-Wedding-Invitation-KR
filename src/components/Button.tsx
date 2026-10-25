@@ -4,15 +4,15 @@ type Variant = 'primary' | 'outline' | 'ghost'
 type Size = 'sm' | 'md'
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-full font-normal tracking-[0.02em] transition-colors select-none ' +
+  'pressable inline-flex items-center justify-center gap-2 rounded-full font-normal tracking-[0.02em] select-none ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50'
 const variants: Record<Variant, string> = {
   primary: 'bg-accent text-white hover:bg-accent/92 active:bg-accent/85',
-  outline: 'border border-line bg-bg-elevated/80 text-ink hover:bg-accent-soft/60 active:bg-accent-soft',
-  ghost: 'text-ink-muted hover:text-ink',
+  outline: 'border border-line bg-bg-elevated text-ink hover:bg-accent-soft/60 active:bg-accent-soft',
+  ghost: 'text-ink-muted hover:text-ink active:bg-ink/5 active:text-ink',
 }
 const sizes: Record<Size, string> = {
-  sm: 'h-9 px-4 text-[0.8125rem]',
+  sm: 'h-11 px-4 text-[0.875rem]',
   md: 'h-12 px-6 text-[0.9375rem]',
 }
 

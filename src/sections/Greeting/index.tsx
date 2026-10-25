@@ -3,9 +3,8 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { wedding } from '@/config/wedding'
 import { LightBloom, PetalDrift } from '@/effects'
+import { REVEAL_STEP } from '@/lib/motion'
 import { splitParagraphs } from './paragraphs'
-
-const REVEAL_STEP = 0.12
 
 export default function Greeting() {
   const { greeting, couple } = wedding
@@ -35,10 +34,10 @@ export default function Greeting() {
 
           {quote && (
             <Reveal delay={REVEAL_STEP} className="mt-12">
-              <blockquote className="rounded-2xl border border-line bg-bg-elevated/75 px-6 py-7 text-center">
+              <blockquote className="rounded-2xl border border-line bg-bg-elevated px-6 py-7 text-center">
                 <p className="font-serif text-[1.0625rem] leading-loose text-ink">{quote.text}</p>
                 {quote.source && (
-                  <footer className="mt-3 font-serif text-[0.875rem] text-ink-muted">
+                  <footer className="mt-3 font-serif font-normal! text-[0.875rem] text-ink-muted">
                     {quote.source}
                   </footer>
                 )}
@@ -48,11 +47,11 @@ export default function Greeting() {
 
           <Reveal delay={quote ? REVEAL_STEP * 2 : REVEAL_STEP} className="mt-12 text-center">
             <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
-              <span className="mr-1 text-[0.875rem] text-ink-muted">신랑</span> {couple.groom.name}
+              <span className="mr-1 text-[0.875rem] font-normal text-ink-muted">신랑</span> {couple.groom.name}
               <span aria-hidden="true" className="mx-3 text-ink-muted">
                 ·
               </span>
-              <span className="mr-1 text-[0.875rem] text-ink-muted">신부</span> {couple.bride.name}
+              <span className="mr-1 text-[0.875rem] font-normal text-ink-muted">신부</span> {couple.bride.name}
             </p>
           </Reveal>
         </div>

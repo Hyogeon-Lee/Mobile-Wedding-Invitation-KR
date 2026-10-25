@@ -1,3 +1,4 @@
+import { MotionConfig } from 'motion/react'
 import { ToastProvider } from '@/components/Toast'
 import SmoothScroll from '@/components/SmoothScroll'
 import { wedding } from '@/config/wedding'
@@ -20,30 +21,32 @@ const s = wedding.sections
 // so the decorative dividers between sections are skipped.
 export default function App() {
   return (
-    <ToastProvider>
-      <SmoothScroll>
-        <main className="app-frame">
-          {s.cover && <Cover />}
-          {s.greeting && <Greeting />}
-          {s.greeting && <BotanicalDivider variant="sprig" />}
-          {s.family && <Family />}
-          {s.family && <BotanicalDivider variant="dots" />}
-          {s.calendar && <Calendar />}
-          {s.calendar && <BotanicalDivider variant="leaf" />}
-          {s.gallery && <Gallery />}
-          {s.gallery && <BotanicalDivider variant="sprig" />}
-          {s.location && <Location />}
-          {s.location && <BotanicalDivider variant="dots" />}
-          {s.account && <Account />}
-          {s.account && <BotanicalDivider variant="leaf" />}
-          {s.rsvp && <Rsvp />}
-          {s.rsvp && <BotanicalDivider variant="dots" />}
-          {s.guestbook && <Guestbook />}
-          {s.guestbook && <BotanicalDivider variant="sprig" />}
-          {s.share && <Share />}
-          {s.footer && <Footer />}
-        </main>
-      </SmoothScroll>
-    </ToastProvider>
+    <MotionConfig reducedMotion="user">
+      <ToastProvider>
+        <SmoothScroll>
+          <main className="app-frame">
+            {s.cover && <Cover />}
+            {s.greeting && <Greeting />}
+            {s.greeting && <BotanicalDivider variant="sprig" />}
+            {s.family && <Family />}
+            {s.family && <BotanicalDivider variant="dots" />}
+            {s.calendar && <Calendar />}
+            {s.calendar && <BotanicalDivider variant="leaf" />}
+            {s.gallery && <Gallery />}
+            {s.gallery && <BotanicalDivider variant="sprig" />}
+            {s.location && <Location />}
+            {s.location && <BotanicalDivider variant="dots" />}
+            {s.account && <Account />}
+            {s.account && <BotanicalDivider variant="leaf" />}
+            {s.rsvp && <Rsvp />}
+            {s.rsvp && <BotanicalDivider variant="dots" />}
+            {s.guestbook && <Guestbook />}
+            {s.guestbook && <BotanicalDivider variant="sprig" />}
+            {s.share && <Share />}
+            {s.footer && <Footer />}
+          </main>
+        </SmoothScroll>
+      </ToastProvider>
+    </MotionConfig>
   )
 }
