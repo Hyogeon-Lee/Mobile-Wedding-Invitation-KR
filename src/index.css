@@ -1,0 +1,94 @@
+@import 'tailwindcss';
+
+/* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
+:root {
+  --color-bg: #fbf9f4;
+  --color-bg-elevated: #ffffff;
+  --color-ink: #2b2a28;
+  --color-ink-muted: #6f6a63;
+  --color-line: #e6e1d8;
+  --color-accent: #a9636b; /* dusty rose */
+  --color-accent-soft: #f1e3e3;
+  --color-sage: #7d8b6a;
+
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo',
+    'Noto Sans KR', sans-serif;
+  --font-serif: 'Gowun Batang', 'Nanum Myeongjo', 'Apple SD Gothic Neo', serif;
+  --font-display: 'Cormorant Garamond', 'Gowun Batang', serif;
+
+  --content-max: 480px;
+  --gutter: 24px;
+  --radius: 12px;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-bg-elevated: var(--color-bg-elevated);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-line: var(--color-line);
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-sage: var(--color-sage);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-display: var(--font-display);
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Large-text mode toggled by adding .text-lg-mode to <html> */
+html.text-lg-mode {
+  font-size: 19px;
+}
+
+/* Block the long-press image menu in in-app browsers */
+img {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+/* Mobile frame: content column centered on wide screens */
+.app-frame {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  background: var(--color-bg);
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@media (min-width: 560px) {
+  body {
+    background: #f1ede6;
+  }
+  .app-frame {
+    box-shadow: 0 0 0 1px var(--color-line), 0 20px 60px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
