@@ -1,7 +1,7 @@
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { BotanicalDivider, GlowPulse, LightBloom, LightLeak, PetalDrift, type GlowPulseProps } from './index'
+import { BotanicalDivider, CurtainLight, GlowPulse, LightBloom, LightLeak, PetalDrift, type GlowPulseProps } from './index'
 
 const count = (html: string, needle: string) => html.split(needle).length - 1
 
@@ -12,6 +12,7 @@ describe('effects markup', () => {
       createElement(LightLeak),
       createElement(PetalDrift),
       createElement(BotanicalDivider),
+      createElement(CurtainLight),
     ]) {
       const html = renderToStaticMarkup(el)
       expect(html.startsWith('<div aria-hidden="true"')).toBe(true)
@@ -44,5 +45,25 @@ describe('effects markup', () => {
 
   it('LightLeak clamps the interval', () => {
     expect(renderToStaticMarkup(createElement(LightLeak, { interval: 1 }))).toContain('--fx-interval:4s')
+  })
+
+  it('CurtainLight renders N bands, one wash and one drifting group, with the requested tone', () => {
+    const html = renderToStaticMarkup(createElement(CurtainLight))
+    expect(count(html, 'fx-curtain-band')).toBe(6)
+    expect(count(html, 'fx-curtain-wash fx-anim')).toBe(1)
+    expect(count(html, 'fx-curtain-group fx-anim')).toBe(1)
+    expect(count(html, 'fx-anim')).toBe(8)
+    expect(html).toContain('z-0')
+    expect(html).toContain('var(--fx-curtain-light-warm)')
+    // band height comes from curtainBandSpan, not a fixed 170%
+    expect(html).toMatch(/height:calc\(10\d(\.\d)?% \+ \d+px\)/)
+    expect(count(renderToStaticMarkup(createElement(CurtainLight, { bands: 1 })), 'fx-curtain-band')).toBe(3)
+    expect(count(renderToStaticMarkup(createElement(CurtainLight, { bands: 40 })), 'fx-curtain-band')).toBe(10)
+    const neutral = renderToStaticMarkup(createElement(CurtainLight, { tone: 'neutral', angle: -90 }))
+    expect(neutral).toContain('var(--fx-curtain-wash-neutral)')
+    // angle clamps to -45; each band adds at most ±2.5° of tilt
+    const angles = [...neutral.matchAll(/rotate\((-?[\d.]+)deg\)/g)].map((m) => Number(m[1]))
+    expect(angles).toHaveLength(6)
+    for (const a of angles) expect(a).toBeGreaterThanOrEqual(-47.5)
   })
 })

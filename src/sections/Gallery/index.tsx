@@ -8,7 +8,7 @@ import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import type { GalleryImage } from '@/config/types'
 import { wedding } from '@/config/wedding'
-import { LightBloom } from '@/effects'
+import { CurtainLight } from '@/effects'
 import { asset } from '@/lib/env'
 import { hasMore, spansBothColumns, splitTiles, tileTilt, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
@@ -134,9 +134,19 @@ export default function Gallery() {
   return (
     <Section id="gallery" eyebrow="GALLERY" title="우리의 순간">
       <Reveal amount="some">
-        {/* Full-bleed light stage behind the frames; masked edges let the bloom fade out instead of being clipped. */}
+        {/* Warm curtain light pooling over the first rows, as if from a window above the top-right frame.
+            The light box is capped at 60rem: rotated bands shift sideways by (h/2)·tan θ at the edges, so on the
+            full ~2,000 px stage they would leave the top-right corner unlit. Edges fade through static bg
+            overlays instead of a mask on the animated layer, which would add a mask pass every frame. */}
         <div className="relative isolate -mx-6 overflow-hidden px-6 py-6">
-          <LightBloom palette={['mint', 'blush']} intensity="soft" className="mask-x-from-88% mask-y-from-82%" />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[min(100%,60rem)] overflow-hidden"
+          >
+            <CurtainLight tone="warm" intensity="soft" bands={5} angle={-12} seed={3} />
+            <div className="absolute inset-x-0 top-0 z-[1] h-16 bg-linear-to-b from-bg to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 z-[1] h-1/2 bg-linear-to-t from-bg to-transparent" />
+          </div>
 
           <div className="relative z-10">
             <div className={GRID}>{tiles(head, 0)}</div>

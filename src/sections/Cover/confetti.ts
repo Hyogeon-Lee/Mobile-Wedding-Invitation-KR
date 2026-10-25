@@ -8,7 +8,7 @@ const FALLBACK: Record<string, string> = {
   '--color-accent': '#587460',
   '--color-sage': '#9bb09a',
   '--fx-petal-mint': '#b4d1ac',
-  '--fx-petal-blush': '#ecc3bd',
+  '--fx-petal-blush': '#efc39a',
 }
 
 function token(name: string): string {

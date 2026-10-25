@@ -3,33 +3,33 @@
 /* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
 :root {
   /*
-   * Palette derived from the Arove Studio feed (2026-10-25): cream off-white walls, warm sunlight through
-   * sheer curtains, glimpses of trees through glass, a light serif wordmark. Warm neutrals carry the page;
-   * sage is the greenery accent; butter/sand/sky are light tints for effects only.
+   * Palette (owner direction 2026-10-25): ivory, pale pastel green, orange as the single point colour, no pink.
+   * Reference remains the Arove Studio look (cream rooms, sun through sheer curtains, greenery through glass).
    */
-  --color-bg: #f9f7f2;
+  --color-bg: #f9f7f0;
   --color-bg-elevated: #ffffff;
-  --color-ink: #4f4e47; /* warm soft charcoal, 7.9:1 on bg */
-  --color-ink-muted: #716e66; /* 4.6:1 on bg */
-  --color-line: #e6e2da;
-  --color-accent: #526e5a; /* muted sage, 5.3:1 on bg, 4.6:1 on mint tints, white on it 5.6:1 */
-  --color-accent-soft: #e8ede3; /* pale sage tint */
-  --color-sage: #9bb09a; /* decorative sage (not for small text) */
-  --color-blush: #f7ece4; /* warm peach-cream tint */
-  --color-butter: #fbf0d5; /* golden sunlight tint */
-  --color-mint: #ecf1e7; /* light sage-mint tint */
-  --color-sand: #f2ece2; /* cream/sand wall tint */
-  --color-sky: #e4eaee; /* window light, gray-blue tint */
+  --color-ink: #4a4a43; /* warm soft charcoal, 8.3:1 on bg */
+  --color-ink-muted: #6f6c63; /* 4.9:1 on bg */
+  --color-line: #e5e2d8;
+  --color-accent: #ab4f23; /* point orange, text-safe: 4.9:1 on bg, white on it 5.1:1 */
+  --color-accent-soft: #fbe9da; /* pale apricot tint for chips and hovers */
+  --color-green: #4f7257; /* greenery accent, text-safe: 4.9:1 on bg, 4.5:1 on mint */
+  --color-sage: #9fb59c; /* decorative sage (leaves, dividers; not for small text) */
+  --color-mint: #e9f0e3; /* pale pastel green tint */
+  --color-blush: #fbeadb; /* warm apricot tint (name kept for compatibility; no pink anywhere) */
+  --color-butter: #fbf1dc; /* ivory-gold sunlight tint */
+  --color-sand: #f1ece0; /* cream wall tint */
+  --color-sky: #e6ebe6; /* window light, grey-green tint */
 
-  --font-sans: 'Gowun Dodum', 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
-    'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-  --font-serif: 'Gowun Batang', 'Nanum Myeongjo', 'Apple SD Gothic Neo', serif;
-  --font-display: 'Cormorant Garamond', 'Gowun Batang', serif;
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo',
+    'Noto Sans KR', sans-serif;
+  --font-serif: 'Noto Serif KR', 'Nanum Myeongjo', 'Apple SD Gothic Neo', serif;
+  --font-display: 'Cormorant Garamond', 'Noto Serif KR', serif;
 
   --content-max: 480px;
   --gutter: 24px;
   --radius: 16px;
-  --shadow-soft: 0 16px 40px -24px rgb(82 110 90 / 0.35);
+  --shadow-soft: 0 16px 40px -24px rgb(79 114 87 / 0.32);
 }
 
 @theme inline {
@@ -41,6 +41,7 @@
   --color-accent: var(--color-accent);
   --color-accent-soft: var(--color-accent-soft);
   --color-sage: var(--color-sage);
+  --color-green: var(--color-green);
   --color-blush: var(--color-blush);
   --color-butter: var(--color-butter);
   --color-mint: var(--color-mint);
@@ -56,7 +57,9 @@ html {
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.7;
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: -0.005em;
   -webkit-text-size-adjust: 100%;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -67,6 +70,15 @@ body {
   min-height: 100dvh;
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Serif headings are set light (300) with a little tracking for a refined, editorial look */
+h1,
+h2,
+h3,
+.font-serif {
+  font-weight: 300;
+  letter-spacing: 0.01em;
 }
 
 /* Large-text mode toggled by adding .text-lg-mode to <html> */
@@ -92,7 +104,7 @@ img {
 }
 @media (min-width: 560px) {
   body {
-    background: linear-gradient(160deg, #f2ede4 0%, #eceff0 100%);
+    background: linear-gradient(160deg, #f1ede3 0%, #e9eee6 100%);
   }
   .app-frame {
     box-shadow: 0 0 0 1px var(--color-line), 0 20px 60px rgba(0, 0, 0, 0.08);

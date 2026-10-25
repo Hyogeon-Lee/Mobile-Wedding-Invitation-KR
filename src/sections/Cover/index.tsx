@@ -2,7 +2,7 @@ import { useId, useRef, type MouseEvent } from 'react'
 import { motion, useInView, useReducedMotion, type TargetAndTransition, type Variants } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { wedding } from '@/config/wedding'
-import { GlowPulse, LightBloom, LightLeak, PetalDrift } from '@/effects'
+import { CurtainLight, GlowPulse, LightLeak, PetalDrift } from '@/effects'
 import { asset } from '@/lib/env'
 import { burstConfetti } from './confetti'
 import { coverDateLine, coverVenueLine } from './format'
@@ -38,8 +38,8 @@ const photoFrame =
   'relative block w-[min(100%,calc(58svh*3/4),max(9rem,calc((100svh_-_22rem_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))*3/4)))] rounded-2xl shadow-(--shadow-soft) ring-4 ring-white/80'
 const photoInner = 'block w-full overflow-hidden rounded-[inherit]'
 
-// Static pool of white light behind small text. The medium LightBloom can tint the background
-// enough to drop text-ink-muted / text-accent below 4.5:1; 72% white restores it. Feathered with
+// Static pool of white light behind small text. Where a warm CurtainLight band crosses it, the
+// tinted background lowers text-ink-muted / text-accent contrast; 72% white keeps them above 4.5:1. Feathered with
 // a horizontal gradient and a vertical mask so it reads as diffused light, not a box.
 const lightPool =
   'relative before:pointer-events-none before:absolute before:-inset-x-10 before:-inset-y-3 before:-z-10 before:bg-[linear-gradient(90deg,rgb(255_255_255/0)_0,rgb(255_255_255/0.72)_40px,rgb(255_255_255/0.72)_calc(100%_-_40px),rgb(255_255_255/0)_100%)] before:[mask-image:linear-gradient(transparent,#000_12px,#000_calc(100%_-_12px),transparent)]'
@@ -93,10 +93,13 @@ export default function Cover() {
       aria-label="표지"
       className="relative isolate flex min-h-svh flex-col items-center overflow-hidden px-6 pt-[calc(32px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
     >
-      <LightBloom palette={['butter', 'mint', 'blush']} intensity="medium" />
-      {/* density="light" renders 5 petals, 2 animated nodes each. Cover total: bloom 6 + petals 10
-          + leak 1 + glow 1 + scroll cue 1 = 19, within the ~20 moving-element budget. */}
-      <PetalDrift count={8} seed={2} density="light" className="z-[5]" />
+      {/* Animated nodes on this screen: curtain 8 (6 bands + wash + drifting group)
+          + petal 2 (one sage sprig: fall + sway wrappers) + leak 1 + glow 1 + scroll cue 1 = 13,
+          within the ~20 budget in src/effects/README.md. CurtainLight is the only background layer:
+          the README says to use it instead of LightBloom, not on top of it. */}
+      {/* Sunlight through sheer curtains: the warm wash supplies the window glow, painted below petals and text. */}
+      <CurtainLight tone="warm" intensity="medium" bands={6} />
+      <PetalDrift count={1} seed={8} className="z-[5]" />
 
       <motion.div
         className="relative z-10 flex w-full flex-1 flex-col items-center justify-center text-center"

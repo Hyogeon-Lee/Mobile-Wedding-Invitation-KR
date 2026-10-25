@@ -6,14 +6,20 @@
 :root {
   /* Glow tints as RGB triplets so gradients can vary alpha: rgb(var(--fx-glow-butter) / 0.5) */
   --fx-glow-butter: 255 233 172;
-  --fx-glow-mint: 204 230 198;
-  --fx-glow-blush: 247 210 204;
+  --fx-glow-mint: 212 232 204;
+  --fx-glow-blush: 250 216 186; /* apricot (no pink in this palette) */
   --fx-glow-sage: 190 210 188;
 
   /* Decorative fills, a step deeper than the page tints so they read on #f9f7f2; sage follows the page token */
   --fx-petal-sage: var(--color-sage);
   --fx-petal-mint: #b4d1ac;
-  --fx-petal-blush: #ecc3bd;
+  --fx-petal-blush: #efc39a; /* apricot petal */
+
+  /* CurtainLight: band light and corner wash (butter / sky follow the page tokens) */
+  --fx-curtain-light-warm: 255 250 235;
+  --fx-curtain-light-neutral: 255 255 255;
+  --fx-curtain-wash-warm: 251 240 213;
+  --fx-curtain-wash-neutral: 228 234 238;
 }
 
 /* ---------- Off-screen pause (set by useInViewPause) ---------- */
@@ -182,6 +188,71 @@
   }
 }
 
+/* ---------- CurtainLight ---------- */
+.fx-curtain {
+  contain: paint;
+}
+/* Faint window glow from the top-right corner; breathes slowly in opacity only */
+.fx-curtain-wash {
+  background: radial-gradient(
+    120% 85% at 100% 0%,
+    rgb(var(--fx-curtain-wash) / var(--fx-wash-a)) 0%,
+    rgb(var(--fx-curtain-wash) / var(--fx-wash-a45)) 35%,
+    rgb(var(--fx-curtain-wash) / 0) 72%
+  );
+  opacity: 0.9;
+  animation: fx-curtain-wash 13s ease-in-out -4s infinite alternate both;
+}
+/* Same box as the layer, so translateX(6%) is 6% of the layer width */
+.fx-curtain-group {
+  animation: fx-curtain-drift var(--fx-dur) ease-in-out var(--fx-delay) infinite alternate both;
+}
+/* Alpha stops are precomputed in CurtainLight.tsx (no calc() inside rgb()) for older WebViews.
+   top/height are set inline from curtainBandSpan() (about 104–111% at the default lean);
+   these values are only a fallback */
+.fx-curtain-band {
+  position: absolute;
+  top: -30%;
+  height: 160%;
+  background: linear-gradient(
+    90deg,
+    rgb(var(--fx-curtain-light) / 0) 0%,
+    rgb(var(--fx-curtain-light) / var(--fx-band-a35)) 22%,
+    rgb(var(--fx-curtain-light) / var(--fx-band-a85)) 42%,
+    rgb(var(--fx-curtain-light) / var(--fx-band-a)) 50%,
+    rgb(var(--fx-curtain-light) / var(--fx-band-a85)) 58%,
+    rgb(var(--fx-curtain-light) / var(--fx-band-a35)) 78%,
+    rgb(var(--fx-curtain-light) / 0) 100%
+  );
+  opacity: var(--fx-o-mid);
+  animation: fx-curtain-breathe var(--fx-dur) ease-in-out var(--fx-delay) infinite alternate both;
+}
+@keyframes fx-curtain-drift {
+  0% {
+    transform: translate3d(-6%, 0, 0);
+  }
+  100% {
+    transform: translate3d(6%, 0, 0);
+  }
+}
+/* Opacity only, so the band's inline rotate() is left untouched */
+@keyframes fx-curtain-breathe {
+  0% {
+    opacity: var(--fx-o-lo);
+  }
+  100% {
+    opacity: var(--fx-o-hi);
+  }
+}
+@keyframes fx-curtain-wash {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 /* ---------- Reduced motion: calmest static frame ---------- */
 /* Class specificity plus !important beats the global `* { animation-duration }` rule in index.css */
 @media (prefers-reduced-motion: reduce) {
@@ -192,7 +263,11 @@
   .fx-motion-only {
     display: none !important;
   }
-  .fx-bloom-blob {
+  .fx-bloom-blob,
+  .fx-curtain-band {
     opacity: var(--fx-o-mid);
+  }
+  .fx-curtain-wash {
+    opacity: 0.9;
   }
 }
