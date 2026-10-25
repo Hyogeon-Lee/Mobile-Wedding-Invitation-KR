@@ -60,17 +60,30 @@ async function post<T>(body: Record<string, unknown>): Promise<Result<T> | Failu
   }
 }
 
-export async function listGuestbook(): Promise<GuestbookEntry[]> {
+export interface GuestbookFetch {
+  ok: boolean
+  entries: GuestbookEntry[]
+  error?: string
+}
+
+/** Loads entries and distinguishes "none yet" (ok, []) from "could not load" (ok=false). */
+export async function fetchGuestbook(): Promise<GuestbookFetch> {
   if (isPreviewBackend) {
-    return previewRead().map(({ password: _p, ...e }) => e)
+    return { ok: true, entries: previewRead().map(({ password: _p, ...e }) => e) }
   }
   try {
     const res = await fetch(`${appsScriptUrl}?action=list`, { redirect: 'follow' })
-    const data = (await res.json()) as { ok: boolean; entries?: GuestbookEntry[] }
-    return data.ok && data.entries ? data.entries : []
+    const data = (await res.json()) as { ok: boolean; entries?: GuestbookEntry[]; error?: string }
+    if (!data.ok) return { ok: false, entries: [], error: data.error ?? '목록을 불러오지 못했습니다.' }
+    return { ok: true, entries: data.entries ?? [] }
   } catch {
-    return []
+    return { ok: false, entries: [], error: '네트워크 오류로 목록을 불러오지 못했습니다.' }
   }
+}
+
+/** @deprecated use fetchGuestbook(); kept for compatibility, swallows errors. */
+export async function listGuestbook(): Promise<GuestbookEntry[]> {
+  return (await fetchGuestbook()).entries
 }
 
 export async function addGuestbook(input: {

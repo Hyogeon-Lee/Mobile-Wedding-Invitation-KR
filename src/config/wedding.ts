@@ -1,4 +1,5 @@
 import type { WeddingConfig, GalleryImage } from './types'
+import { formatDateKo } from '@/lib/date'
 
 /**
  * Schematic draft data. Every "OO" is a placeholder to be replaced.
@@ -10,6 +11,13 @@ const img = (i: number, w: number, h: number): GalleryImage => ({
   height: h,
   alt: `신랑 신부 사진 ${i}`,
 })
+
+// Placeholder instant: 2027-05-15 (Sat) 12:00 KST. Replace when the date is confirmed and set datePlaceholder=false.
+const startsAt = '2027-05-15T12:00:00+09:00'
+const datePlaceholder = true
+const venueName = '노블발렌티 삼성'
+/** "2027년 OO월 OO일" until confirmed, then the real date; shared by the Kakao card and index.html copy. */
+export const dateLine = datePlaceholder ? `${startsAt.slice(0, 4)}년 OO월 OO일` : formatDateKo(startsAt)
 
 export const wedding: WeddingConfig = {
   couple: {
@@ -27,10 +35,9 @@ export const wedding: WeddingConfig = {
     },
   },
   event: {
-    // Placeholder instant: 2027-05-15 (Sat) 12:00 KST. Replace when the date is confirmed.
-    startsAt: '2027-05-15T12:00:00+09:00',
-    datePlaceholder: true,
-    venueName: '노블발렌티 삼성',
+    startsAt,
+    datePlaceholder,
+    venueName,
     hall: 'OO홀',
     // Address from two listing sites (directwedding, weddingcrowd) on 2026-10-25; confirm with the venue.
     address: '서울특별시 강남구 봉은사로 637',
@@ -92,7 +99,7 @@ export const wedding: WeddingConfig = {
   },
   share: {
     title: '이OO ♥ 박OO 결혼합니다',
-    description: '2027년 OO월 OO일 · 노블발렌티 삼성',
+    description: `${dateLine} · ${venueName}`,
     imagePath: 'og-image.png',
     buttonLabel: '카카오톡으로 공유하기',
   },

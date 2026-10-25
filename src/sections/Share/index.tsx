@@ -1,0 +1,90 @@
+import { useState } from 'react'
+import CopyButton from '@/components/CopyButton'
+import Reveal from '@/components/Reveal'
+import Section from '@/components/Section'
+import { useToast } from '@/components/toast-context'
+import { wedding } from '@/config/wedding'
+import { copyText } from '@/lib/clipboard'
+import { kakaoKey, loadKakaoSdk, siteUrl } from '@/lib/kakao'
+import { fallbackCopyMessage, isShareAbort, kakaoFeedPayload, shareImageUrl } from './share'
+
+const REVEAL_STEP = 0.12
+const INTRO = '청첩장을 소중한 분들께 전해 주세요.'
+
+/** Speech-bubble glyph in Kakao's style; colour comes from the button text. */
+function KakaoBubble() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M12 3C6.48 3 2 6.47 2 10.75c0 2.72 1.78 5.1 4.46 6.47l-.93 3.44c-.08.3.26.54.52.37l4.07-2.7c.61.08 1.24.12 1.88.12 5.52 0 10-3.47 10-7.7S17.52 3 12 3Z" />
+    </svg>
+  )
+}
+
+export default function Share() {
+  const toast = useToast()
+  const [busy, setBusy] = useState(false)
+  const { share } = wedding
+  const url = siteUrl()
+
+  const shareViaKakao = async () => {
+    if (busy) return
+    setBusy(true)
+    try {
+      const ready = await loadKakaoSdk()
+      if (ready && window.Kakao) {
+        window.Kakao.Share.sendDefault(
+          kakaoFeedPayload({
+            title: share.title,
+            description: share.description,
+            imageUrl: shareImageUrl(url, share.imagePath),
+            url,
+          }),
+        )
+        return
+      }
+      if (typeof navigator.share === 'function') {
+        try {
+          await navigator.share({ title: share.title, text: share.description, url })
+          return
+        } catch (error) {
+          if (isShareAbort(error)) return
+        }
+      }
+      const copied = await copyText(url)
+      toast.show(copied ? fallbackCopyMessage(kakaoKey !== '') : '복사에 실패했습니다. 길게 눌러 복사해 주세요.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Section id="share" eyebrow="SHARE" title="청첩장 전하기">
+      <Reveal>
+        <p className="text-center text-[15px] leading-relaxed text-ink-muted">{INTRO}</p>
+      </Reveal>
+
+      <Reveal delay={REVEAL_STEP} className="mt-10">
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={shareViaKakao}
+            disabled={busy}
+            aria-busy={busy}
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FEE500] px-6 text-[15px] font-medium text-[#191919] transition-colors select-none hover:bg-[#F6DD00] active:bg-[#EDD500] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
+          >
+            <KakaoBubble />
+            {share.buttonLabel}
+          </button>
+          <CopyButton
+            text={url}
+            label="링크 복사하기"
+            successMessage="링크가 복사되었습니다"
+            size="md"
+            className="w-full"
+          />
+        </div>
+        <p className="mt-4 text-center text-[13px] leading-relaxed break-all text-ink-muted">{url}</p>
+      </Reveal>
+    </Section>
+  )
+}

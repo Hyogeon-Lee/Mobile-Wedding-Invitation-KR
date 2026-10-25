@@ -12,8 +12,8 @@ const variants: Record<Variant, string> = {
   ghost: 'text-ink-muted hover:text-ink',
 }
 const sizes: Record<Size, string> = {
-  sm: 'h-9 px-4 text-[13px]',
-  md: 'h-12 px-6 text-[15px]',
+  sm: 'h-9 px-4 text-[0.8125rem]',
+  md: 'h-12 px-6 text-[0.9375rem]',
 }
 
 interface CommonProps {
