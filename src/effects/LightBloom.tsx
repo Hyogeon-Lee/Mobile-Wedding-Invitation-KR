@@ -31,7 +31,7 @@ const DEFAULT_PALETTE: BloomTint[] = ['butter', 'mint', 'blush']
 
 /**
  * Background layer of large, slowly drifting and breathing light blobs.
- * Place inside a `relative isolate overflow-hidden` parent; content above it needs `relative z-10`.
+ * Place inside a `Bleed` or a `relative isolate overflow-hidden` parent; content above it needs `relative z-10`.
  */
 export function LightBloom({ palette = DEFAULT_PALETTE, intensity = 'soft', className = '' }: LightBloomProps) {
   const ref = useRef<HTMLDivElement>(null)

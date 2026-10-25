@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import Button from '@/components/Button'
 import Reveal from '@/components/Reveal'
 import { wedding } from '@/config/wedding'
-import { BotanicalDivider, LightBloom } from '@/effects'
+import { Bleed, BotanicalDivider, LightBloom } from '@/effects'
 import { applyTextLg, readTextLg, scrollTopBehavior, writeTextLg } from './textSize'
 
 /**
@@ -42,8 +42,11 @@ export default function Footer() {
   }
 
   return (
-    <footer id="footer" className="relative isolate overflow-hidden px-6 pt-4 pb-12 text-center">
-      <LightBloom palette={['butter']} intensity="soft" className="opacity-70" />
+    <footer id="footer" className="relative px-6 pt-6 pb-12 text-center">
+      {/* Light rises from under the Share buttons and fades in over 14rem; it never reaches past the page end. */}
+      <Bleed top="-14rem" bottom="0" mask="top" fade="14rem">
+        <LightBloom palette={['butter']} intensity="soft" className="opacity-70" />
+      </Bleed>
       <Reveal className="relative z-10">
         <BotanicalDivider variant="sprig" className="mb-2" />
         <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">

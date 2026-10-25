@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useInViewPause } from './useInViewPause'
 
 export interface BotanicalDividerProps {
-  /** Ornament between the hairlines. Default 'sprig' */
+  /** Ornament shape. Default 'sprig' */
   variant?: 'sprig' | 'dots' | 'leaf'
   className?: string
 }
@@ -75,7 +75,7 @@ function Dots() {
 /** Sway pivot per variant, in % of the 120×28 box: the stem base for sprig and leaf. */
 const ORIGIN = { sprig: '50% 86%', leaf: '28% 68%', dots: '50% 50%' } as const
 
-/** Centered botanical ornament between two hairlines with a gentle ±2.5° sway. Decorative only. */
+/** Centered, line-free botanical ornament (44 px tall) with a gentle ±2.5° sway. Decorative only. */
 export function BotanicalDivider({ variant = 'sprig', className = '' }: BotanicalDividerProps) {
   const ref = useRef<HTMLDivElement>(null)
   useInViewPause(ref)
@@ -84,9 +84,8 @@ export function BotanicalDivider({ variant = 'sprig', className = '' }: Botanica
     <div
       ref={ref}
       aria-hidden="true"
-      className={`pointer-events-none flex items-center justify-center gap-3 overflow-hidden px-6 py-6 ${className}`}
+      className={`pointer-events-none flex items-center justify-center overflow-hidden px-6 py-2 ${className}`}
     >
-      <span className="block h-px max-w-18 flex-1 bg-line" />
       <svg
         viewBox="0 0 120 28"
         width="120"
@@ -97,7 +96,6 @@ export function BotanicalDivider({ variant = 'sprig', className = '' }: Botanica
       >
         {variant === 'sprig' ? <Sprig /> : variant === 'leaf' ? <Leaf /> : <Dots />}
       </svg>
-      <span className="block h-px max-w-18 flex-1 bg-line" />
     </div>
   )
 }

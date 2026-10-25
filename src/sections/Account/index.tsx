@@ -1,11 +1,10 @@
 import { ExternalLink } from 'lucide-react'
-import { Fragment, type CSSProperties } from 'react'
+import { Fragment } from 'react'
 import CopyButton from '@/components/CopyButton'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
-import { LightBloom } from '@/effects'
 import { REVEAL_STEP } from '@/lib/motion'
 import { openAppScheme } from '@/lib/openApp'
 import { accounts, isSampleData, type Account } from '@/lib/private'
@@ -13,28 +12,6 @@ import Accordion from './Accordion'
 import { accountGroups, copyValue, payLinks } from './accounts'
 
 const groups = accountGroups(accounts)
-
-/**
- * Static white light pooled behind the heading and intro: reads as light spreading from the centre
- * and keeps text-ink-muted / text-accent above 4.5:1 where the bloom blobs are densest.
- */
-const LIGHT_WASH: CSSProperties = {
-  background:
-    'radial-gradient(ellipse 80% 62% at 50% 46%, rgb(255 255 255 / 0.74) 0%, rgb(255 255 255 / 0.6) 55%, rgb(255 255 255 / 0) 100%)',
-}
-
-/** Mint-to-blush band with drifting light; -z-10 inside the isolated section keeps it under the header and content. */
-function AccountBackdrop() {
-  return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-linear-to-b from-mint/80 via-bg to-blush/60"
-    >
-      <LightBloom palette={['mint', 'blush']} intensity="soft" />
-      <div className="absolute inset-x-0 top-0 h-96" style={LIGHT_WASH} />
-    </div>
-  )
-}
 
 function AccountRow({ account }: { account: Account }) {
   const links = payLinks(account)
@@ -88,8 +65,9 @@ export default function Account() {
       id="account"
       eyebrow={wedding.account.eyebrow}
       title={wedding.account.title}
-      tone="plain"
-      className="relative isolate overflow-hidden"
+      top="md"
+      bottom="md"
+      wash="mint"
       badge={
         isSampleData ? (
           <span className="rounded-full border border-line bg-bg-elevated px-3 py-0.5 text-[0.75rem] tracking-[0.02em] text-accent">
@@ -98,8 +76,6 @@ export default function Account() {
         ) : undefined
       }
     >
-      <AccountBackdrop />
-
       <Reveal>
         <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">
           {wedding.account.intro.map((line, i) => (

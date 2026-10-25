@@ -253,6 +253,54 @@
   }
 }
 
+/* ---------- Wash (static; reaches past its section, feathered at both ends) ---------- */
+/* When the plateau is shorter than the two fades (a short section), CSS clamps the third stop to the
+   second and the wash becomes a soft hump. That is intended. */
+.fx-wash {
+  top: calc(var(--fx-wash-top, 160px) * -1);
+  bottom: calc(var(--fx-wash-bottom, 160px) * -1);
+  --fx-wash-fade-top: calc(var(--fx-wash-top, 160px) * 2);
+  --fx-wash-fade-bottom: max(calc(var(--fx-wash-bottom, 160px) * 2), 160px);
+  background-image:
+    radial-gradient(90% 38% at 22% 30%, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0) 100%),
+    linear-gradient(
+      to bottom,
+      rgb(var(--fx-wash-tint) / 0) 0,
+      rgb(var(--fx-wash-tint) / var(--fx-wash-peak)) var(--fx-wash-fade-top),
+      rgb(var(--fx-wash-tint) / var(--fx-wash-peak)) calc(100% - var(--fx-wash-fade-bottom)),
+      rgb(var(--fx-wash-tint) / 0) 100%
+    );
+}
+/* Peaks are capped so text-ink-muted stays >= 4.6:1 on the composite (see README) */
+.fx-wash-leaf {
+  --fx-wash-tint: var(--fx-glow-butter); /* 226 242 208 -> rgb(236 245 226) at peak */
+  --fx-wash-peak: 0.5;
+}
+.fx-wash-mint {
+  --fx-wash-tint: var(--fx-glow-mint); /* 200 234 212 -> rgb(229 243 232) */
+  --fx-wash-peak: 0.36;
+}
+.fx-wash-sky {
+  --fx-wash-tint: var(--fx-curtain-wash-neutral); /* 223 236 239 -> rgb(234 242 241) */
+  --fx-wash-peak: 0.5;
+}
+
+/* The last section's wash must not extend the page past <main> */
+.app-frame > :last-child > .fx-wash {
+  bottom: 0;
+}
+
+/* ---------- Bleed (decorative layer that crosses section boundaries) ---------- */
+.fx-bleed {
+  contain: paint;
+}
+
+@media (prefers-contrast: more), (forced-colors: active) {
+  .fx-wash {
+    display: none;
+  }
+}
+
 /* ---------- Reduced motion: calmest static frame ---------- */
 /* Class specificity plus !important beats the global `* { animation-duration }` rule in index.css */
 @media (prefers-reduced-motion: reduce) {

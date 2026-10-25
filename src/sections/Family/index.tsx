@@ -58,7 +58,14 @@ export default function Family() {
   const close = useCallback(() => setOpen(false), [])
 
   return (
-    <Section id="family" eyebrow={wedding.family.eyebrow} title={wedding.family.title}>
+    <Section
+      id="family"
+      eyebrow={wedding.family.eyebrow}
+      title={wedding.family.title}
+      top="sm"
+      bottom="md"
+      wash="mint"
+    >
       <Reveal>
         <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-bg-elevated px-6 py-2">
           {SIDES.map((side) => (
@@ -68,7 +75,7 @@ export default function Family() {
       </Reveal>
 
       {groups.length > 0 && (
-        <Reveal delay={REVEAL_STEP} className="mt-10 flex justify-center">
+        <Reveal delay={REVEAL_STEP} className="mt-8 flex justify-center">
           <Button variant="primary" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
             <Phone size={16} aria-hidden="true" />
             연락하기

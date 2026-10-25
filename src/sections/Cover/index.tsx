@@ -2,7 +2,7 @@ import { useId, useRef, type MouseEvent } from 'react'
 import { motion, useInView, useReducedMotion, type TargetAndTransition, type Variants } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { wedding } from '@/config/wedding'
-import { CurtainLight, GlowPulse, LightLeak, PetalDrift } from '@/effects'
+import { CurtainLight, fadeMask, GlowPulse, LightLeak, PetalDrift } from '@/effects'
 import { EASE_OUT } from '@/lib/motion'
 import { burstConfetti } from './confetti'
 import { coverDateLine, coverVenueLine } from './format'
@@ -41,6 +41,8 @@ const photoInner = 'block w-full overflow-hidden rounded-[inherit]'
 // a horizontal gradient and a vertical mask so it reads as diffused light, not a box.
 const lightPool =
   'relative before:pointer-events-none before:absolute before:-inset-x-10 before:-inset-y-3 before:-z-10 before:bg-[linear-gradient(90deg,rgb(255_255_255/0)_0,rgb(255_255_255/0.72)_40px,rgb(255_255_255/0.72)_calc(100%_-_40px),rgb(255_255_255/0)_100%)] before:[mask-image:linear-gradient(transparent,#000_12px,#000_calc(100%_-_12px),transparent)]'
+
+const CURTAIN_FADE = fadeMask('bottom', '200px')
 
 /** Hero screen: eyebrow, cover photo, names, date and venue. Not wrapped in <Section>. */
 export default function Cover() {
@@ -96,7 +98,10 @@ export default function Cover() {
           within the ~20 budget in src/effects/README.md. CurtainLight is the only background layer:
           the README says to use it instead of LightBloom, not on top of it. */}
       {/* Sunlight through sheer curtains: the warm wash supplies the window glow, painted below petals and text. */}
-      <CurtainLight tone="warm" intensity="medium" bands={6} />
+      {/* The curtain fades out over its last 200 px, where the greeting's leaf wash shows through from below. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0" style={CURTAIN_FADE}>
+        <CurtainLight tone="warm" intensity="medium" bands={6} />
+      </div>
       <PetalDrift count={1} seed={8} className="z-[5]" />
 
       <motion.div

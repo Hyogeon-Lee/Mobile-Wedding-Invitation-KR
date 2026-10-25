@@ -36,7 +36,7 @@ export default function Calendar() {
   }, [startsAt])
 
   return (
-    <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)}>
+    <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)} top="md" bottom="sm">
       <Reveal className="mx-auto max-w-[340px]">
         <div className="relative isolate overflow-hidden rounded-2xl border border-line bg-bg-elevated px-2.5 pt-6 pb-5">
           {/* Dimmed so the peak mint tint keeps text-accent / text-ink-muted at or above 4.5:1 on this card. */}
@@ -94,7 +94,7 @@ export default function Calendar() {
         </div>
       </Reveal>
 
-      <Reveal delay={REVEAL_STEP} className="mt-14 text-center">
+      <Reveal delay={REVEAL_STEP} className="mt-12 text-center">
         <p className="font-display text-[2.5rem] leading-none tracking-[-0.01em] tabular-nums lining-nums text-orange">
           {formatDday(days, datePlaceholder)}
         </p>

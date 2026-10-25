@@ -120,6 +120,8 @@ img {
 
 /* Mobile frame: content column centered on wide screens */
 .app-frame {
+  position: relative;
+  isolation: isolate;
   max-width: var(--content-max);
   margin: 0 auto;
   background: var(--color-bg);

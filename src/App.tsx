@@ -29,8 +29,8 @@ const s = {
   footer: wedding.footer.enabled,
 }
 
-// Page order. Sections stay direct children of <main>; the cover's scroll cue targets the next sibling that is not aria-hidden,
-// so the decorative dividers between sections are skipped.
+// Page order. Sections stay direct children of <main>; the cover's scroll cue targets the next sibling that is not
+// aria-hidden. The two line-free ornaments below (and the footer's own sprig) are the only ones on the page.
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
@@ -39,21 +39,15 @@ export default function App() {
           <main className="app-frame">
             {s.cover && <Cover />}
             {s.greeting && <Greeting />}
-            {s.greeting && <BotanicalDivider variant="sprig" />}
+            {s.greeting && s.family && <BotanicalDivider variant="sprig" />}
             {s.family && <Family />}
-            {s.family && <BotanicalDivider variant="dots" />}
             {s.calendar && <Calendar />}
-            {s.calendar && <BotanicalDivider variant="leaf" />}
             {s.gallery && <Gallery />}
-            {s.gallery && <BotanicalDivider variant="sprig" />}
+            {s.gallery && s.location && <BotanicalDivider variant="leaf" />}
             {s.location && <Location />}
-            {s.location && <BotanicalDivider variant="dots" />}
             {s.account && <Account />}
-            {s.account && <BotanicalDivider variant="leaf" />}
             {s.rsvp && <Rsvp />}
-            {s.rsvp && <BotanicalDivider variant="dots" />}
             {s.guestbook && <Guestbook />}
-            {s.guestbook && <BotanicalDivider variant="sprig" />}
             {s.share && <Share />}
             {s.footer && <Footer />}
           </main>

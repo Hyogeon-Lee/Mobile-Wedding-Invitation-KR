@@ -8,7 +8,7 @@ import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import type { GalleryImage } from '@/config/types'
 import { wedding } from '@/config/wedding'
-import { CurtainLight } from '@/effects'
+import { Bleed, CurtainLight, PetalDrift } from '@/effects'
 import { EASE_OUT } from '@/lib/motion'
 import { hasMore, spansBothColumns, splitTiles, tileTilt, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
@@ -143,41 +143,46 @@ export default function Gallery() {
     ))
 
   return (
-    <Section id="gallery" eyebrow={eyebrow} title={title}>
-      <Reveal amount="some">
-        {/* Warm curtain light pooling over the first rows, as if from a window above the top-right frame.
-            The light box is capped at 60rem: rotated bands shift sideways by (h/2)·tan θ at the edges, so on the
-            full ~2,000 px stage they would leave the top-right corner unlit. Edges fade through static bg
-            overlays instead of a mask on the animated layer, which would add a mask pass every frame. */}
-        <div className="relative isolate -mx-6 overflow-hidden px-6 py-6">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[min(100%,60rem)] overflow-hidden"
-          >
+    <Section
+      id="gallery"
+      eyebrow={eyebrow}
+      title={title}
+      top="lg"
+      bottom="sm"
+      backdrop={
+        <>
+          {/* Curtain light rising from under the heading over the first rows; a static mask feathers both ends.
+              Capped at 60rem: rotated bands shift sideways by (h/2)·tan θ at the edges, so on the full ~2,000 px
+              section they would leave the top-right corner unlit. */}
+          <Bleed top="-10rem" mask="y" fade="12rem" className="h-[min(calc(100%_+_10rem),60rem)]">
             <CurtainLight tone="warm" intensity="soft" bands={5} angle={-12} seed={3} />
-            <div className="absolute inset-x-0 top-0 z-[1] h-16 bg-linear-to-b from-bg to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 z-[1] h-1/2 bg-linear-to-t from-bg to-transparent" />
-          </div>
+          </Bleed>
+          {/* Leaves fall from the last rows into Location (3 petals, 6 nodes). */}
+          <Bleed bottom="-12rem" className="h-[28rem]">
+            <PetalDrift count={3} seed={5} />
+          </Bleed>
+        </>
+      }
+    >
+      <Reveal amount="some">
+        <div className="py-6">
+          <div className={GRID}>{tiles(head, 0)}</div>
 
-          <div className="relative z-10">
-            <div className={GRID}>{tiles(head, 0)}</div>
-
-            <AnimatePresence initial={false}>
-              {expanded && tail.length > 0 && (
-                <motion.div
-                  id={tailId}
-                  key="tail"
-                  // Opacity/transform only: animating height would relayout every section below on each frame.
-                  initial={reduce ? false : { opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? undefined : { opacity: 0 }}
-                  transition={{ duration: reduce ? 0 : 0.35, ease: EASE_OUT }}
-                >
-                  <div className={`${GRID} pt-3`}>{tiles(tail, head.length)}</div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          <AnimatePresence initial={false}>
+            {expanded && tail.length > 0 && (
+              <motion.div
+                id={tailId}
+                key="tail"
+                // Opacity/transform only: animating height would relayout every section below on each frame.
+                initial={reduce ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduce ? undefined : { opacity: 0 }}
+                transition={{ duration: reduce ? 0 : 0.35, ease: EASE_OUT }}
+              >
+                <div className={`${GRID} pt-3`}>{tiles(tail, head.length)}</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {hasMore(images.length) && (

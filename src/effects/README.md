@@ -1,11 +1,12 @@
 # src/effects — soft light & greenery effects
 
 Decorative layers for the "morning light through leaves" look: drifting light blooms, a light
-sweep over photos, sunlight through sheer curtains, falling leaves and petals, a breathing glow, and
-a swaying botanical divider.
+sweep over photos, sunlight through sheer curtains, falling leaves and petals, a breathing glow,
+a swaying botanical ornament, and two static helpers that let tints and leaves cross section boundaries
+(`Wash`, `Bleed`).
 
 ```tsx
-import { LightBloom, LightLeak, CurtainLight, PetalDrift, GlowPulse, BotanicalDivider, useInViewPause } from '@/effects'
+import { LightBloom, LightLeak, CurtainLight, PetalDrift, GlowPulse, BotanicalDivider, Wash, Bleed, fadeMask, useInViewPause } from '@/effects'
 ```
 
 Importing from `@/effects` also loads `effects.css` (keyframes, pause and reduced-motion rules).
@@ -15,6 +16,7 @@ Always import from the index, never from individual files, so the stylesheet is 
 
 - Animates only `transform` and `opacity`; softness comes from gradients, never `filter: blur()`.
 - Root is `aria-hidden="true"` and `pointer-events-none` (except `GlowPulse`, whose wrapper holds your real content; only its glow is hidden).
+- `Wash` and `Bleed` are static (no keyframes), so they cost 0 animated nodes and need no pause or reduced-motion rule.
 - Pauses while off-screen (`useInViewPause` sets `data-paused` on the root).
 - Under `prefers-reduced-motion` all keyframes stop and each effect shows a calm static frame.
 
@@ -30,17 +32,66 @@ Keep about 20 or fewer animated nodes in one viewport. Costs:
 | `LightLeak` | 1 |
 | `GlowPulse` | 1 |
 | `BotanicalDivider` | 1 |
+| `Wash` | 0 (static) |
+| `Bleed` | 0 (static wrapper; count the effects inside it) |
 
 The default `PetalDrift` alone (24) is over budget, so always pass a lower `count` or
 `density="light"`. Use at most one `PetalDrift` per section and prefer `density="light"` when it shares
 a viewport with `LightBloom` or `CurtainLight`. Use `CurtainLight` instead of `LightBloom` as a section background,
 not in addition to it: the two together already cost 14 at their defaults.
 
+Current page (iPhone 14, 390 × 844, counted as above; a Bleed's effects count wherever the Bleed reaches):
+
+| Viewport | Animated nodes |
+| --- | --- |
+| Cover | 13 (curtain 8 + petal 2 + leak 1 + glow 1 + scroll cue 1) |
+| Cover → greeting | 19 (13 + greeting petals 6) |
+| Greeting → family | 7 (petals 6 + sprig 1) |
+| Family → calendar | 7 (card bloom 6 + glow 1) |
+| Calendar → gallery | 14 (card bloom 6 + glow 1 + gallery curtain 7) |
+| Gallery → location | 13 (petals 6 + leaf 1 + location bloom 6) |
+| Location → account | 6 (location bloom) |
+| Account, RSVP, guestbook | 0 |
+| Share → footer | 7 (footer bloom 6 + sprig 1) |
+
+Measured in Chromium (running `.fx-anim` elements intersecting an 844 px viewport, 150 px scroll steps):
+at most 17, at the cover → greeting step at 480 px (cover 10 + petals 6 + sprig 1); 16 at 360 and 390 px
+(cover 9 + petals 6 + sprig 1; some cover bands are already above the fold); 14 at 390 px and 12 at 360 px in
+large-text mode. The scroll cue is a Motion/WAAPI loop, not `.fx-anim`, so it adds 1 there (18 at most).
+
 ## Layering (read this before using LightBloom / CurtainLight / PetalDrift)
 
-Background layers are `absolute inset-0 z-0`. The parent must be `relative isolate overflow-hidden`,
-and every piece of content that should sit above the layer must be positioned with `relative z-10`
-(non-positioned content paints *under* an absolutely positioned layer).
+There are two places a background layer can live.
+
+**Across sections (page ambience).** `<main>` (`.app-frame`, `relative isolate`) is the only stacking
+context for page decoration. `Section` is `relative` and never `isolate`, `overflow-hidden`, transformed or
+z-indexed, so a layer at `-z-10` inside it paints in `<main>`'s context: above the page background, under every
+section's content, and free to extend into the neighbouring sections. Use `Section`'s `wash` prop for a
+static tint and its `backdrop` prop for a `Bleed` holding animated effects. Later sections' layers paint over
+earlier ones, so never put an opaque fill (for example a `from-bg` overlay) where another section's tint is still
+visible; feather with a mask instead.
+
+```tsx
+<Section
+  id="location"
+  top="sm"
+  bottom="sm"
+  backdrop={
+    <Bleed top="-8rem" bottom="0" mask="y" fade="12rem">
+      <LightBloom palette={['butter', 'mint']} intensity="soft" className="opacity-65" />
+    </Bleed>
+  }
+>
+  …content…
+</Section>
+```
+
+`Section`'s header is `relative z-20` and its children wrapper `relative z-10`, so light placed inside the
+content layer passes under the title.
+
+**Inside a component (a card, a photo frame).** Effects are `absolute inset-0 z-0`. The parent must be
+`relative isolate overflow-hidden`, and every piece of content that should sit above the layer must be
+positioned with `relative z-10` (non-positioned content paints *under* an absolutely positioned layer).
 
 ```tsx
 <div className="relative isolate overflow-hidden rounded-2xl">
@@ -48,8 +99,6 @@ and every piece of content that should sit above the layer must be positioned wi
   <div className="relative z-10">…content…</div>
 </div>
 ```
-
-`Section` does not yet put its own header above a background layer; see the note at the end.
 
 ---
 
@@ -118,7 +167,7 @@ parameters come from the pure `curtainParams(index, seed)` in `curtain.ts`.
 </div>
 ```
 
-The root is `absolute inset-0 z-0`, so the parent must be `relative isolate overflow-hidden` and
+The root is `absolute inset-0 z-0`, so the parent must be a `Bleed` or `relative isolate overflow-hidden`, and
 content above it `relative z-10` (see Layering). The bands are lighter than the page background, so
 they only raise text contrast. The wash is the one part that darkens the background slightly; its
 peak alpha is capped so `text-ink-muted` stays at or above 4.5:1 over `bg` (4.59:1 under the warm medium
@@ -172,7 +221,7 @@ Wraps children and puts a soft radial glow disc behind them that breathes (scale
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `color` | `'butter' \| 'mint' \| 'blush'` | `'butter'` | Glow tint |
-| `size` | `number` (px) | `220` | Glow diameter; the glow may extend past the wrapper, so keep it inside an `overflow-hidden` section or make it no wider than the column |
+| `size` | `number` (px) | `220` | Glow diameter; the glow may extend past the wrapper and sections no longer clip, so keep it no wider than the column (≤ 342 px at 390 px) |
 | `className` | `string` | `''` | Wrapper classes, e.g. `'mx-auto'` or `'grid w-full'` |
 | `children` | `ReactNode` | required | Rendered above the glow, stays accessible |
 
@@ -186,21 +235,89 @@ Reduced motion: glow static at scale 1, opacity 0.7.
 
 ## BotanicalDivider
 
-Centered 120×28 SVG ornament between two hairlines (`bg-line`), swaying ±2.5° around the stem base
-(5 s, ease-in-out, alternate). Decorative only (`aria-hidden`).
+Centered, line-free 120×28 SVG ornament (the root is 44 px tall), swaying ±2.5° around the stem base
+(5 s, ease-in-out, alternate). Decorative only (`aria-hidden`). There are no hairlines: a line across the column
+reads as a cut between sections. Use at most three ornaments per page (currently: after the greeting, after the
+gallery, and the footer's own sprig).
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `variant` | `'sprig' \| 'dots' \| 'leaf'` | `'sprig'` | `sprig`: two arching stems with six leaves and a blush bud; `leaf`: one leaf on a short stem; `dots`: three sage / blush / mint dots |
-| `className` | `string` | `''` | Appended to the root (default padding `px-6 py-6`) |
+| `className` | `string` | `''` | Appended to the root (default padding `px-6 py-2`) |
 
 ```tsx
 <Greeting />
-<BotanicalDivider variant="leaf" />
+<BotanicalDivider variant="sprig" />
 <Family />
 ```
 
 Reduced motion: no sway.
+
+## Wash
+
+Static, feathered tint owned by a section that reaches past it into both neighbours: the gradient is
+transparent at the layer's top, reaches the peak `2 × reachTop` below that, holds, and fades out over
+`max(2 × reachBottom, 160px)`, so a tint always starts before a boundary and ends after it. A faint white
+radial highlight sits near the top-left. Usually rendered through `Section`'s `wash` prop.
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `tone` | `'leaf' \| 'mint' \| 'sky'` | `'leaf'` | Peak 0.5 of `226 242 208` (leaf), 0.36 of `200 234 212` (mint), 0.5 of `223 236 239` (sky) |
+| `reachTop` | `number` (px) | `160` | How far the layer extends above the parent |
+| `reachBottom` | `number` (px) | `160` | How far the layer extends below the parent; clamped to `0` automatically in the last section |
+| `className` | `string` | `''` | Appended to the root |
+
+```tsx
+<Section id="family" top="sm" wash="mint">…</Section>
+```
+
+Rules: the parent must be `relative` and never `isolate`, `overflow-hidden`, transformed or z-indexed;
+otherwise the wash is clipped to the parent's box or painted inside it instead of across the boundary.
+Over a short section the plateau collapses and the wash becomes a soft hump; that is intended.
+
+Contrast at the densest point (sRGB alpha-over on bg `#f5f8f3`, WCAG ratio):
+
+| Tint | Peak composite | `text-ink-muted` | `text-accent` |
+| --- | --- | --- | --- |
+| mint | `rgb(229 243 232)` | 4.63:1 | 5.49:1 |
+| leaf | `rgb(236 245 226)` | 4.73:1 | 5.61:1 |
+| sky (unused) | `rgb(234 242 241)` | 4.67:1 | 5.54:1 |
+
+Do not stack a wash on a `LightBloom` that sits under small muted text without recomputing. Hidden under
+`prefers-contrast: more` and `forced-colors: active`; kept under `prefers-reduced-transparency` (it is a
+tint on an opaque ground, not a see-through surface).
+
+## Bleed
+
+Static decorative wrapper (`absolute inset-x-0 -z-10 overflow-hidden`, `contain: paint`) whose `top` /
+`bottom` may be negative, so the effects inside it cross section boundaries: light that starts above a heading,
+leaves that fall from one section into the next. A Bleed at `-z-10` is its own stacking context, so effects inside
+keep their `absolute inset-0 z-0` layout and `useInViewPause` still observes the effect's own root.
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `top` | CSS length | `0` unless only `bottom` is set | Negative reaches into the section above; a `%` resolves against the parent's height |
+| `bottom` | CSS length | `0` unless only `top` is set | Negative reaches into the section below |
+| `mask` | `'none' \| 'y' \| 'top' \| 'bottom'` | `'none'` | Static feather on those edges |
+| `fade` | CSS length | `'10rem'` | Feather length |
+| `className` | `string` | `''` | E.g. a height when only one edge is set: `h-[28rem]` |
+| `style` | `CSSProperties` | | Merged last |
+
+```tsx
+// Leaves fall from the last gallery rows into Location (3 petals, 6 nodes).
+<Bleed bottom="-12rem" className="h-[28rem]">
+  <PetalDrift count={3} seed={5} />
+</Bleed>
+```
+
+`fadeMask(edge, fade = '10rem'): CSSProperties` returns the mask as both `mask-image` and
+`-webkit-mask-image` (older Android WebViews need the prefix). Use it directly for a masked wrapper that is
+not a Bleed, e.g. the cover's curtain, which fades over its last 200 px inside the isolated cover.
+
+Rules: same parent rules as `Wash`. Feather a Bleed with `mask`, never with opaque `from-bg` overlays (they would
+hide the washes of earlier sections). Count the effects inside it in every viewport the Bleed reaches. A Bleed
+with a negative `bottom` must not sit in the last section of `<main>`: it would add empty scroll below the page.
+(A wash in the last section is clamped to `bottom: 0` by `.app-frame > :last-child > .fx-wash`.)
 
 ## useInViewPause(ref, rootMargin?)
 
@@ -227,8 +344,13 @@ These are for decoration only. Text keeps using `text-ink`, `text-ink-muted` or 
 
 ## Known integration notes
 
-- `Section` renders its header as non-positioned content, so a `LightBloom` inside a `Section`
-  would paint over the header. Until `Section` supports a backdrop, put the effect in a wrapper
-  inside `Section`'s children, or ask for the shared `Section` change.
-- `App.tsx` notes that sections must stay direct children of `<main>` because the cover's scroll cue
-  targets its next sibling. Inserting `BotanicalDivider` between sections changes that sibling.
+- `Section` is never isolated or clipped (`relative px-6` plus `top` / `bottom` padding of 48 / 56 / 64 px).
+  Ambient light goes in `wash` or a `Bleed` in `backdrop`; the header is `z-20`, the content `z-10`.
+- `.app-frame` (`<main>`) is `relative isolate` so negative-z layers paint above its background. It has no
+  overflow rule; Bleeds and washes are `inset-x-0`, so nothing overflows horizontally.
+- The cover stays `relative isolate overflow-hidden` (its rotated curtain bands must be clipped sideways). Its
+  curtain fades out over the last 200 px through `fadeMask('bottom', '200px')`, and the greeting's leaf wash shows
+  through from below.
+- Sections stay direct children of `<main>`. The cover's scroll cue skips `aria-hidden` siblings, so the
+  ornaments between sections are safe.
+- At most three ornaments per page, all line-free; no hairlines between sections.

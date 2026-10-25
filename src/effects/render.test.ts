@@ -1,7 +1,18 @@
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { BotanicalDivider, CurtainLight, GlowPulse, LightBloom, LightLeak, PetalDrift, type GlowPulseProps } from './index'
+import {
+  Bleed,
+  BotanicalDivider,
+  CurtainLight,
+  fadeMask,
+  GlowPulse,
+  LightBloom,
+  LightLeak,
+  PetalDrift,
+  Wash,
+  type GlowPulseProps,
+} from './index'
 
 const count = (html: string, needle: string) => html.split(needle).length - 1
 
@@ -13,12 +24,48 @@ describe('effects markup', () => {
       createElement(PetalDrift),
       createElement(BotanicalDivider),
       createElement(CurtainLight),
+      createElement(Bleed),
     ]) {
       const html = renderToStaticMarkup(el)
       expect(html.startsWith('<div aria-hidden="true"')).toBe(true)
       expect(html).toContain('pointer-events-none')
       expect(html).toContain('overflow-hidden')
     }
+    // Wash must not clip: it reaches past its parent on purpose.
+    const wash = renderToStaticMarkup(createElement(Wash))
+    expect(wash.startsWith('<div aria-hidden="true"')).toBe(true)
+    expect(wash).toContain('pointer-events-none')
+  })
+
+  it('BotanicalDivider is a line-free ornament', () => {
+    for (const variant of ['sprig', 'leaf', 'dots'] as const) {
+      const html = renderToStaticMarkup(createElement(BotanicalDivider, { variant }))
+      expect(html).not.toContain('bg-line')
+      expect(html).toContain('py-2')
+    }
+  })
+
+  it('Wash paints a static tint at -z-10 with the requested tone and reach', () => {
+    const html = renderToStaticMarkup(createElement(Wash, { tone: 'mint', reachTop: 200 }))
+    expect(html).toContain('-z-10')
+    expect(html).toContain('fx-wash-mint')
+    expect(html).toContain('--fx-wash-top:200px')
+    expect(html).toContain('--fx-wash-bottom:160px')
+    expect(html).not.toContain('fx-anim')
+    expect(renderToStaticMarkup(createElement(Wash))).toContain('fx-wash-leaf')
+    expect(renderToStaticMarkup(createElement(Wash, { reachBottom: 0 }))).toContain('--fx-wash-bottom:0px')
+  })
+
+  it('Bleed offsets its box, feathers with both mask properties and paints at -z-10', () => {
+    const html = renderToStaticMarkup(createElement(Bleed, { top: '-10rem', mask: 'y', fade: '12rem' }))
+    expect(html).toContain('-z-10')
+    expect(html).toContain('top:-10rem')
+    expect(html).not.toContain('bottom:')
+    expect(html).toContain('mask-image:linear-gradient(to bottom, transparent 0, #000 12rem')
+    expect(html).toContain('-webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 12rem')
+    expect(renderToStaticMarkup(createElement(Bleed))).toContain('top:0;bottom:0')
+    expect(fadeMask('none')).toEqual({})
+    expect(fadeMask('top', '14rem').maskImage).toBe('linear-gradient(to bottom, transparent 0, #000 14rem)')
   })
 
   it('LightBloom renders six blobs with the requested tints', () => {

@@ -76,8 +76,15 @@ export default function Guestbook() {
   const { visible, remaining } = paginate(entries, shown)
 
   return (
-    <Section id="guestbook" eyebrow={wedding.guestbook.eyebrow} title={wedding.guestbook.title}>
-      {isPreviewBackend && <PreviewNotice className="-mt-6 mb-8">{PREVIEW_NOTICE}</PreviewNotice>}
+    <Section
+      id="guestbook"
+      eyebrow={wedding.guestbook.eyebrow}
+      title={wedding.guestbook.title}
+      top="sm"
+      bottom="md"
+      wash="leaf"
+    >
+      {isPreviewBackend && <PreviewNotice className="-mt-4 mb-8">{PREVIEW_NOTICE}</PreviewNotice>}
 
       <Reveal>
         <GuestbookForm onAdded={insert} />

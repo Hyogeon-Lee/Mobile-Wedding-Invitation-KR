@@ -129,7 +129,7 @@ export default function Rsvp() {
   const { event, rsvp } = wedding
 
   return (
-    <Section id="rsvp" eyebrow={rsvp.eyebrow} title={rsvp.title}>
+    <Section id="rsvp" eyebrow={rsvp.eyebrow} title={rsvp.title} top="md" bottom="sm">
       <Reveal className="text-center">
         <p className="text-[0.9375rem] leading-[1.8] text-ink-muted">
           {rsvp.intro.map((line, i) => (
@@ -142,7 +142,7 @@ export default function Rsvp() {
         <p className="mt-4 font-serif text-[1rem] leading-relaxed text-ink">{rsvpEventLine(event)}</p>
       </Reveal>
 
-      <Reveal delay={REVEAL_STEP} className="mt-10">
+      <Reveal delay={REVEAL_STEP} className="mt-12">
         {status === 'success' ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}

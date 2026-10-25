@@ -6,7 +6,7 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
-import { LightBloom } from '@/effects'
+import { Bleed, LightBloom } from '@/effects'
 import { asset } from '@/lib/env'
 import { REVEAL_STEP } from '@/lib/motion'
 import { siteUrl } from '@/lib/kakao'
@@ -49,13 +49,6 @@ const TRANSPORT_ICON: Record<TransportKey, LucideIcon> = {
   parking: ParkingCircle,
   shuttle: BusFront,
 }
-
-/**
- * The section is an isolated stacking context, so a negative z-index puts the bloom above the
- * section background but under the (non-positioned) Section header and content. The root is dimmed
- * so butter peaks keep text-ink-muted above 4.5:1, and masked so it fades into neighbouring sections.
- */
-const BLOOM_CLASS = '-z-10! opacity-75 mask-y-from-80%'
 
 const navLinkClass =
   'pressable inline-flex min-h-11 w-full items-center justify-center rounded-full border border-line bg-bg-elevated px-1 py-2 leading-tight ' +
@@ -115,8 +108,20 @@ export default function Location() {
   const showMap = hasKey && !mapFailed
 
   return (
-    <Section id="location" eyebrow={location.eyebrow} title={location.title} className="relative isolate overflow-hidden">
-      <LightBloom palette={['butter', 'mint']} intensity="soft" className={BLOOM_CLASS} />
+    <Section
+      id="location"
+      eyebrow={location.eyebrow}
+      title={location.title}
+      top="sm"
+      bottom="sm"
+      backdrop={
+        // Starts under the gallery hint and fades in and out over 12rem. Dimmed to 0.65 so even two
+        // overlapping blob peaks keep text-ink-muted at 4.5:1 under the address lines.
+        <Bleed top="-8rem" bottom="0" mask="y" fade="12rem">
+          <LightBloom palette={['butter', 'mint']} intensity="soft" className="opacity-65" />
+        </Bleed>
+      }
+    >
       <Reveal className="text-center">
         <p className="font-serif text-[1.25rem] leading-snug text-ink">{venueName}</p>
         <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>

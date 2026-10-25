@@ -34,7 +34,7 @@ const BREATHE = 0.15
 /**
  * Sunlight through sheer curtains: soft, leaning vertical bands of light over a faint window wash
  * from the top-right corner. The band group drifts sideways very slowly while each band breathes.
- * Place inside a `relative isolate overflow-hidden` parent; content above it needs `relative z-10`.
+ * Place inside a `Bleed` or a `relative isolate overflow-hidden` parent; content above it needs `relative z-10`.
  */
 export function CurtainLight({
   bands,
