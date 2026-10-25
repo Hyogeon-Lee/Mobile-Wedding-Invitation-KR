@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500">
-  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e7ebe8"/><stop offset="1" stop-color="#c9d3cf"/></linearGradient></defs>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e1ecee"/><stop offset="1" stop-color="#bfd3d6"/></linearGradient></defs>
   <rect width="1200" height="1500" fill="url(#g)"/>
   <circle cx="600" cy="630" r="192" fill="rgba(255,255,255,0.35)"/>
   <text x="50%" y="1170" text-anchor="middle" font-family="Georgia, serif" font-size="60" fill="rgba(60,50,45,0.6)" letter-spacing="4">PHOTO 4</text>

@@ -3,23 +3,25 @@
 /* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
 :root {
   /*
-   * Palette (owner direction 2026-10-25): ivory, pale pastel green, orange as the single point colour, no pink.
-   * Reference remains the Arove Studio look (cream rooms, sun through sheer curtains, greenery through glass).
+   * Palette (owner direction 2026-10-25, revision 3): fresh, cool greens. No pink, no apricot, no golden warmth.
+   * Ivory-white with a green cast, pastel and mint tints, deep fresh green as the text/button accent,
+   * and a clean orange reserved for large numerals and tiny decorative marks (sparks in the greenery).
    */
-  --color-bg: #f9f7f0;
+  --color-bg: #f5f8f3;
   --color-bg-elevated: #ffffff;
-  --color-ink: #4a4a43; /* warm soft charcoal, 8.3:1 on bg */
-  --color-ink-muted: #6f6c63; /* 4.9:1 on bg */
-  --color-line: #e5e2d8;
-  --color-accent: #ab4f23; /* point orange, text-safe: 4.9:1 on bg, white on it 5.1:1 */
-  --color-accent-soft: #fbe9da; /* pale apricot tint for chips and hovers */
-  --color-green: #4f7257; /* greenery accent, text-safe: 4.9:1 on bg, 4.5:1 on mint */
-  --color-sage: #9fb59c; /* decorative sage (leaves, dividers; not for small text) */
-  --color-mint: #e9f0e3; /* pale pastel green tint */
-  --color-blush: #fbeadb; /* warm apricot tint (name kept for compatibility; no pink anywhere) */
-  --color-butter: #fbf1dc; /* ivory-gold sunlight tint */
-  --color-sand: #f1ece0; /* cream wall tint */
-  --color-sky: #e6ebe6; /* window light, grey-green tint */
+  --color-ink: #36423b; /* deep green-charcoal, 10:1 on bg */
+  --color-ink-muted: #5f6f66; /* 4.9:1 on bg */
+  --color-line: #dbe5da;
+  --color-accent: #2f6b4f; /* fresh deep green, text-safe: 6.4:1 on bg, white on it 6.9:1 */
+  --color-accent-soft: #dcecdb; /* pale fresh green tint */
+  --color-green: #3f7a5a; /* mid greenery green for icons and labels, 4.7:1 on bg */
+  --color-sage: #9fcfa9; /* pastel leaf green (decorative) */
+  --color-orange: #d9671f; /* point orange: large text (>= 24px) and decorative marks only, 3.3:1 on bg */
+  --color-mint: #e2efe0; /* pale mint tint */
+  --color-blush: #e7f2e3; /* legacy name: now a pale leaf tint (no pink anywhere) */
+  --color-butter: #eef6e3; /* light through leaves: cool lime-white tint */
+  --color-sand: #eef3ea; /* cool off-white tint */
+  --color-sky: #dfecef; /* cool window-light tint */
 
   --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo',
     'Noto Sans KR', sans-serif;
@@ -29,7 +31,7 @@
   --content-max: 480px;
   --gutter: 24px;
   --radius: 16px;
-  --shadow-soft: 0 16px 40px -24px rgb(79 114 87 / 0.32);
+  --shadow-soft: 0 16px 40px -24px rgb(47 107 79 / 0.3);
 }
 
 @theme inline {
@@ -42,6 +44,7 @@
   --color-accent-soft: var(--color-accent-soft);
   --color-sage: var(--color-sage);
   --color-green: var(--color-green);
+  --color-orange: var(--color-orange);
   --color-blush: var(--color-blush);
   --color-butter: var(--color-butter);
   --color-mint: var(--color-mint);
@@ -104,7 +107,7 @@ img {
 }
 @media (min-width: 560px) {
   body {
-    background: linear-gradient(160deg, #f1ede3 0%, #e9eee6 100%);
+    background: linear-gradient(160deg, #e9f1e6 0%, #e3edee 100%);
   }
   .app-frame {
     box-shadow: 0 0 0 1px var(--color-line), 0 20px 60px rgba(0, 0, 0, 0.08);

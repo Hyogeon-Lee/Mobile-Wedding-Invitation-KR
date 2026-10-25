@@ -6,12 +6,12 @@ const out = join(process.cwd(), 'public', 'images')
 mkdirSync(out, { recursive: true })
 
 const palettes = [
-  ['#efe9dc', '#d9cfb9'], // ivory / sand
-  ['#e6ecdf', '#c3d1bb'], // pale green
-  ['#f3efe6', '#e0d6c4'], // cream
-  ['#e7ebe8', '#c9d3cf'], // grey-green sky
-  ['#f6ecdc', '#e7cdae'], // warm apricot-sand
-  ['#e9efe3', '#cfdac6'], // mint
+  ['#eef3ea', '#cfdccb'], // cool off-white / sage
+  ['#e3f0e1', '#b9d8bd'], // pale green
+  ['#f1f5ef', '#d6e3d4'], // white-green
+  ['#e1ecee', '#bfd3d6'], // cool sky
+  ['#e6f1e4', '#a9d4b4'], // fresh mint
+  ['#edf4e6', '#c8dcb6'], // lime-white
 ]
 
 function svg(w, h, label, [c1, c2]) {

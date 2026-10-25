@@ -5,21 +5,21 @@
 
 :root {
   /* Glow tints as RGB triplets so gradients can vary alpha: rgb(var(--fx-glow-butter) / 0.5) */
-  --fx-glow-butter: 255 233 172;
-  --fx-glow-mint: 212 232 204;
-  --fx-glow-blush: 250 216 186; /* apricot (no pink in this palette) */
-  --fx-glow-sage: 190 210 188;
+  --fx-glow-butter: 226 242 208; /* cool leaf-light */
+  --fx-glow-mint: 200 234 212;
+  --fx-glow-blush: 214 238 226; /* legacy name: cool mint (no pink, no apricot) */
+  --fx-glow-sage: 176 220 190;
 
   /* Decorative fills, a step deeper than the page tints so they read on #f9f7f2; sage follows the page token */
   --fx-petal-sage: var(--color-sage);
-  --fx-petal-mint: #b4d1ac;
-  --fx-petal-blush: #efc39a; /* apricot petal */
+  --fx-petal-mint: #a9d9b6;
+  --fx-petal-blush: #8fcba0; /* legacy name: fresh leaf green */
 
   /* CurtainLight: band light and corner wash (butter / sky follow the page tokens) */
-  --fx-curtain-light-warm: 255 250 235;
+  --fx-curtain-light-warm: 247 255 244; /* cool green-white light */
   --fx-curtain-light-neutral: 255 255 255;
-  --fx-curtain-wash-warm: 251 240 213;
-  --fx-curtain-wash-neutral: 228 234 238;
+  --fx-curtain-wash-warm: 226 242 220;
+  --fx-curtain-wash-neutral: 223 236 239;
 }
 
 /* ---------- Off-screen pause (set by useInViewPause) ---------- */
