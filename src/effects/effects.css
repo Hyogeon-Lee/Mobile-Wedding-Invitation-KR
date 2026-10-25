@@ -1,0 +1,199 @@
+/*
+ * Shared stylesheet for src/effects. Only transform and opacity are animated.
+ * Softness comes from radial/linear gradients, never from filter: blur().
+ */
+
+:root {
+  /* Glow tints as RGB triplets so gradients can vary alpha: rgb(var(--fx-glow-butter) / 0.5) */
+  --fx-glow-butter: 255 233 172;
+  --fx-glow-mint: 204 230 198;
+  --fx-glow-blush: 247 210 204;
+  --fx-glow-sage: 190 210 188;
+
+  /* Decorative fills, a step deeper than the page tints so they read on #f8f9f4 */
+  --fx-petal-sage: #8fa892;
+  --fx-petal-mint: #b4d1ac;
+  --fx-petal-blush: #ecc3bd;
+}
+
+/* ---------- Off-screen pause (set by useInViewPause) ---------- */
+[data-paused] .fx-anim {
+  animation-play-state: paused;
+}
+
+/* ---------- LightBloom ---------- */
+.fx-bloom {
+  contain: paint;
+}
+.fx-bloom-blob {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: radial-gradient(
+    closest-side,
+    rgb(var(--fx-tint) / 0.95) 0%,
+    rgb(var(--fx-tint) / 0.55) 40%,
+    rgb(var(--fx-tint) / 0.18) 70%,
+    rgb(var(--fx-tint) / 0) 100%
+  );
+  opacity: var(--fx-o-hi);
+  animation: fx-bloom-drift var(--fx-dur) ease-in-out var(--fx-delay) infinite alternate both;
+}
+@keyframes fx-bloom-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.92);
+    opacity: var(--fx-o-lo);
+  }
+  50% {
+    transform: translate3d(calc(var(--fx-dx) * 0.55), calc(var(--fx-dy) * -0.35), 0) scale(1.05);
+    opacity: var(--fx-o-hi);
+  }
+  100% {
+    transform: translate3d(var(--fx-dx), var(--fx-dy), 0) scale(1.14);
+    opacity: var(--fx-o-mid);
+  }
+}
+
+/* ---------- LightLeak ---------- */
+.fx-leak {
+  contain: paint;
+}
+.fx-leak-vignette {
+  background: radial-gradient(
+    130% 95% at 0% 0%,
+    rgb(255 238 200 / 0.42) 0%,
+    rgb(255 238 200 / 0.16) 32%,
+    rgb(255 238 200 / 0) 58%
+  );
+}
+.fx-leak-band {
+  background: linear-gradient(
+    105deg,
+    rgb(255 255 255 / 0) 22%,
+    rgb(255 250 232 / 0.22) 40%,
+    rgb(255 255 255 / 0.35) 50%,
+    rgb(255 250 232 / 0.22) 60%,
+    rgb(255 255 255 / 0) 78%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translate3d(-110%, 0, 0);
+  animation: fx-leak-sweep var(--fx-interval) ease-in-out 1.2s infinite both;
+}
+/* Sweep fills the first 3/7 of the cycle (3 s of the default 7 s), then the band rests off-frame */
+@keyframes fx-leak-sweep {
+  0% {
+    transform: translate3d(-110%, 0, 0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 1;
+  }
+  43% {
+    transform: translate3d(110%, 0, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(110%, 0, 0);
+    opacity: 0;
+  }
+}
+
+/* ---------- PetalDrift ---------- */
+.fx-petals {
+  contain: paint;
+}
+/* Full-height column so translateY(100%) equals the container height */
+.fx-petal-fall {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transform: translate3d(0, var(--fx-rest), 0);
+  animation: fx-petal-fall var(--fx-fall-dur) linear var(--fx-fall-delay) infinite both;
+}
+.fx-petal-sway {
+  display: block;
+  transform: rotate(var(--fx-rot-a));
+  animation: fx-petal-sway var(--fx-sway-dur) ease-in-out var(--fx-sway-delay) infinite alternate both;
+}
+@keyframes fx-petal-fall {
+  0% {
+    transform: translate3d(0, -28px, 0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, calc(100% + 28px), 0);
+    opacity: 0;
+  }
+}
+@keyframes fx-petal-sway {
+  0% {
+    transform: translate3d(calc(var(--fx-sway) * -1), 0, 0) rotate(var(--fx-rot-a));
+  }
+  45% {
+    transform: translate3d(calc(var(--fx-sway) * 0.35), 0, 0) rotate(calc((var(--fx-rot-a) + var(--fx-rot-b)) / 2));
+  }
+  100% {
+    transform: translate3d(var(--fx-sway), 0, 0) rotate(var(--fx-rot-b));
+  }
+}
+
+/* ---------- GlowPulse ---------- */
+.fx-glow {
+  border-radius: 9999px;
+  background: radial-gradient(
+    closest-side,
+    rgb(var(--fx-tint) / 0.95) 0%,
+    rgb(var(--fx-tint) / 0.5) 45%,
+    rgb(var(--fx-tint) / 0) 100%
+  );
+  opacity: 0.7;
+  animation: fx-glow-pulse 3s ease-in-out infinite alternate both;
+}
+@keyframes fx-glow-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+/* ---------- BotanicalDivider ---------- */
+.fx-sway {
+  animation: fx-sway 5s ease-in-out infinite alternate both;
+}
+@keyframes fx-sway {
+  0% {
+    transform: rotate(-2.5deg);
+  }
+  100% {
+    transform: rotate(2.5deg);
+  }
+}
+
+/* ---------- Reduced motion: calmest static frame ---------- */
+/* Class specificity plus !important beats the global `* { animation-duration }` rule in index.css */
+@media (prefers-reduced-motion: reduce) {
+  .fx-anim {
+    animation: none !important;
+  }
+  .fx-leak-band,
+  .fx-motion-only {
+    display: none !important;
+  }
+  .fx-bloom-blob {
+    opacity: var(--fx-o-mid);
+  }
+}
