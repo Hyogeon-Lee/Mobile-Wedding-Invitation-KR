@@ -12,10 +12,12 @@ import Rsvp from '@/sections/Rsvp'
 import Guestbook from '@/sections/Guestbook'
 import Share from '@/sections/Share'
 import Footer from '@/sections/Footer'
+import { BotanicalDivider } from '@/effects'
 
 const s = wedding.sections
 
-// Page order. Sections must stay direct children of <main>: the cover's scroll cue targets its next sibling.
+// Page order. Sections stay direct children of <main>; the cover's scroll cue targets the next sibling that is not aria-hidden,
+// so the decorative dividers between sections are skipped.
 export default function App() {
   return (
     <ToastProvider>
@@ -23,13 +25,21 @@ export default function App() {
         <main className="app-frame">
           {s.cover && <Cover />}
           {s.greeting && <Greeting />}
+          {s.greeting && <BotanicalDivider variant="sprig" />}
           {s.family && <Family />}
+          {s.family && <BotanicalDivider variant="dots" />}
           {s.calendar && <Calendar />}
+          {s.calendar && <BotanicalDivider variant="leaf" />}
           {s.gallery && <Gallery />}
+          {s.gallery && <BotanicalDivider variant="sprig" />}
           {s.location && <Location />}
+          {s.location && <BotanicalDivider variant="dots" />}
           {s.account && <Account />}
+          {s.account && <BotanicalDivider variant="leaf" />}
           {s.rsvp && <Rsvp />}
+          {s.rsvp && <BotanicalDivider variant="dots" />}
           {s.guestbook && <Guestbook />}
+          {s.guestbook && <BotanicalDivider variant="sprig" />}
           {s.share && <Share />}
           {s.footer && <Footer />}
         </main>

@@ -12,7 +12,7 @@
   --color-ink: #4f4e47; /* warm soft charcoal, 7.9:1 on bg */
   --color-ink-muted: #716e66; /* 4.6:1 on bg */
   --color-line: #e6e2da;
-  --color-accent: #587460; /* muted sage, 4.9:1 on bg, white on it 5.1:1 */
+  --color-accent: #526e5a; /* muted sage, 5.3:1 on bg, 4.6:1 on mint tints, white on it 5.6:1 */
   --color-accent-soft: #e8ede3; /* pale sage tint */
   --color-sage: #9bb09a; /* decorative sage (not for small text) */
   --color-blush: #f7ece4; /* warm peach-cream tint */
@@ -29,6 +29,7 @@
   --content-max: 480px;
   --gutter: 24px;
   --radius: 16px;
+  --shadow-soft: 0 16px 40px -24px rgb(82 110 90 / 0.35);
 }
 
 @theme inline {

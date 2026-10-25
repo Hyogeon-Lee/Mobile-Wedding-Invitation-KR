@@ -20,7 +20,7 @@ export default function Accordion({ id, title, children, defaultOpen = false }: 
   const panelId = `${id}-panel`
 
   return (
-    <div className="rounded-[12px] border border-line bg-bg-elevated">
+    <div className="rounded-2xl border border-line bg-bg-elevated">
       <h3>
         <button
           type="button"
@@ -28,13 +28,13 @@ export default function Accordion({ id, title, children, defaultOpen = false }: 
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between gap-3 rounded-[12px] px-5 py-4 text-left text-[0.9375rem] font-medium text-ink transition-colors hover:bg-accent-soft/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="flex w-full items-center justify-between gap-3 rounded-2xl px-5 py-4 text-left text-[0.9375rem] text-ink transition-colors hover:bg-mint/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <span>{title}</span>
           <ChevronDown
             size={18}
             aria-hidden="true"
-            className={`shrink-0 text-ink-muted transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+            className={`shrink-0 text-accent transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
           />
         </button>
       </h3>

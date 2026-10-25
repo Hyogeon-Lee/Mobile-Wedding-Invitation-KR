@@ -63,8 +63,8 @@ Reduced motion: blobs stay at rest at their middle opacity.
 
 ## LightLeak
 
-Overlay for a photo frame: a static warm glow in the top-left corner and a soft diagonal white band
-(`mix-blend-mode: screen`) that sweeps across once per cycle. Place it after the image inside a
+Overlay for a photo frame: a static warm glow in the top-left corner and a soft, semi-transparent
+diagonal white band (normal compositing, alpha 0.22–0.35) that sweeps across once per cycle. Place it after the image inside a
 `relative overflow-hidden` frame; it inherits the frame's border radius.
 
 | Prop | Type | Default | Notes |

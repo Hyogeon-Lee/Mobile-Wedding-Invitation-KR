@@ -6,6 +6,7 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
+import { LightBloom } from '@/effects'
 import { asset } from '@/lib/env'
 import { siteUrl } from '@/lib/kakao'
 import MapBoundary from './MapBoundary'
@@ -49,9 +50,16 @@ const TRANSPORT_ICON: Record<TransportKey, LucideIcon> = {
   shuttle: BusFront,
 }
 
+/**
+ * The section is an isolated stacking context, so a negative z-index puts the bloom above the
+ * section background but under the (non-positioned) Section header and content. The root is dimmed
+ * so butter peaks keep text-ink-muted above 4.5:1, and masked so it fades into neighbouring sections.
+ */
+const BLOOM_CLASS = '-z-10! opacity-75 mask-y-from-80%'
+
 const navLinkClass =
-  'inline-flex h-11 w-full items-center justify-center rounded-full border border-line bg-bg-elevated px-1 ' +
-  'text-[0.9375rem] font-medium text-ink transition-colors select-none hover:bg-accent-soft/60 active:bg-accent-soft ' +
+  'inline-flex h-11 w-full items-center justify-center rounded-full border border-line bg-white/80 px-1 ' +
+  'text-[0.9375rem] font-medium text-ink transition-colors select-none hover:bg-mint active:bg-mint ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 /** App-scheme links: an iOS long-press "Open in New Tab" would open a dead scheme URL. */
 const appLinkClass = `${navLinkClass} [-webkit-touch-callout:none]`
@@ -61,7 +69,7 @@ function MapFallback({ label }: { label: string }) {
     <div className="relative size-full">
       <img src={asset(FALLBACK_IMAGE)} alt="" className="size-full object-cover" />
       <div className="absolute inset-0 flex items-center justify-center p-6">
-        <p className="rounded-full border border-line bg-bg-elevated/90 px-4 py-2 text-center text-[0.9375rem] text-ink">
+        <p className="rounded-full border border-line bg-white/85 px-4 py-2 text-center text-[0.9375rem] text-ink">
           {label}
         </p>
       </div>
@@ -106,7 +114,8 @@ export default function Location() {
   const showMap = hasKey && !mapFailed
 
   return (
-    <Section id="location" eyebrow="LOCATION" title="오시는 길">
+    <Section id="location" eyebrow="LOCATION" title="오시는 길" className="relative isolate overflow-hidden">
+      <LightBloom palette={['butter', 'mint']} intensity="soft" className={BLOOM_CLASS} />
       <Reveal className="text-center">
         <p className="font-serif text-[1.25rem] leading-snug text-ink">{venueName}</p>
         <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>
@@ -120,7 +129,7 @@ export default function Location() {
       <Reveal delay={REVEAL_STEP} className="mt-10">
         <div
           ref={mapBoxRef}
-          className="relative aspect-4/3 overflow-hidden rounded-xl border border-line bg-accent-soft/30"
+          className="relative aspect-4/3 overflow-hidden rounded-2xl border-6 border-white bg-mint shadow-(--shadow-soft)"
           data-lenis-prevent
         >
           {showMap && mapNear ? (
@@ -175,16 +184,18 @@ export default function Location() {
 
       {entries.length > 0 && (
         <Reveal delay={REVEAL_STEP * 2} className="mt-10">
-          <dl className="divide-y divide-line border-y border-line">
+          <dl className="divide-y divide-line rounded-2xl border border-line bg-white/55 px-5">
             {entries.map(({ key, label, lines }) => {
               const Icon = TRANSPORT_ICON[key]
               return (
-                <div key={key} className="flex gap-4 py-5">
-                  <dt className="flex w-18 shrink-0 items-center gap-2 self-start text-[0.9375rem] font-medium text-ink">
-                    <Icon size={18} aria-hidden="true" className="shrink-0 text-accent" />
+                <div key={key} className="py-5">
+                  <dt className="flex items-center gap-2.5 text-[0.9375rem] font-medium text-ink">
+                    <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-mint text-accent">
+                      <Icon size={17} strokeWidth={1.75} aria-hidden="true" />
+                    </span>
                     {label}
                   </dt>
-                  <dd className="min-w-0 flex-1">
+                  <dd className="mt-1.5 min-w-0 pl-[2.875rem]">
                     {lines.map((line, i) => (
                       <p key={i} className="text-[0.9375rem] leading-relaxed text-ink-muted">
                         {line}

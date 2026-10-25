@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
+import { GlowPulse, LightBloom } from '@/effects'
 import { wedding } from '@/config/wedding'
 import { WEEKDAYS_KO, daysUntil, formatDday, toKstParts } from '@/lib/date'
 import { calendarTitle, ddaySentence, monthLabel } from './format'
@@ -8,6 +9,11 @@ import { calendarWeeks, isWeddingCell } from './grid'
 
 const REFRESH_MS = 60_000
 const REVEAL_STEP = 0.12
+/** Mint glow behind the wedding-day circle; small enough to stay clear of neighbouring day numbers. */
+const DAY_GLOW_PX = 56
+/** Butter glow behind the D-day number; narrower than the narrowest content column (272px). */
+const DDAY_GLOW_PX = 190
+const BLOOM_CLASS = 'opacity-60'
 
 export default function Calendar() {
   const { couple, event } = wedding
@@ -33,57 +39,71 @@ export default function Calendar() {
 
   return (
     <Section id="calendar" eyebrow="SAVE THE DATE" title={calendarTitle(event)}>
-      <Reveal className="mx-auto max-w-[320px]">
-        <table className="w-full table-fixed border-collapse">
-          <caption className="caption-top pb-4 text-center font-serif text-[1.0625rem] text-ink">
-            {monthLabel(target.year, target.month, datePlaceholder)}
-          </caption>
-          <thead>
-            <tr className="border-b border-line">
-              {WEEKDAYS_KO.map((w, i) => (
-                <th
-                  key={w}
-                  scope="col"
-                  abbr={`${w}요일`}
-                  className={`pb-3 text-center text-[0.8125rem] font-normal tracking-wide ${i === 0 ? 'text-accent' : 'text-ink-muted'}`}
-                >
-                  {w}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {weeks.map((week, wi) => (
-              <tr key={wi}>
-                {week.map((day, di) => {
-                  const isWedding = isWeddingCell(day, target.day, datePlaceholder)
-                  return (
-                    <td key={di} className="pt-2 text-center text-[0.9375rem] leading-none text-ink">
-                      {day !== null && (
-                        <span
-                          className={`inline-flex size-9 items-center justify-center rounded-full ${
-                            isWedding ? 'bg-accent font-medium text-white' : ''
-                          } ${di === 0 && !isWedding ? 'text-accent' : ''}`}
-                        >
-                          {day}
-                          {isWedding && <span className="sr-only"> 결혼식</span>}
-                        </span>
-                      )}
-                    </td>
-                  )
-                })}
+      <Reveal className="mx-auto max-w-[340px]">
+        <div className="relative isolate overflow-hidden rounded-2xl border border-line bg-white/45 px-2.5 pt-6 pb-5">
+          {/* Dimmed so the peak mint tint keeps text-accent / text-ink-muted at or above 4.5:1 on this card. */}
+          <LightBloom palette={['mint', 'butter', 'mint']} className={BLOOM_CLASS} />
+          <table className="relative z-10 w-full table-fixed border-collapse">
+            <caption className="caption-top pb-4 text-center font-serif text-[1.0625rem] text-ink-muted">
+              {monthLabel(target.year, target.month, datePlaceholder)}
+            </caption>
+            <thead>
+              <tr className="border-b border-line">
+                {WEEKDAYS_KO.map((w, i) => (
+                  <th
+                    key={w}
+                    scope="col"
+                    abbr={`${w}요일`}
+                    className={`pb-3 text-center text-[0.8125rem] font-normal tracking-wide ${i === 0 ? 'text-accent' : 'text-ink-muted'}`}
+                  >
+                    {w}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {datePlaceholder && <p className="mt-4 text-center text-[0.9375rem] text-ink-muted">일정 확정 전 예시 달력</p>}
+            </thead>
+            <tbody>
+              {weeks.map((week, wi) => (
+                <tr key={wi}>
+                  {week.map((day, di) => {
+                    const isWedding = isWeddingCell(day, target.day, datePlaceholder)
+                    return (
+                      <td key={di} className="pt-2 text-center text-[0.9375rem] leading-none text-ink">
+                        {day !== null && !isWedding && (
+                          <span
+                            className={`inline-flex size-9 items-center justify-center rounded-full ${di === 0 ? 'text-accent' : ''}`}
+                          >
+                            {day}
+                          </span>
+                        )}
+                        {isWedding && (
+                          <GlowPulse color="mint" size={DAY_GLOW_PX}>
+                            <span className="inline-flex size-9 items-center justify-center rounded-full bg-accent font-medium text-white">
+                              {day}
+                              <span className="sr-only"> 결혼식</span>
+                            </span>
+                          </GlowPulse>
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {datePlaceholder && (
+            <p className="relative z-10 mt-4 text-center text-[0.9375rem] text-ink-muted">일정 확정 전 예시 달력</p>
+          )}
+        </div>
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-14 text-center">
-        <p className="font-display text-[2.5rem] leading-none tracking-[0.06em] text-ink">
-          {formatDday(days, datePlaceholder)}
-        </p>
-        <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink">
+        <GlowPulse color="butter" size={DDAY_GLOW_PX}>
+          <p className="font-display text-[2.5rem] leading-none tracking-[0.06em] text-accent">
+            {formatDday(days, datePlaceholder)}
+          </p>
+        </GlowPulse>
+        {/* Positioned so it paints above the D-day glow, which is itself a positioned layer. */}
+        <p className="relative mt-4 text-[0.9375rem] leading-relaxed text-ink">
           {ddaySentence({ groom: couple.groom.name, bride: couple.bride.name, days, placeholder: datePlaceholder })}
         </p>
       </Reveal>

@@ -1,8 +1,10 @@
 import { ExternalLink } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import CopyButton from '@/components/CopyButton'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
+import { LightBloom } from '@/effects'
 import { openAppScheme } from '@/lib/openApp'
 import { accounts, isSampleData, type Account } from '@/lib/private'
 import Accordion from './Accordion'
@@ -12,6 +14,28 @@ const REVEAL_STEP = 0.12
 const INTRO = ['참석이 어려우신 분들을 위해 계좌번호를 안내드립니다.', '전해 주시는 마음은 소중하게 간직하겠습니다.']
 const groups = accountGroups(accounts)
 
+/**
+ * Static white light pooled behind the heading and intro: reads as light spreading from the centre
+ * and keeps text-ink-muted / text-accent above 4.5:1 where the bloom blobs are densest.
+ */
+const LIGHT_WASH: CSSProperties = {
+  background:
+    'radial-gradient(ellipse 80% 62% at 50% 46%, rgb(255 255 255 / 0.74) 0%, rgb(255 255 255 / 0.6) 55%, rgb(255 255 255 / 0) 100%)',
+}
+
+/** Mint-to-blush band with drifting light; -z-10 inside the isolated section keeps it under the header and content. */
+function AccountBackdrop() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-linear-to-b from-mint/80 via-bg to-blush/60"
+    >
+      <LightBloom palette={['mint', 'blush']} intensity="soft" />
+      <div className="absolute inset-x-0 top-0 h-96" style={LIGHT_WASH} />
+    </div>
+  )
+}
+
 function AccountRow({ account }: { account: Account }) {
   const links = payLinks(account)
   const toast = useToast()
@@ -19,7 +43,7 @@ function AccountRow({ account }: { account: Account }) {
     <li className="py-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[0.9375rem] font-medium text-ink">{account.holder}</p>
+          <p className="text-[0.9375rem] text-ink">{account.holder}</p>
           <p className="mt-0.5 text-[0.9375rem] text-ink-muted tabular-nums">
             {account.bank} {account.number}
           </p>
@@ -45,7 +69,7 @@ function AccountRow({ account }: { account: Account }) {
                       })
                     }
               }
-              className="inline-flex h-8 items-center gap-1 rounded-full px-2 text-[0.8125rem] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="inline-flex h-8 items-center gap-1 rounded-full px-2 text-[0.8125rem] text-ink-muted transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               {link.label}
               <ExternalLink size={12} aria-hidden="true" />
@@ -64,18 +88,20 @@ export default function Account() {
       id="account"
       eyebrow="GIFT"
       title="마음 전하실 곳"
-      tone="tinted"
+      tone="plain"
+      className="relative isolate overflow-hidden"
       badge={
         isSampleData ? (
-          <span className="rounded-full border border-line bg-bg-elevated px-2.5 py-0.5 text-[0.75rem] font-medium text-accent">
+          <span className="rounded-full border border-line bg-bg-elevated px-3 py-0.5 text-[0.75rem] tracking-wide text-accent">
             예시 계좌
           </span>
         ) : undefined
       }
     >
+      <AccountBackdrop />
 
       <Reveal>
-        <p className="text-center text-[0.9375rem] leading-relaxed text-ink-muted">
+        <p className="text-center text-[0.9375rem] leading-[1.85] text-ink-muted">
           {INTRO[0]}
           <br />
           {INTRO[1]}

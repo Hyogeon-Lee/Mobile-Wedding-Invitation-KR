@@ -11,6 +11,14 @@ export function spansBothColumns(index: number): boolean {
   return index % 3 === 2
 }
 
+/**
+ * Alternating polaroid tilt. Literal class names so Tailwind generates them.
+ * Even indices lean left, odd lean right; with the pair/full rhythm this varies per row.
+ */
+export function tileTilt(index: number): string {
+  return index % 2 === 0 ? 'rotate-[-1.2deg]' : 'rotate-[1deg]'
+}
+
 export function hasMore(total: number): boolean {
   return total > COLLAPSED_COUNT
 }

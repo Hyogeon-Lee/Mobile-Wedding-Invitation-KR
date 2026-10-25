@@ -10,8 +10,8 @@
   --fx-glow-blush: 247 210 204;
   --fx-glow-sage: 190 210 188;
 
-  /* Decorative fills, a step deeper than the page tints so they read on #f8f9f4 */
-  --fx-petal-sage: #8fa892;
+  /* Decorative fills, a step deeper than the page tints so they read on #f9f7f2; sage follows the page token */
+  --fx-petal-sage: var(--color-sage);
   --fx-petal-mint: #b4d1ac;
   --fx-petal-blush: #ecc3bd;
 }
@@ -75,7 +75,6 @@
     rgb(255 250 232 / 0.22) 60%,
     rgb(255 255 255 / 0) 78%
   );
-  mix-blend-mode: screen;
   opacity: 0;
   transform: translate3d(-110%, 0, 0);
   animation: fx-leak-sweep var(--fx-interval) ease-in-out 1.2s infinite both;

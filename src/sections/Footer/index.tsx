@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react'
 import Button from '@/components/Button'
 import Reveal from '@/components/Reveal'
 import { wedding } from '@/config/wedding'
+import { BotanicalDivider, LightBloom } from '@/effects'
 import { applyTextLg, readTextLg, scrollTopBehavior, writeTextLg } from './textSize'
 
 /**
- * Compact page footer: hairline, couple names, credit, and two utilities
- * (large-text toggle persisted in localStorage, scroll to top).
+ * Compact page footer: botanical sprig, couple names, credit, and two utilities
+ * (large-text toggle persisted in localStorage, scroll to top), over a faint butter light bloom.
  * Not wrapped in <Section>: the footer has no heading and a tighter rhythm.
  */
 export default function Footer() {
@@ -41,13 +42,14 @@ export default function Footer() {
   }
 
   return (
-    <footer id="footer" className="px-6 py-10 text-center">
-      <Reveal>
-        <hr className="mx-auto mb-8 w-10 border-0 border-t border-line" />
-        <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
+    <footer id="footer" className="relative isolate overflow-hidden px-6 pt-4 pb-12 text-center">
+      <LightBloom palette={['butter']} intensity="soft" className="opacity-70" />
+      <Reveal className="relative z-10">
+        <BotanicalDivider variant="sprig" className="mb-2" />
+        <p className="font-serif text-[1.0625rem] leading-relaxed tracking-[0.02em] text-ink">
           {groom.name} · {bride.name}
         </p>
-        <p className="mt-2 font-display text-[0.6875rem] tracking-[0.3em] text-ink-muted uppercase">{credit}</p>
+        <p className="mt-2 font-display text-[0.8125rem] tracking-[0.16em] text-ink-muted italic">{credit}</p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
           <Button
@@ -55,7 +57,7 @@ export default function Footer() {
             variant="outline"
             aria-pressed={textLg}
             onClick={toggleTextLg}
-            className="aria-pressed:border-accent aria-pressed:text-accent"
+            className="aria-pressed:border-accent/70 aria-pressed:text-accent"
           >
             <ALargeSmall size={16} aria-hidden="true" />
             글자 크게 보기

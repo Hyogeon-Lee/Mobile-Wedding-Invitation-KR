@@ -8,12 +8,20 @@ import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import type { GalleryImage } from '@/config/types'
 import { wedding } from '@/config/wedding'
+import { LightBloom } from '@/effects'
 import { asset } from '@/lib/env'
-import { hasMore, spansBothColumns, splitTiles, toSlides, toggleLabel } from './layout'
+import { hasMore, spansBothColumns, splitTiles, tileTilt, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
 
 const EASE = [0.22, 1, 0.36, 1] as const
-const GRID = 'grid grid-cols-2 gap-2'
+// gap-3 leaves room for the opposite tilts of neighbouring frames so their corners never touch.
+const GRID = 'grid grid-cols-2 gap-3'
+// Soft polaroid frame: 6px white mat, hairline ring, faint sage-tinted drop shadow.
+const FRAME =
+  'block w-full overflow-hidden rounded-xl bg-white p-1.5 ring-1 ring-line/70 ' +
+  'shadow-(--shadow-soft) ' +
+  'transition-[rotate,opacity] duration-500 ease-out motion-reduce:transition-none ' +
+  'hover:rotate-0 focus-visible:rotate-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 
 interface TileProps {
   image: GalleryImage
@@ -31,9 +39,7 @@ function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
       onClick={() => onOpen(index)}
       aria-label={`${image.alt} 크게 보기`}
       aria-busy={busy || undefined}
-      className={`block w-full overflow-hidden rounded-[4px] bg-accent-soft/40 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-        spansBothColumns(index) ? 'col-span-2' : ''
-      } ${busy ? 'opacity-70' : ''}`}
+      className={`${FRAME} ${tileTilt(index)} ${spansBothColumns(index) ? 'col-span-2' : ''} ${busy ? 'opacity-70' : ''}`}
     >
       <img
         src={asset(image.src)}
@@ -43,7 +49,7 @@ function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
         loading="lazy"
         decoding="async"
         style={{ aspectRatio: `${image.width} / ${image.height}` }}
-        className="block h-auto w-full object-cover"
+        className="block h-auto w-full rounded-[6px] bg-accent-soft/60 object-cover"
       />
     </button>
   )
@@ -128,23 +134,30 @@ export default function Gallery() {
   return (
     <Section id="gallery" eyebrow="GALLERY" title="우리의 순간">
       <Reveal amount="some">
-        <div className={GRID}>{tiles(head, 0)}</div>
+        {/* Full-bleed light stage behind the frames; masked edges let the bloom fade out instead of being clipped. */}
+        <div className="relative isolate -mx-6 overflow-hidden px-6 py-6">
+          <LightBloom palette={['mint', 'blush']} intensity="soft" className="mask-x-from-88% mask-y-from-82%" />
 
-        <AnimatePresence initial={false}>
-          {expanded && tail.length > 0 && (
-            <motion.div
-              id={tailId}
-              key="tail"
-              // Opacity/transform only: animating height would relayout every section below on each frame.
-              initial={reduce ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={reduce ? undefined : { opacity: 0 }}
-              transition={{ duration: reduce ? 0 : 0.4, ease: EASE }}
-            >
-              <div className={`${GRID} pt-2`}>{tiles(tail, head.length)}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <div className="relative z-10">
+            <div className={GRID}>{tiles(head, 0)}</div>
+
+            <AnimatePresence initial={false}>
+              {expanded && tail.length > 0 && (
+                <motion.div
+                  id={tailId}
+                  key="tail"
+                  // Opacity/transform only: animating height would relayout every section below on each frame.
+                  initial={reduce ? false : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduce ? undefined : { opacity: 0 }}
+                  transition={{ duration: reduce ? 0 : 0.4, ease: EASE }}
+                >
+                  <div className={`${GRID} pt-3`}>{tiles(tail, head.length)}</div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
 
         {hasMore(images.length) && (
           <div className="mt-8 text-center">

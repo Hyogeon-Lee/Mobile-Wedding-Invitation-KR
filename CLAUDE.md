@@ -9,7 +9,7 @@ Mobile wedding invitation (Korean). Vite + React 19 + TypeScript + Tailwind CSS 
 - Dates: use helpers in `src/lib/date.ts` (KST-fixed). Respect `wedding.event.datePlaceholder` (print "OO월 OO일", "D-OOO").
 - Assets under `public/` must be referenced via `asset()` from `@/lib/env` (handles the GitHub Pages base path).
 - Styling: Tailwind utilities + tokens from `src/index.css` (`bg-bg`, `text-ink`, `text-ink-muted`, `border-line`, `text-accent`, `bg-accent-soft`, `bg-blush`, `bg-butter`, `bg-mint`, `bg-sand`, `bg-sky`, `font-serif`, `font-display`). Palette follows the Arove Studio look: warm cream neutrals, golden sunlight tints, sage greenery accent; never use near-black fills. Mobile first, max content width 480px, 24px gutters. Body text ≥ 15px, contrast ≥ 4.5:1.
-- Motion: `motion/react` only. 0.4–0.8 s, ease-out, at most two moving elements per viewport. Honor `prefers-reduced-motion`.
+- Motion: content entry animations use `motion/react` (0.4–0.8 s, ease-out, at most two at once). Decorative ambient effects come from `src/effects` (CSS keyframes, transform/opacity only, about 20 animated nodes per viewport, paused off-screen, static under `prefers-reduced-motion`); see `src/effects/README.md`.
 - Icons: `lucide-react`.
 - Imports use the `@/` alias for `src/`.
 - Checks before finishing: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`.

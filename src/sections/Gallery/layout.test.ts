@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { COLLAPSED_COUNT, hasMore, spansBothColumns, splitTiles, toSlides, toggleLabel } from './layout'
+import { COLLAPSED_COUNT, hasMore, spansBothColumns, splitTiles, tileTilt, toSlides, toggleLabel } from './layout'
 
 describe('spansBothColumns', () => {
   it('spans every third tile so the 2-column grid reads as pair, full, pair, full', () => {
     expect([0, 1, 2, 3, 4, 5, 6, 7, 8].map(spansBothColumns)).toEqual([
       false, false, true, false, false, true, false, false, true,
     ])
+  })
+})
+
+describe('tileTilt', () => {
+  it('alternates a left and a right lean', () => {
+    expect([0, 1, 2, 3].map(tileTilt)).toEqual(['rotate-[-1.2deg]', 'rotate-[1deg]', 'rotate-[-1.2deg]', 'rotate-[1deg]'])
   })
 })
 

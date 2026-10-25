@@ -5,6 +5,7 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import type { Parent, Person } from '@/config/types'
 import { wedding } from '@/config/wedding'
+import { BotanicalDivider } from '@/effects'
 import { contacts, isSampleData } from '@/lib/private'
 import ContactSheet from './ContactSheet'
 import { buildContactGroups, DECEASED_MARK, presentParents, SIDE_LABEL, SIDES, THIN_SPACE, type Side } from './family'
@@ -29,8 +30,8 @@ function ParentName({ parent }: { parent: Parent }) {
 function FamilyRow({ side, person }: { side: Side; person: Person }) {
   const parents = presentParents(person)
   return (
-    <div className="py-7 text-center">
-      <p className="text-[0.75rem] font-medium text-accent">{SIDE_LABEL[side]}</p>
+    <div className="py-6 text-center">
+      <p className="font-sans text-[0.8125rem] tracking-[0.2em] text-accent">{SIDE_LABEL[side]}</p>
       {parents.length > 0 && (
         <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted">
           {parents.map((parent, i) => (
@@ -60,16 +61,23 @@ export default function Family() {
   return (
     <Section id="family" eyebrow="FAMILY" title="양가 혼주">
       <Reveal>
-        <div className="divide-y divide-line border-y border-line">
-          {SIDES.map((side) => (
-            <FamilyRow key={side} side={side} person={wedding.couple[side]} />
+        <div className="overflow-hidden rounded-2xl border border-line bg-bg-elevated/70 px-6 py-2">
+          {SIDES.map((side, i) => (
+            <Fragment key={side}>
+              {i > 0 && (
+                <div className="-my-4">
+                  <BotanicalDivider variant="leaf" />
+                </div>
+              )}
+              <FamilyRow side={side} person={wedding.couple[side]} />
+            </Fragment>
           ))}
         </div>
       </Reveal>
 
       {groups.length > 0 && (
         <Reveal delay={REVEAL_STEP} className="mt-10 flex justify-center">
-          <Button variant="outline" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
+          <Button variant="primary" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
             <Phone size={16} aria-hidden="true" />
             연락하기
           </Button>

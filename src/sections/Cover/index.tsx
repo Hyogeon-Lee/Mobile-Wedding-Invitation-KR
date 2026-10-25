@@ -2,6 +2,7 @@ import { useId, useRef, type MouseEvent } from 'react'
 import { motion, useInView, useReducedMotion, type TargetAndTransition, type Variants } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { wedding } from '@/config/wedding'
+import { GlowPulse, LightBloom, LightLeak, PetalDrift } from '@/effects'
 import { asset } from '@/lib/env'
 import { burstConfetti } from './confetti'
 import { coverDateLine, coverVenueLine } from './format'
@@ -30,10 +31,18 @@ const cueBob: TargetAndTransition = {
 const cueRest: TargetAndTransition = { transform: 'translateY(0px)', transition: { duration: 0.4, ease: EASE } }
 
 // Photo is 3:4 and at most 58svh tall. On short screens it shrinks to the height left after
-// ~21rem of text, scroll cue and padding (rem, so large-text mode is covered too), keeping the
-// scroll cue on the first screen. svh does not change when browser toolbars collapse.
-const photoBox =
-  'block w-[min(100%,calc(58svh*3/4),max(9rem,calc((100svh_-_21rem_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))*3/4)))] overflow-hidden rounded-[4px]'
+// ~22rem of text, frame ring, scroll cue and padding (rem, so large-text mode is covered too),
+// keeping the scroll cue on the first screen. svh does not change when browser toolbars collapse.
+// The frame carries the ring, shadow and light leak; the inner box clips the photo.
+const photoFrame =
+  'relative block w-[min(100%,calc(58svh*3/4),max(9rem,calc((100svh_-_22rem_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))*3/4)))] rounded-2xl shadow-(--shadow-soft) ring-4 ring-white/80'
+const photoInner = 'block w-full overflow-hidden rounded-[inherit]'
+
+// Static pool of white light behind small text. The medium LightBloom can tint the background
+// enough to drop text-ink-muted / text-accent below 4.5:1; 72% white restores it. Feathered with
+// a horizontal gradient and a vertical mask so it reads as diffused light, not a box.
+const lightPool =
+  'relative before:pointer-events-none before:absolute before:-inset-x-10 before:-inset-y-3 before:-z-10 before:bg-[linear-gradient(90deg,rgb(255_255_255/0)_0,rgb(255_255_255/0.72)_40px,rgb(255_255_255/0.72)_calc(100%_-_40px),rgb(255_255_255/0)_100%)] before:[mask-image:linear-gradient(transparent,#000_12px,#000_calc(100%_-_12px),transparent)]'
 
 /** Hero screen: eyebrow, cover photo, names, date and venue. Not wrapped in <Section>. */
 export default function Cover() {
@@ -70,7 +79,9 @@ export default function Cover() {
 
   const scrollToNext = () => {
     const behavior: ScrollBehavior = reduce ? 'auto' : 'smooth'
-    const next = sectionRef.current?.nextElementSibling
+    // Skip decorative siblings (e.g. a BotanicalDivider) so the cue lands on the next section.
+    let next = sectionRef.current?.nextElementSibling
+    while (next && next.getAttribute('aria-hidden') === 'true') next = next.nextElementSibling
     if (next instanceof HTMLElement) next.scrollIntoView({ behavior, block: 'start' })
     else window.scrollBy({ top: window.innerHeight, behavior })
   }
@@ -80,57 +91,67 @@ export default function Cover() {
       id="cover"
       ref={sectionRef}
       aria-label="표지"
-      className="flex min-h-svh flex-col items-center px-6 pt-[calc(32px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
+      className="relative isolate flex min-h-svh flex-col items-center overflow-hidden px-6 pt-[calc(32px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
     >
+      <LightBloom palette={['butter', 'mint', 'blush']} intensity="medium" />
+      {/* density="light" renders 5 petals, 2 animated nodes each. Cover total: bloom 6 + petals 10
+          + leak 1 + glow 1 + scroll cue 1 = 19, within the ~20 moving-element budget. */}
+      <PetalDrift count={8} seed={2} density="light" className="z-[5]" />
+
       <motion.div
-        className="flex w-full flex-1 flex-col items-center justify-center text-center"
+        className="relative z-10 flex w-full flex-1 flex-col items-center justify-center text-center"
         variants={stagger}
         initial={reduce ? false : 'hidden'}
         animate="shown"
       >
         {cover.eyebrow && (
-          <motion.p variants={line} className="mb-7 font-display text-[0.6875rem] tracking-[0.35em] text-accent uppercase">
+          <motion.p
+            variants={line}
+            className={`${lightPool} mb-6 font-display text-[1.0625rem] tracking-[0.22em] text-accent uppercase italic`}
+          >
             {cover.eyebrow}
           </motion.p>
         )}
 
         {/* The confetti burst is motion-only, so under reduced motion the photo is not a control. */}
-        {reduce ? (
-          <motion.div variants={photo} className={photoBox}>
-            {photoImg}
-          </motion.div>
-        ) : (
-          <motion.button
-            type="button"
-            variants={photo}
-            onClick={onPhotoClick}
-            aria-describedby={photoHintId}
-            className={`${photoBox} focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent`}
-          >
-            {photoImg}
-            <span id={photoHintId} hidden>
-              누르면 축하 꽃가루가 날립니다
-            </span>
-          </motion.button>
-        )}
+        <motion.div variants={photo} className={photoFrame}>
+          {reduce ? (
+            <div className={photoInner}>{photoImg}</div>
+          ) : (
+            <button
+              type="button"
+              onClick={onPhotoClick}
+              aria-describedby={photoHintId}
+              className={`${photoInner} focus-visible:outline-2 focus-visible:outline-offset-[8px] focus-visible:outline-accent`}
+            >
+              {photoImg}
+              <span id={photoHintId} hidden>
+                누르면 축하 꽃가루가 날립니다
+              </span>
+            </button>
+          )}
+          <LightLeak interval={8} />
+        </motion.div>
 
-        <motion.h1 variants={line} className="mt-8 font-serif text-[1.75rem] leading-snug font-normal text-ink">
-          {couple.groom.name} · {couple.bride.name}
-        </motion.h1>
+        <motion.div variants={line} className="mt-8 grid w-full place-items-center">
+          <GlowPulse color="butter" size={220}>
+            <h1 className="font-serif text-[1.75rem] leading-snug font-normal tracking-[0.04em] text-ink">
+              {couple.groom.name} · {couple.bride.name}
+            </h1>
+          </GlowPulse>
+        </motion.div>
 
-        <motion.p variants={line} className="mt-4 text-[0.95rem] leading-relaxed text-ink">
-          {coverDateLine(event)}
-        </motion.p>
-        <motion.p variants={line} className="mt-1 text-[0.95rem] leading-relaxed text-ink-muted">
-          {coverVenueLine(event)}
-        </motion.p>
+        <motion.div variants={line} className={`${lightPool} mt-3`}>
+          <p className="text-[0.95rem] leading-relaxed tracking-[0.02em] text-ink-muted">{coverDateLine(event)}</p>
+          <p className="mt-1 text-[0.95rem] leading-relaxed tracking-[0.02em] text-ink-muted">{coverVenueLine(event)}</p>
+        </motion.div>
       </motion.div>
 
       <motion.button
         type="button"
         onClick={scrollToNext}
         aria-label="Scroll, 다음 내용으로 이동"
-        className="mt-10 flex flex-col items-center gap-1 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+        className={`${lightPool} z-10 mt-10 flex flex-col items-center gap-1 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent`}
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.9, ease: EASE }}
@@ -140,7 +161,7 @@ export default function Cover() {
           className="flex flex-col items-center gap-1"
           animate={reduce || !cueInView ? cueRest : cueBob}
         >
-          <span className="font-display text-[0.6875rem] tracking-[0.3em] uppercase">Scroll</span>
+          <span className="font-display text-[0.8125rem] font-medium tracking-[0.28em] uppercase">Scroll</span>
           <ChevronDown size={18} strokeWidth={1.5} aria-hidden="true" />
         </motion.span>
       </motion.button>

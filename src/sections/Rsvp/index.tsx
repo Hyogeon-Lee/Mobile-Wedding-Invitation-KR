@@ -30,7 +30,7 @@ const REVEAL_STEP = 0.12
 const FOCUS_RING = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 const LABEL = 'mb-2 block text-[0.8125rem] font-medium tracking-wide text-ink-muted'
 const FIELD =
-  'w-full rounded-[12px] border bg-bg-elevated px-4 text-[1rem] text-ink placeholder:text-ink-muted ' +
+  'w-full rounded-2xl border bg-bg-elevated px-4 text-[1rem] text-ink placeholder:text-ink-muted ' +
   `transition-colors disabled:opacity-50 ${FOCUS_RING}`
 const STEP_BUTTON =
   `flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-ink transition-colors ${FOCUS_RING} ` +
@@ -144,7 +144,7 @@ export default function Rsvp() {
 
       <Reveal delay={REVEAL_STEP} className="mt-10">
         {status === 'success' ? (
-          <div className="rounded-[12px] border border-line bg-bg-elevated px-6 py-10 text-center">
+          <div className="rounded-2xl border border-line bg-bg-elevated px-6 py-10 text-center">
             <div ref={successRef} tabIndex={-1} role="status" className="outline-none">
               <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent">
                 <Check size={22} aria-hidden="true" />
@@ -161,7 +161,7 @@ export default function Rsvp() {
             {isPreviewBackend && (
               <p
                 role="note"
-                className="flex items-start gap-2 rounded-[12px] border border-line bg-bg-elevated px-4 py-3 text-[0.8125rem] leading-relaxed text-ink-muted"
+                className="flex items-start gap-2 rounded-2xl border border-line bg-bg-elevated px-4 py-3 text-[0.8125rem] leading-relaxed text-ink-muted"
               >
                 <Info size={14} aria-hidden="true" className="mt-[4px] shrink-0 text-accent" />
                 <span>미리보기 모드 · 지금은 전송 내용이 저장되지 않습니다</span>

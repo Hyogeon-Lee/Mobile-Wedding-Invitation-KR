@@ -1,11 +1,14 @@
 /**
  * Small celebratory burst for the cover photo. `canvas-confetti` is imported on first
  * use so it stays out of the initial bundle. Colors come from the CSS tokens in
- * `src/index.css`; the literals below are only a fallback when the stylesheet is absent.
+ * `src/index.css` and the petal fills in `src/effects/effects.css`; the literals below are
+ * only a fallback when the stylesheet is absent.
  */
 const FALLBACK: Record<string, string> = {
-  '--color-accent': '#a9636b',
-  '--color-sage': '#7d8b6a',
+  '--color-accent': '#587460',
+  '--color-sage': '#9bb09a',
+  '--fx-petal-mint': '#b4d1ac',
+  '--fx-petal-blush': '#ecc3bd',
 }
 
 function token(name: string): string {
@@ -32,7 +35,7 @@ export async function burstConfetti(origin: BurstOrigin): Promise<void> {
     scalar: 0.9,
     ticks: 180,
     origin,
-    colors: [token('--color-accent'), token('--color-sage')],
+    colors: [token('--color-accent'), token('--color-sage'), token('--fx-petal-mint'), token('--fx-petal-blush')],
     disableForReducedMotion: true,
     zIndex: 60,
   })
