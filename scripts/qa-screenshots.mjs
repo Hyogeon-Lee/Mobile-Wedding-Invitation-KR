@@ -1,6 +1,7 @@
 // Full-page screenshots on phone viewports against a running dev/preview server.
 // Usage: BASE_URL=http://localhost:4173 node scripts/qa-screenshots.mjs
-import { chromium, devices } from 'playwright'
+import { createRequire } from 'node:module'
+const { chromium, devices } = createRequire(import.meta.url)('playwright')
 import { mkdirSync } from 'node:fs'
 
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:4173'

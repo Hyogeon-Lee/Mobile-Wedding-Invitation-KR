@@ -1,7 +1,7 @@
 # 모바일 청첩장 개발 계획서
 
-- 작성일: 2026-10-25
-- 상태: 초안 (v0.1) — 결정 필요 사항(11장) 확정 후 v1.0으로 갱신
+- 작성일: 2026-10-25 (v0.2: 4.4 저장소를 Apps Script로, 4.5 배포를 GitHub Actions로 확정)
+- 상태: 초안 — 결정 필요 사항(11장) 확정 후 v1.0으로 갱신
 - 대상 저장소: `Hyogeon-Lee/Mobile-Wedding-Invitation-KR`
 
 ## 1. 목표와 원칙
@@ -114,18 +114,21 @@
 
 ### 4.4 방명록·참석 여부 저장소
 
-**결정: Firebase Cloud Firestore(Spark 무료 플랜) 1안, Google Sheets + Apps Script 2안.**
+**결정(2026-10-25, 사용자 지시): Google Apps Script + Google Sheets. Firebase는 쓰지 않는다.**
 
-- Firestore는 참고 오픈소스 2곳(heejin-hwang, gpjeong)에서 검증됐고 페이지에서 실시간으로 방명록을 표시할 수 있다. 검색 결과 기준 무료 한도는 저장 1GiB, 읽기 5만/일, 쓰기 2만/일로 청첩장 규모에 충분하다(공식 요금 페이지는 착수 시 재확인).
-- 보안 규칙으로 익명 쓰기를 허용하되 필드 길이와 쓰기 빈도를 제한하고, 삭제는 작성 시 입력한 비밀번호 해시로만 허용한다.
-- Sheets 방식은 SDK 없이 `fetch`로 끝나고 응답 확인이 쉽다. RSVP 결과 열람은 어느 방식이든 Sheets로 내보낸다.
+- Apps Script 웹 앱 하나가 방명록 목록 조회(GET)와 방명록 등록·삭제, 참석 여부 등록(POST)을 처리하고 시트 두 장(`guestbook`, `rsvp`)에 기록한다. 코드는 `google-apps-script/Code.gs`에 둔다.
+- 정적 사이트에서 CORS 사전 요청 없이 호출하도록 POST 본문을 `text/plain`으로 보낸다. Apps Script 웹 앱은 preflight에 응답하지 않기 때문이다.
+- 삭제는 등록 시 입력한 비밀번호의 SHA-256 해시로만 허용한다. 이름 20자, 메시지 300자 상한과 스크립트 락으로 동시 쓰기를 직렬화한다.
+- Google 계정 연동은 추후 진행한다. 그 전까지 클라이언트(`src/lib/sheets.ts`)는 `VITE_APPS_SCRIPT_URL`이 비어 있으면 미리보기 모드로 동작해 브라우저 localStorage에만 저장하고 화면에 "미리보기 모드" 표시를 낸다.
+- 응답 열람은 시트에서 직접 한다. 별도 관리자 화면은 만들지 않는다.
 
 ### 4.5 배포
 
-**결정: GitHub Actions → GitHub Pages(1안), Vercel(2안).**
+**결정(2026-10-25, 사용자 지시): GitHub Actions → GitHub Pages.**
 
-- 1안은 저장소 하나로 끝나고 비용이 없다. 다만 GitHub 무료 계정은 공개 저장소에서만 Pages를 쓸 수 있는 것으로 알고 있으므로(착수 시 확인), 사진 비공개가 중요하면 2안으로 간다.
-- 2안은 비공개 저장소에서도 무료 배포가 되고 미리보기 배포가 있어 디자인 검토에 유리하다.
+- `.github/workflows/deploy.yml`이 `main` 푸시마다 lint, test, build를 거쳐 Pages에 배포한다. 프로젝트 페이지 경로(`/<repo>/`)는 `VITE_BASE`로 주입한다.
+- 카카오 키, 연락처·계좌 JSON, Apps Script URL은 GitHub Secrets에 두고 빌드 시에만 읽는다.
+- GitHub 무료 계정은 공개 저장소에서만 Pages를 쓸 수 있는 것으로 알고 있으므로(착수 시 확인), 사진 비공개가 필요해지면 Vercel을 대안으로 둔다.
 - 사용자 지정 도메인은 선택 사항이다. 카카오톡 공유 시 표시되는 URL의 인상에 영향을 주므로 결정 항목에 포함한다.
 
 ### 4.6 이미지·폰트 파이프라인
@@ -196,7 +199,7 @@ export interface WeddingConfig {
 | 지도 | 카카오맵 JavaScript SDK | JavaScript 키, Web 플랫폼 도메인 등록, [카카오맵] 사용 설정 ON |
 | 카카오톡 공유 | Kakao JavaScript SDK `Kakao.Share` | 같은 JavaScript 키, 메시지 템플릿(기본 피드) |
 | 네비 연결 | 카카오내비, 네이버지도, 티맵 딥링크 | 키 불필요, 위경도 또는 주소 |
-| 방명록·RSVP | Firebase Firestore | 프로젝트 생성, 웹 앱 설정값, 보안 규칙 |
+| 방명록·RSVP | Google Apps Script 웹 앱 + Google Sheets | 시트 생성, 스크립트 배포(액세스: 모든 사용자), 웹 앱 URL을 `VITE_APPS_SCRIPT_URL`에 설정 |
 | 송금 링크 | 카카오페이 송금 코드, 토스 송금 링크 | 각 앱에서 생성한 링크 |
 
 ## 7. 비기능 요구사항
@@ -234,7 +237,7 @@ export interface WeddingConfig {
 
 - 공개 저장소에는 변환된 사진만 커밋하고 원본은 올리지 않는다. 사진 비공개가 필요하면 저장소를 비공개로 두고 Vercel로 배포한다.
 - 예식 후 일정 기간이 지나면 `site:down` 스크립트로 빈 페이지를 배포해 링크를 닫는다(gpjeong 방식).
-- Firestore 보안 규칙에서 읽기는 허용하되, 쓰기는 필드 검증과 크기 제한을 둔다.
+- Apps Script에서 입력 길이 제한, 비밀번호 해시 검증, 스크립트 락을 적용한다. 시트 자체는 비공개로 둔다.
 
 ## 8. 단계별 계획
 
@@ -268,8 +271,8 @@ export interface WeddingConfig {
 | 카카오톡 썸네일이 바뀌지 않음 | 공유 인상 저하 | 파일명 버전 관리, 공개 전 디버거로 확인 |
 | 저사양 Android에서 모션 끊김 | 사용성 저하 | 파티클·3D 미채택, 모션 수 제한, 실기기 검증 |
 | 개인정보 커밋 | 영구 노출 | 환경 변수 분리, pre-commit에서 전화·계좌 패턴 검사, 원본 사진 저장소 외 보관 |
-| 방명록 스팸 | 불쾌한 내용 노출 | Firestore 규칙으로 길이·빈도 제한, 관리자 삭제 경로, 필요 시 승인 후 표시 |
-| 무료 플랜 한도·정책 변경 | 서비스 중단 | 정적 기능은 영향 없음, 방명록은 Sheets 방식으로 전환 가능 |
+| 방명록 스팸 | 불쾌한 내용 노출 | Apps Script에서 길이 제한, 시트에서 `deleted` 열로 즉시 숨김, 필요 시 승인 후 표시로 전환 |
+| 무료 플랜 한도·정책 변경 | 서비스 중단 | 정적 기능은 영향 없음, Apps Script 일일 호출 한도는 청첩장 규모에서 여유가 큼(착수 시 수치 확인) |
 | 일정 지연 | 공개 지연 | 섹션 플래그로 미완성 섹션을 숨기고 먼저 공개, 단계 5는 생략 가능 |
 
 ## 11. 결정 필요 사항
@@ -279,9 +282,9 @@ export interface WeddingConfig {
 1. 예식 일시, 장소(홀 이름, 주소), 공개 목표일
 2. 디자인 콘셉트(5장 A~D 중 택 1) 및 참고 이미지
 3. 지도: 카카오맵(1안) 확정 여부
-4. 방명록·RSVP 포함 여부, 포함 시 Firestore(1안) 또는 Sheets(2안)
+4. ~~방명록·RSVP 저장소~~ → Google Apps Script + Sheets로 확정(2026-10-25). Google 계정 연동 시점만 남음
 5. 배경음악 포함 여부와 음원 저작권 확인
-6. 배포: GitHub Pages(공개 저장소) 또는 Vercel(비공개 저장소), 사용자 지정 도메인 사용 여부
+6. ~~배포 방식~~ → GitHub Actions + GitHub Pages로 확정(2026-10-25). 사용자 지정 도메인 사용 여부만 남음
 7. 사진 수량, 메인 사진·영상 유무, 원본 보관 위치
 8. 계좌·송금 링크 공개 범위(양가 모두 또는 일부)
 9. 15번 개성 요소 중 구현할 항목

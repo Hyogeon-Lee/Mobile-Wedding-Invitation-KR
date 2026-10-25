@@ -11,7 +11,8 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "placeholders": "node scripts/make-placeholders.mjs",
-    "qa:shots": "node scripts/qa-screenshots.mjs"
+    "qa:shots": "node scripts/qa-screenshots.mjs",
+    "og": "node scripts/make-og.mjs"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
