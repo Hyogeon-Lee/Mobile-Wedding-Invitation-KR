@@ -2,23 +2,27 @@
 
 /* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
 :root {
-  --color-bg: #fbf9f4;
+  /* Pastel greenery palette: airy ivory-green background, soft sage text, pale mint and blush tints */
+  --color-bg: #f8f9f4;
   --color-bg-elevated: #ffffff;
-  --color-ink: #2b2a28;
-  --color-ink-muted: #6f6a63;
-  --color-line: #e6e1d8;
-  --color-accent: #96565d; /* dusty rose, 5.3:1 on --color-bg */
-  --color-accent-soft: #f1e3e3;
-  --color-sage: #7d8b6a;
+  --color-ink: #4b5447; /* soft sage-gray, 7.5:1 on bg */
+  --color-ink-muted: #667164; /* 4.9:1 on bg */
+  --color-line: #e1e7dc;
+  --color-accent: #527457; /* text-safe sage, 5.1:1 on bg, white on it 5.0:1 */
+  --color-accent-soft: #e4eee0; /* pale mint tint */
+  --color-sage: #8fa892; /* decorative sage (not for small text) */
+  --color-blush: #f6e6e4; /* pastel blush tint */
+  --color-butter: #fbf3dc; /* warm sunlight tint */
+  --color-mint: #edf4e8; /* light mint tint */
 
-  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo',
-    'Noto Sans KR', sans-serif;
+  --font-sans: 'Gowun Dodum', 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
   --font-serif: 'Gowun Batang', 'Nanum Myeongjo', 'Apple SD Gothic Neo', serif;
   --font-display: 'Cormorant Garamond', 'Gowun Batang', serif;
 
   --content-max: 480px;
   --gutter: 24px;
-  --radius: 12px;
+  --radius: 16px;
 }
 
 @theme inline {
@@ -30,6 +34,9 @@
   --color-accent: var(--color-accent);
   --color-accent-soft: var(--color-accent-soft);
   --color-sage: var(--color-sage);
+  --color-blush: var(--color-blush);
+  --color-butter: var(--color-butter);
+  --color-mint: var(--color-mint);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-display: var(--font-display);
@@ -76,7 +83,7 @@ img {
 }
 @media (min-width: 560px) {
   body {
-    background: #f1ede6;
+    background: linear-gradient(160deg, #eef3ea 0%, #f5f1ec 100%);
   }
   .app-frame {
     box-shadow: 0 0 0 1px var(--color-line), 0 20px 60px rgba(0, 0, 0, 0.08);

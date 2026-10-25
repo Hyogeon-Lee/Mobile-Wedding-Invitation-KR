@@ -7,8 +7,8 @@ const base =
   'inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors select-none ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50'
 const variants: Record<Variant, string> = {
-  primary: 'bg-ink text-bg hover:bg-ink/90 active:bg-ink/80',
-  outline: 'border border-line bg-bg-elevated text-ink hover:bg-accent-soft/60 active:bg-accent-soft',
+  primary: 'bg-accent text-white hover:bg-accent/90 active:bg-accent/80',
+  outline: 'border border-line bg-bg-elevated/80 text-ink hover:bg-accent-soft/60 active:bg-accent-soft',
   ghost: 'text-ink-muted hover:text-ink',
 }
 const sizes: Record<Size, string> = {

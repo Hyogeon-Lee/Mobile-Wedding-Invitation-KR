@@ -58,7 +58,7 @@ export default function Segmented<T extends string>({ label, value, options, onC
               disabled={disabled}
               onClick={() => onChange(option.value)}
               className={`h-10 flex-1 rounded-full text-[0.9375rem] transition-colors disabled:opacity-50 ${FOCUS_RING} ${
-                checked ? 'bg-ink font-medium text-bg' : 'text-ink-muted hover:text-ink'
+                checked ? 'bg-accent font-medium text-white' : 'text-ink-muted hover:text-ink'
               }`}
             >
               {option.label}
