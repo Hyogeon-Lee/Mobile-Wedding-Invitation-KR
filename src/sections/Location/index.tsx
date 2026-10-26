@@ -124,7 +124,7 @@ export default function Location() {
     >
       <Reveal className="text-center">
         <p className="font-serif text-[1.25rem] leading-snug text-ink">{venueName}</p>
-        <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>
+        {hall.trim() && <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>}
         <p className="mt-4 text-[0.9375rem] leading-[1.8] text-ink-muted">{address}</p>
         {addressJibun && <p className="mt-0.5 text-[0.9375rem] leading-[1.8] text-ink-muted">(지번) {addressJibun}</p>}
         <div className="mt-4 flex justify-center">
