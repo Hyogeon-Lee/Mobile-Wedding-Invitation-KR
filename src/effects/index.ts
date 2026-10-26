@@ -2,6 +2,8 @@ import './effects.css'
 
 export { LightBloom } from './LightBloom'
 export { LightLeak } from './LightLeak'
+export { LeafShade } from './LeafShade'
+export { Daylight } from './Daylight'
 export { PetalDrift } from './PetalDrift'
 export { GlowPulse, type GlowPulseProps } from './GlowPulse'
 export { BotanicalDivider } from './BotanicalDivider'

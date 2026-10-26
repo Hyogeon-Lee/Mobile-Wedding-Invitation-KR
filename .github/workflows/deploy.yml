@@ -30,7 +30,6 @@ jobs:
           VITE_BASE: /${{ github.event.repository.name }}/
           VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
           VITE_KAKAO_JS_KEY: ${{ secrets.VITE_KAKAO_JS_KEY }}
-          VITE_CONTACTS: ${{ secrets.VITE_CONTACTS }}
           VITE_ACCOUNTS: ${{ secrets.VITE_ACCOUNTS }}
           VITE_APPS_SCRIPT_URL: ${{ secrets.VITE_APPS_SCRIPT_URL }}
       - uses: actions/upload-pages-artifact@v3

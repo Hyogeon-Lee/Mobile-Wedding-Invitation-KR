@@ -1,20 +1,6 @@
 import type { GalleryImage } from '@/config/types'
 
-/**
- * Tiles shown before "더 보기". Kept a multiple of 3 so the collapsed grid ends on a
- * full-width tile and the expanded tail starts a fresh row with the same rhythm.
- */
-export const COLLAPSED_COUNT = 9
-
-/** Every third tile (the 4:3 photos in the config order) spans both columns. */
-export function spansBothColumns(index: number): boolean {
-  return index % 3 === 2
-}
-
-/** Literal class names so Tailwind generates them. Alternating lean varies per row against the pair/full rhythm. */
-export function tileTilt(index: number): string {
-  return index % 2 === 0 ? 'rotate-[-1.2deg]' : 'rotate-[1deg]'
-}
+export const COLLAPSED_COUNT = 5
 
 export function hasMore(total: number): boolean {
   return total > COLLAPSED_COUNT

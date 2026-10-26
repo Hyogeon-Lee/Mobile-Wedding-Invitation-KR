@@ -27,6 +27,74 @@
   animation-play-state: paused;
 }
 
+.fx-leaf-shade {
+  position: absolute;
+  top: -3rem;
+  left: -5rem;
+  width: 21rem;
+  color: var(--color-sage);
+  opacity: 0.5;
+  transform-origin: 0 0;
+  animation: fx-leaf-shade 22s ease-in-out -8s infinite alternate both;
+}
+@keyframes fx-leaf-shade {
+  from {
+    transform: rotate(-5deg) translate3d(0, 0, 0);
+    opacity: 0.38;
+  }
+  to {
+    transform: rotate(2deg) translate3d(6px, 3px, 0);
+    opacity: 0.55;
+  }
+}
+
+.fx-daylight {
+  contain: paint;
+  background: linear-gradient(125deg, rgb(var(--fx-curtain-wash-neutral) / 0.3), rgb(var(--fx-glow-mint) / 0.1) 50%, transparent);
+}
+.fx-daylight-rays,
+.fx-daylight-air {
+  position: absolute;
+  inset: -8%;
+}
+.fx-daylight-rays {
+  background: linear-gradient(
+    118deg,
+    transparent 15%,
+    rgb(255 255 255 / 0.75) 30%,
+    rgb(255 255 255 / 0.12) 43%,
+    rgb(255 255 255 / 0.85) 54%,
+    transparent 72%
+  );
+  opacity: 0.85;
+  animation: fx-daylight-rays 36s ease-in-out -7s infinite alternate both;
+}
+.fx-daylight-air {
+  background: radial-gradient(ellipse at 28% 35%, rgb(255 255 255 / 0.8), transparent 60%);
+  opacity: 0.7;
+  animation: fx-daylight-air 48s ease-in-out -16s infinite alternate both;
+}
+@keyframes fx-daylight-rays {
+  from {
+    transform: translate3d(-3%, 0, 0) rotate(-2deg);
+    opacity: 0.65;
+  }
+  to {
+    transform: translate3d(3%, 1%, 0) rotate(1deg);
+    opacity: 1;
+  }
+}
+@keyframes fx-daylight-air {
+  from {
+    transform: translate3d(2%, -2%, 0) scale(0.98);
+    opacity: 0.55;
+  }
+  to {
+    transform: translate3d(-2%, 2%, 0) scale(1.04);
+    opacity: 0.9;
+  }
+}
+
 /* ---------- LightBloom ---------- */
 .fx-bloom {
   contain: paint;
@@ -76,9 +144,9 @@
   background: linear-gradient(
     105deg,
     rgb(255 255 255 / 0) 22%,
-    rgb(var(--fx-curtain-light-warm) / 0.22) 40%,
-    rgb(255 255 255 / 0.35) 50%,
-    rgb(var(--fx-curtain-light-warm) / 0.22) 60%,
+    rgb(var(--fx-curtain-light-warm) / 0.1) 40%,
+    rgb(255 255 255 / 0.18) 50%,
+    rgb(var(--fx-curtain-light-warm) / 0.1) 60%,
     rgb(255 255 255 / 0) 78%
   );
   opacity: 0;
@@ -117,12 +185,12 @@
   top: 0;
   height: 100%;
   transform: translate3d(0, var(--fx-rest), 0);
-  animation: fx-petal-fall var(--fx-fall-dur) linear var(--fx-fall-delay) infinite both;
+  animation: fx-petal-fall calc(var(--fx-fall-dur) * 1.8) linear calc(var(--fx-fall-delay) * 1.8) infinite both;
 }
 .fx-petal-sway {
   display: block;
   transform: rotate(var(--fx-rot-a));
-  animation: fx-petal-sway var(--fx-sway-dur) ease-in-out var(--fx-sway-delay) infinite alternate both;
+  animation: fx-petal-sway calc(var(--fx-sway-dur) * 1.5) ease-in-out calc(var(--fx-sway-delay) * 1.5) infinite alternate both;
 }
 @keyframes fx-petal-fall {
   0% {
@@ -162,16 +230,16 @@
     rgb(var(--fx-tint) / 0) 100%
   );
   opacity: 0.7;
-  animation: fx-glow-pulse 3s ease-in-out infinite alternate both;
+  animation: fx-glow-pulse 7s ease-in-out infinite alternate both;
 }
 @keyframes fx-glow-pulse {
   0% {
-    transform: scale(0.9);
-    opacity: 0.5;
+    transform: scale(0.96);
+    opacity: 0.55;
   }
   100% {
-    transform: scale(1.1);
-    opacity: 0.9;
+    transform: scale(1.04);
+    opacity: 0.75;
   }
 }
 
@@ -296,7 +364,9 @@
 }
 
 @media (prefers-contrast: more), (forced-colors: active) {
-  .fx-wash {
+  .fx-wash,
+  .fx-leaf-shade,
+  .fx-daylight {
     display: none;
   }
 }

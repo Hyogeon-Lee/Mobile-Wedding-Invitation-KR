@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react'
 import Button from '@/components/Button'
 import Reveal from '@/components/Reveal'
 import { wedding } from '@/config/wedding'
-import { Bleed, BotanicalDivider, LightBloom } from '@/effects'
+import { Bleed, Daylight, PetalDrift } from '@/effects'
+import { SCROLL_OPTIONS } from '@/lib/motion'
 import { applyTextLg, readTextLg, scrollTopBehavior, writeTextLg } from './textSize'
 
 /** Not wrapped in <Section>: the footer has no heading and a tighter rhythm */
@@ -31,7 +32,7 @@ export default function Footer() {
     const behavior = scrollTopBehavior(reduce)
     // Lenis owns the scroll when mounted, and a native smooth scroll would fight its raf loop
     if (lenis && behavior === 'smooth') {
-      lenis.scrollTo(0)
+      lenis.scrollTo(0, SCROLL_OPTIONS)
       return
     }
     window.scrollTo({ top: 0, behavior })
@@ -41,10 +42,10 @@ export default function Footer() {
     <footer id="footer" className="relative px-6 pt-6 pb-12 text-center">
       {/* Light rises from under the Share buttons and never reaches past the page end */}
       <Bleed top="-14rem" bottom="0" mask="top" fade="14rem">
-        <LightBloom palette={['butter']} intensity="soft" className="opacity-70" />
+        <Daylight />
+        <PetalDrift count={2} seed={11} />
       </Bleed>
       <Reveal className="relative z-10">
-        <BotanicalDivider variant="sprig" className="mb-2" />
         <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
           {groom.name} · {bride.name}
         </p>

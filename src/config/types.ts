@@ -52,6 +52,7 @@ export interface EventInfo {
   address: string
   /** Legacy lot-number address, shown as secondary line when present */
   addressJibun?: string
+  naverMapUrl?: string
   /** Coordinates for the map. Mark placeholder=true until confirmed on Kakao Map. */
   coords: { lat: number; lng: number; placeholder?: boolean }
   venuePhone?: string
@@ -76,7 +77,7 @@ export interface WeddingContent {
     /** Alt text per file name in config/images/gallery/, e.g. { "03.jpg": "..." } */
     captions?: Record<string, string>
   }
-  location: SectionHeading & { transport: TransportInfo }
+  location: SectionHeading & { transport: TransportInfo; transportLinks?: Partial<Record<keyof TransportInfo, string>> }
   account: SectionHeading & { intro: string[] }
   rsvp: SectionHeading & { intro: string[] }
   guestbook: SectionHeading

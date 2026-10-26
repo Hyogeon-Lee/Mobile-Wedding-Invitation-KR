@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { wedding } from '@/config/wedding'
-import { Bleed, PetalDrift } from '@/effects'
+import { Bleed, Daylight } from '@/effects'
 import { REVEAL_STEP } from '@/lib/motion'
 import { splitParagraphs } from './paragraphs'
 
@@ -18,16 +18,14 @@ export default function Greeting() {
       title={greeting.title}
       top="lg"
       bottom="sm"
-      wash="leaf"
       backdrop={
-        // Leaves fall from mid-greeting past the sprig into Family's header (3 petals, 6 nodes)
-        <Bleed top="45%" bottom="-14rem">
-          <PetalDrift count={5} seed={2} density="light" />
+        <Bleed top="-12rem" bottom="0" mask="y" fade="12rem">
+          <Daylight />
         </Bleed>
       }
     >
       <div className="py-4">
-        <Reveal className="text-center font-serif text-[1.0625rem] leading-loose text-ink">
+        <Reveal className="text-center font-serif text-[1.0625rem] leading-[2.2] text-ink">
           {paragraphs.map((lines, pi) => (
             <p key={pi} className={pi > 0 ? 'mt-6' : undefined}>
               {lines.map((line, li) => (

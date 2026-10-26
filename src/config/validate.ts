@@ -175,6 +175,7 @@ export function validateWedding(input: unknown): WeddingContent {
     'hall',
     'address',
     'addressJibun',
+    'naverMapUrl',
     'coords',
     'venuePhone',
   ])
@@ -190,7 +191,7 @@ export function validateWedding(input: unknown): WeddingContent {
   const family = object(root.family, 'family', ['enabled', 'eyebrow', 'title'])
   const calendar = object(root.calendar, 'calendar', ['enabled', 'eyebrow'])
   const gallery = object(root.gallery, 'gallery', ['enabled', 'eyebrow', 'title', 'alt', 'captions'])
-  const location = object(root.location, 'location', ['enabled', 'eyebrow', 'title', 'transport'])
+  const location = object(root.location, 'location', ['enabled', 'eyebrow', 'title', 'transport', 'transportLinks'])
   const account = object(root.account, 'account', ['enabled', 'eyebrow', 'title', 'intro'])
   const rsvp = object(root.rsvp, 'rsvp', ['enabled', 'eyebrow', 'title', 'intro'])
   const guestbook = object(root.guestbook, 'guestbook', ['enabled', 'eyebrow', 'title'])
@@ -226,6 +227,18 @@ export function validateWedding(input: unknown): WeddingContent {
     }
   }
 
+  const transportLinks: WeddingContent['location']['transportLinks'] = {}
+  if (location.transportLinks !== undefined) {
+    const links = object(location.transportLinks, 'location.transportLinks', TRANSPORT_KEYS)
+    for (const key of TRANSPORT_KEYS) {
+      const url = optionalString(links, key, 'location.transportLinks')
+      if (url) {
+        if (!url.startsWith('https://')) fail(`location.transportLinks.${key}`, 'https://로 시작하는 지도 링크여야 합니다.')
+        transportLinks[key] = url
+      }
+    }
+  }
+
   const event: WeddingContent['event'] = {
     startsAt: startsAt(e, 'event'),
     datePlaceholder: boolean(e, 'datePlaceholder', 'event'),
@@ -236,6 +249,8 @@ export function validateWedding(input: unknown): WeddingContent {
   }
   const addressJibun = optionalString(e, 'addressJibun', 'event')
   if (addressJibun) event.addressJibun = addressJibun
+  const naverMapUrl = optionalString(e, 'naverMapUrl', 'event')
+  if (naverMapUrl) event.naverMapUrl = naverMapUrl
   const venuePhone = optionalString(e, 'venuePhone', 'event')
   if (venuePhone) event.venuePhone = venuePhone
 
@@ -258,7 +273,7 @@ export function validateWedding(input: unknown): WeddingContent {
       alt: string(gallery, 'alt', 'gallery', { nonEmpty: true }),
       ...(captions ? { captions } : {}),
     },
-    location: { ...heading(location, 'location'), transport: transport(present(location, 'transport', 'location'), 'location.transport') },
+    location: { ...heading(location, 'location'), transport: transport(present(location, 'transport', 'location'), 'location.transport'), transportLinks },
     account: { ...heading(account, 'account'), intro: lines(account, 'intro', 'account') },
     rsvp: { ...heading(rsvp, 'rsvp'), intro: lines(rsvp, 'intro', 'rsvp') },
     guestbook: heading(guestbook, 'guestbook'),

@@ -13,7 +13,6 @@ import Rsvp from '@/sections/Rsvp'
 import Guestbook from '@/sections/Guestbook'
 import Share from '@/sections/Share'
 import Footer from '@/sections/Footer'
-import { BotanicalDivider } from '@/effects'
 
 const s = {
   cover: wedding.cover.enabled,
@@ -38,11 +37,9 @@ export default function App() {
           <main className="app-frame">
             {s.cover && <Cover />}
             {s.greeting && <Greeting />}
-            {s.greeting && s.family && <BotanicalDivider variant="sprig" />}
             {s.family && <Family />}
             {s.calendar && <Calendar />}
             {s.gallery && <Gallery />}
-            {s.gallery && s.location && <BotanicalDivider variant="leaf" />}
             {s.location && <Location />}
             {s.account && <Account />}
             {s.rsvp && <Rsvp />}

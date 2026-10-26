@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
-import { GlowPulse, LightBloom } from '@/effects'
+import { GlowPulse } from '@/effects'
 import { wedding } from '@/config/wedding'
 import { WEEKDAYS_KO, daysUntil, formatDday, toKstParts } from '@/lib/date'
 import { REVEAL_STEP } from '@/lib/motion'
@@ -37,9 +37,7 @@ export default function Calendar() {
   return (
     <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)} top="md" bottom="sm">
       <Reveal className="mx-auto max-w-[340px]">
-        <div className="relative isolate overflow-hidden rounded-2xl border border-line bg-bg-elevated px-2.5 pt-6 pb-5">
-          {/* Dimmed so the peak mint tint keeps text-accent / text-ink-muted at or above 4.5:1 on this card */}
-          <LightBloom palette={['mint', 'butter', 'mint']} className="opacity-60" />
+        <div className="relative px-2.5 pt-6 pb-5">
           <table className="relative z-10 w-full table-fixed border-collapse">
             <caption className="caption-top pb-4 text-center font-serif text-[1.0625rem] text-ink-muted">
               {monthLabel(target.year, target.month, datePlaceholder)}

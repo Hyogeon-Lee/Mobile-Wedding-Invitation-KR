@@ -1,12 +1,12 @@
 # src/effects — soft light & greenery effects
 
-Decorative layers for the "morning light through leaves" look: drifting light blooms, a light
+Decorative layers for the "morning light through leaves" look: broad daylight, a feathered leaf shade, drifting light blooms, a light
 sweep over photos, sunlight through sheer curtains, falling leaves and petals, a breathing glow,
 a swaying botanical ornament, and two static helpers that let tints and leaves cross section boundaries
 (`Wash`, `Bleed`).
 
 ```tsx
-import { LightBloom, LightLeak, CurtainLight, PetalDrift, GlowPulse, BotanicalDivider, Wash, Bleed, fadeMask } from '@/effects'
+import { Daylight, LeafShade, LightBloom, LightLeak, CurtainLight, PetalDrift, GlowPulse, BotanicalDivider, Wash, Bleed, fadeMask } from '@/effects'
 ```
 
 Importing from `@/effects` also loads `effects.css` (keyframes, pause and reduced-motion rules).
@@ -32,6 +32,8 @@ Keep about 20 or fewer animated nodes in one viewport. Costs:
 | `CurtainLight` | `bands` + 2 (one wash, one drifting group): 8 by default, 5–12 |
 | `PetalDrift` | 2 × rendered petals (each petal has a falling wrapper and a swaying wrapper): 24 at the default `count` 12, 14 at `count` 12 with `density="light"` (7 petals) |
 | `LightLeak` | 1 |
+| `LeafShade` | 1 |
+| `Daylight` | 2 |
 | `GlowPulse` | 1 |
 | `BotanicalDivider` | 1 |
 | `Wash` | 0 (static) |
@@ -42,24 +44,24 @@ The default `PetalDrift` alone (24) is over budget, so always pass a lower `coun
 a viewport with `LightBloom` or `CurtainLight`. Use `CurtainLight` instead of `LightBloom` as a section background,
 not in addition to it: the two together already cost 14 at their defaults.
 
-Current page (iPhone 14, 390 × 844, counted as above; a Bleed's effects count wherever the Bleed reaches):
+Current page layer costs by section. Count neighbouring Bleeds too when they share a viewport:
 
-| Viewport | Animated nodes |
+| Section | Continuous animated nodes |
 | --- | --- |
-| Cover | 13 (curtain 8 + petal 2 + leak 1 + glow 1 + scroll cue 1) |
-| Cover → greeting | 19 (13 + greeting petals 6) |
-| Greeting → family | 7 (petals 6 + sprig 1) |
-| Family → calendar | 7 (card bloom 6 + glow 1) |
-| Calendar → gallery | 14 (card bloom 6 + glow 1 + gallery curtain 7) |
-| Gallery → location | 13 (petals 6 + leaf 1 + location bloom 6) |
-| Location → account | 6 (location bloom) |
-| Account, RSVP, guestbook | 0 |
-| Share → footer | 7 (footer bloom 6 + sprig 1) |
+| Cover | 11 (daylight 2 + leaf shade 1 + leak 1 + scroll cue 1 + three petals 6) |
+| Greeting | 6 (daylight 2 + two petals 4) |
+| Family | 6 (daylight 2 + two petals 4) |
+| Calendar | 5 (date glow 1 + two petals 4) |
+| Gallery | 6 (daylight 2 + two petals 4) |
+| Location | 6 (daylight 2 + two petals 4) |
+| Account, RSVP, guestbook, Share | 4 each (two petals) |
+| Footer, reaching into Share | 6 (daylight 2 + two petals 4) |
 
-Measured in Chromium (running `.fx-anim` elements intersecting an 844 px viewport, 150 px scroll steps):
-at most 17, at the cover → greeting step at 480 px (cover 10 + petals 6 + sprig 1); 16 at 360 and 390 px
-(cover 9 + petals 6 + sprig 1; some cover bands are already above the fold); 14 at 390 px and 12 at 360 px in
-large-text mode. The scroll cue is a Motion/WAAPI loop, not `.fx-anim`, so it adds 1 there (18 at most).
+These are source-level layer costs, not device performance measurements. The scroll cue is a Motion/WAAPI
+loop, not `.fx-anim`. Finite text and photo entrances are separate from the continuous budget.
+The opening's three handwriting paths and underline draw once over 2.45 s. These small SVG paths require
+painting, unlike the continuous effects. The opening leaves after 3.4 s plus a 0.8 s fade and is skipped
+for reduced motion or a section deep link. Its lettering attribution is in `public/licenses/opening-lettering.txt`.
 
 ## Layering (read this before using LightBloom / CurtainLight / PetalDrift)
 
@@ -127,7 +129,7 @@ Reduced motion: blobs stay at rest at their middle opacity.
 ## LightLeak
 
 Overlay for a photo frame: a static pale green-white glow in the top-left corner and a soft, semi-transparent
-diagonal white band (normal compositing, alpha 0.22–0.35) that sweeps across once per cycle. Place it after the image inside a
+diagonal white band (normal compositing, alpha 0.10–0.18) that sweeps across once per cycle. Place it after the image inside a
 `relative overflow-hidden` frame; it inherits the frame's border radius.
 
 | Prop | Type | Default | Notes |
@@ -143,6 +145,30 @@ diagonal white band (normal compositing, alpha 0.22–0.35) that sweeps across o
 ```
 
 Reduced motion: no sweep; the corner glow stays.
+
+## Daylight
+
+Two broad white gradients move over a faint linear sky-to-mint wash. The light rays take 36 s per
+direction and the air highlight takes 48 s. Travel stays within 3%, so the surface changes slowly
+without distinct green spots. The root is clipped, ignores input and pauses outside the viewport.
+Reduced motion keeps a static frame; increased contrast and forced colours hide the layer.
+
+```tsx
+<Bleed top="-6rem" bottom="-6rem" mask="y" fade="12rem">
+  <Daylight />
+</Bleed>
+```
+
+## LeafShade
+
+A feathered branch near the cover's top-left edge, drawn with radial-gradient SVG leaves and no blur filter.
+One SVG drifts by 6 px / 3 px and rotates from -5° to 2° over a 22 s half-cycle. Opacity stays between 0.38 and 0.55.
+The wrapper ignores pointer events, hides from assistive technology, and pauses outside the viewport.
+Reduced motion leaves a static branch; increased contrast and forced colours hide it.
+
+```tsx
+<LeafShade />
+```
 
 ## CurtainLight
 
@@ -190,8 +216,9 @@ paint bands far outside the box. Also exported from `curtain.ts`: `clampBands`, 
 ## PetalDrift
 
 Small inline-SVG leaves, round petals and tiny sprigs in sage / mint / blush (opacity 0.55–0.85,
-10–22 px). An outer wrapper falls (18–30 s, linear, fades in and out at the edges) while an inner
-wrapper sways sideways 10–34 px and rotates, so the motion reads as air currents. Parameters come
+10–22 px). An outer wrapper falls (32.4–54 s, linear, fades in and out at the edges) while an inner
+wrapper sways sideways 10–34 px and rotates over 5.25–10.5 s, so the motion reads as air currents. CSS scales
+the fall duration and starting delay by 1.8, and the sway duration and delay by 1.5. Parameters come
 from the pure `petalParams(index, seed)` in `petals.ts`.
 
 | Prop | Type | Default | Notes |
@@ -216,8 +243,8 @@ Also exported from `petals.ts`: `PETAL_MAX` (18), `PETAL_DEFAULT` (12), types `P
 
 ## GlowPulse
 
-Wraps children and puts a soft radial glow disc behind them that breathes (scale 0.9 → 1.1, opacity
-0.5 → 0.9, 3 s each way, about a 6 s cycle). The wrapper is `relative isolate inline-grid place-items-center`.
+Wraps children and puts a soft radial glow disc behind them that breathes (scale 0.96 → 1.04, opacity
+0.55 → 0.75, 7 s each way, about a 14 s cycle). The wrapper is `relative isolate inline-grid place-items-center`.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
@@ -237,9 +264,8 @@ Reduced motion: glow static at scale 1, opacity 0.7.
 ## BotanicalDivider
 
 Centered, line-free 120×28 SVG ornament (the root is 44 px tall), swaying ±2.5° around the stem base
-(5 s, ease-in-out, alternate). Decorative only (`aria-hidden`). There are no hairlines: a line across the column
-reads as a cut between sections. Use at most three ornaments per page (currently: after the greeting, after the
-gallery, and the footer's own sprig).
+(5 s, ease-in-out, alternate). Decorative only (`aria-hidden`). The current page uses whitespace and
+continuous light instead of these ornaments. The component remains available for other layouts.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
@@ -349,9 +375,8 @@ These are for decoration only. Text keeps using `text-ink`, `text-ink-muted` or 
   Ambient light goes in `wash` or a `Bleed` in `backdrop`; the header is `z-20`, the content `z-10`.
 - `.app-frame` (`<main>`) is `relative isolate` so negative-z layers paint above its background. It has no
   overflow rule; Bleeds and washes are `inset-x-0`, so nothing overflows horizontally.
-- The cover stays `relative isolate overflow-hidden` (its rotated curtain bands must be clipped sideways). Its
-  curtain fades out over the last 200 px through `fadeMask('bottom', '200px')`, and the greeting's leaf wash shows
-  through from below.
+- The cover stays `relative isolate overflow-hidden` to contain the opening and leaf shade. Its daylight
+  fades out over the last 200 px through `fadeMask('bottom', '200px')` into the greeting's light.
 - Sections stay direct children of `<main>`. The cover's scroll cue skips `aria-hidden` siblings, so the
   ornaments between sections are safe.
-- At most three ornaments per page, all line-free; no hairlines between sections.
+- Photo edges use static intersecting masks on the image, leaving the button's keyboard focus ring intact.

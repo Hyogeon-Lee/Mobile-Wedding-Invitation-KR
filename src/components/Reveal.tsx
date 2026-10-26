@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react'
 import type { ReactNode } from 'react'
-import { EASE_OUT } from '@/lib/motion'
+import { EASE_SOFT } from '@/lib/motion'
 
 interface RevealProps {
   children: ReactNode
@@ -19,16 +19,16 @@ interface RevealProps {
 }
 
 /** Fade and rise on first entry into the viewport. Honors prefers-reduced-motion. */
-export default function Reveal({ children, delay = 0, y = 16, className, as = 'div', amount = 0.25 }: RevealProps) {
+export default function Reveal({ children, delay = 0, y = 6, className, as = 'div', amount = 'some' }: RevealProps) {
   const reduce = useReducedMotion()
   const Tag = motion[as]
   return (
     <Tag
       className={className}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
+      initial={reduce ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount, margin: amount === 'some' ? '0px 0px -10% 0px' : undefined }}
-      transition={{ duration: 0.6, ease: EASE_OUT, delay }}
+      viewport={{ once: true, amount, margin: '0px 0px 64px 0px' }}
+      transition={{ duration: reduce ? 0 : 0.65, ease: EASE_SOFT, delay: reduce ? 0 : delay }}
     >
       {children}
     </Tag>
