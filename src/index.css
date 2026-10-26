@@ -28,7 +28,7 @@
   --color-accent-tint-hover: #cfe6d1;
   --color-accent-tint-active: #cbe3cd;
   --color-accent-soft: #e6f2e4; /* pale fresh green tint: icon bubbles, chips (accent on it 4.68:1) */
-  --color-green: #3f7a5a; /* mid greenery green for icons and labels, 4.8:1 on bg (unused today) */
+  --color-green: #3f7a5a; /* mid greenery green for icons and labels, 4.86:1 on bg (unused today) */
   --color-sage: #b0d9b9; /* pastel leaf green (decorative, 1.49:1 on bg) */
   --color-orange: #d9671f; /* point orange: large text (>= 24px) and decorative marks only, 3.4:1 on bg */
   --color-mint: #e9f4e8; /* pale mint tint */
@@ -205,7 +205,7 @@ img {
   }
 }
 
-/* Increased-contrast variant (hairlines reach 3.4:1 on white; muted text 6.8:1 on bg) */
+/* Increased-contrast variant (hairlines reach 3.4:1 on white; muted text 7.0:1 on bg) */
 @media (prefers-contrast: more) {
   :root {
     --color-line: #7f8f85;

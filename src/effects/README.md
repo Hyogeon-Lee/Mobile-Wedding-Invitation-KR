@@ -154,7 +154,7 @@ parameters come from the pure `curtainParams(index, seed)` in `curtain.ts`.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `bands` | `number` | `6` | Clamped 3–10. Cost is `bands` + 2 animated nodes |
-| `tone` | `'warm' \| 'neutral'` | `'warm'` | `warm`: warm-white bands (`rgb(255 250 235)`) and a butter wash; `neutral`: white bands and a sky wash |
+| `tone` | `'warm' \| 'neutral'` | `'warm'` | `warm`: cool green-white bands (`rgb(250 255 248)`) and a leaf wash (`234 246 230`); `neutral`: white bands and a sky wash (`230 240 242`) |
 | `intensity` | `'soft' \| 'medium'` | `'soft'` | Band opacity 0.5–0.65 (soft) or 0.5–0.8 (medium); wash peak alpha 0.40 / 0.55 (warm) or 0.26 / 0.34 (neutral) |
 | `angle` | `number` (deg) | `-15` | Lean of the bands, clamped -45–45; each band adds up to ±2.5° so they are not parallel |
 | `seed` | `number` | `1` | Band positions, widths and timings; use a different seed per section |

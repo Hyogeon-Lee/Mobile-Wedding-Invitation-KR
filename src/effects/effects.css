@@ -15,7 +15,7 @@
   --fx-petal-mint: #b8e0c2;
   --fx-petal-blush: #a6d6b2; /* legacy name: fresh leaf green */
 
-  /* CurtainLight: band light and corner wash (butter / sky follow the page tokens) */
+  /* CurtainLight: band light and corner wash (hand-tuned near the butter / sky tints) */
   --fx-curtain-light-warm: 250 255 248; /* cool green-white light */
   --fx-curtain-light-neutral: 255 255 255;
   --fx-curtain-wash-warm: 234 246 230;

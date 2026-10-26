@@ -15,7 +15,7 @@ const palettes = [
   ['#eef3ea', '#cfdccb'], // cool off-white / sage
   ['#e3f0e1', '#b9d8bd'], // pale green
   ['#f1f5ef', '#d6e3d4'], // white-green
-  ['#e1ecee', '#bfd3d6'], // cool sky
+  ['#e9f2f3', '#cfdfe1'], // cool sky
   ['#e6f1e4', '#a9d4b4'], // fresh mint
   ['#edf4e6', '#c8dcb6'], // lime-white
 ]

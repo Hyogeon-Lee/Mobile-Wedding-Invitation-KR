@@ -7,7 +7,9 @@ const base =
   'pressable inline-flex items-center justify-center gap-2 rounded-full font-normal tracking-[0.02em] select-none ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50'
 const variants: Record<Variant, string> = {
-  primary: 'bg-accent-tint text-accent-deep hover:bg-accent-tint-hover active:bg-accent-tint-active',
+  // Under prefers-contrast: more every other control gets a visible edge, so the pale fill gets one too
+  primary:
+    'bg-accent-tint text-accent-deep hover:bg-accent-tint-hover active:bg-accent-tint-active contrast-more:shadow-[inset_0_0_0_1px_var(--color-line)]',
   outline: 'border border-line bg-bg-elevated text-ink hover:bg-accent-soft/60 active:bg-accent-soft',
   ghost: 'text-ink-muted hover:text-ink active:bg-ink/5 active:text-ink',
 }

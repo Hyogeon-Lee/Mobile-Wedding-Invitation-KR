@@ -21,7 +21,7 @@ export interface CurtainLightProps {
 
 /**
  * Peak alpha of the corner wash. The wash is the only part darker than the page background, so
- * these caps keep text-ink-muted ≥ 4.5:1 over it (butter 0.55 → 4.59:1, sky 0.34 → 4.55:1 on bg).
+ * these caps keep text-ink-muted ≥ 4.5:1 over it (warm 0.55 → 4.91:1, neutral 0.34 → 4.91:1 on bg).
  */
 const WASH_ALPHA = {
   warm: { soft: 0.4, medium: 0.55 },
