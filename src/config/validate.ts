@@ -175,6 +175,7 @@ export function validateWedding(input: unknown): WeddingContent {
     'hall',
     'address',
     'addressJibun',
+    'naverMapUrl',
     'coords',
     'venuePhone',
   ])
@@ -236,6 +237,8 @@ export function validateWedding(input: unknown): WeddingContent {
   }
   const addressJibun = optionalString(e, 'addressJibun', 'event')
   if (addressJibun) event.addressJibun = addressJibun
+  const naverMapUrl = optionalString(e, 'naverMapUrl', 'event')
+  if (naverMapUrl) event.naverMapUrl = naverMapUrl
   const venuePhone = optionalString(e, 'venuePhone', 'event')
   if (venuePhone) event.venuePhone = venuePhone
 

@@ -1,12 +1,15 @@
 import { ReactLenis } from 'lenis/react'
 import type { ReactNode } from 'react'
+import 'lenis/dist/lenis.css'
+import { SCROLL_OPTIONS } from '@/lib/motion'
 
 /** Lenis smooth scroll on the window. Disabled automatically for reduced-motion users. */
 export default function SmoothScroll({ children }: { children: ReactNode }) {
-  const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (reduce) return <>{children}</>
   return (
-    <ReactLenis root options={{ lerp: 0.12, smoothWheel: true, syncTouch: false }}>
+    <ReactLenis
+      root
+      options={{ autoRaf: true, lerp: 0.1, smoothWheel: true, syncTouch: false, respectReducedMotion: true, anchors: SCROLL_OPTIONS }}
+    >
       {children}
     </ReactLenis>
   )

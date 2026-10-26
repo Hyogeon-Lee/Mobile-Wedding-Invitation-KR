@@ -47,6 +47,7 @@ config/
 | `coords.lat`, `coords.lng` | 지도 핀 좌표. 카카오맵에서 예식장을 찾아 확인한다 | `37.5094`, `127.0623` |
 | `coords.placeholder` | 좌표가 임시이면 `true`. 지도 아래에 안내 문구가 나온다 (선택) | `true` |
 | `venuePhone` | 예식장 전화번호 (선택). 지금은 화면에 표시하지 않는다 | `"02-000-0000"` |
+| `naverMapUrl` | 네이버 지도에서 공유한 장소 링크 (선택). 설정하면 네이버지도 버튼이 이 링크를 연다 | `"https://naver.me/5uIYZdsZ"` |
 
 **datePlaceholder**: `true`인 동안에는 화면 어디에도 확정되지 않은 날짜가 나오지 않는다. `startsAt`에서 연도만 쓰고 나머지는 "OO월 OO일", "OO요일 오후 OO시", D-day는 "D-OOO"로 표시한다. 날짜가 정해지면 `startsAt`을 바꾸고 `datePlaceholder`를 `false`로 바꾼다.
 

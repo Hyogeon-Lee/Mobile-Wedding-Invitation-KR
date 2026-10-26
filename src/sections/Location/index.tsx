@@ -6,7 +6,7 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
-import { Bleed, LightBloom } from '@/effects'
+import { Bleed, Daylight } from '@/effects'
 import { asset } from '@/lib/env'
 import { REVEAL_STEP } from '@/lib/motion'
 import { kakaoKey, siteUrl } from '@/lib/kakao'
@@ -83,7 +83,7 @@ export default function Location() {
   const appName = useMemo(() => hostOf(siteUrl()) || window.location.host, [])
   const kakaoHref = kakaoNaviUrl(place)
   const naverHref = naverAppUrl(place, appName)
-  const naverWebHref = naverWebUrl(address)
+  const naverWebHref = event.naverMapUrl || naverWebUrl(address)
   const tmapHref = tmapUrl(place)
   const entries = transportEntries(transport)
 
@@ -96,9 +96,11 @@ export default function Location() {
     e.preventDefault()
     openAppScheme(tmapHref, { timeoutMs: APP_TIMEOUT_MS, onFail: () => toast.show(TMAP_MISSING) })
   }
-  const naverLinkProps = IS_ANDROID
-    ? { href: androidIntentUrl(naverHref, NAVER_MAP_PACKAGE, naverWebHref) }
-    : { href: naverHref, onClick: openNaver }
+  const naverLinkProps = event.naverMapUrl
+    ? { href: naverWebHref, target: '_blank', rel: 'noopener noreferrer' }
+    : IS_ANDROID
+      ? { href: androidIntentUrl(naverHref, NAVER_MAP_PACKAGE, naverWebHref) }
+      : { href: naverHref, onClick: openNaver }
   const tmapLinkProps = IS_ANDROID
     ? { href: androidIntentUrl(tmapHref, TMAP_PACKAGE, TMAP_STORE_URL) }
     : { href: tmapHref, onClick: openTmap }
@@ -114,9 +116,8 @@ export default function Location() {
       top="sm"
       bottom="sm"
       backdrop={
-        // Dimmed to 0.65 so even two overlapping blob peaks keep text-ink-muted at 4.5:1 under the address lines
         <Bleed top="-8rem" bottom="0" mask="y" fade="12rem">
-          <LightBloom palette={['butter', 'mint']} intensity="soft" className="opacity-65" />
+          <Daylight />
         </Bleed>
       }
     >
@@ -133,7 +134,7 @@ export default function Location() {
       <Reveal delay={REVEAL_STEP} className="mt-10">
         <div
           ref={mapBoxRef}
-          className="relative aspect-4/3 overflow-hidden rounded-2xl border-6 border-white bg-mint shadow-(--shadow-soft)"
+          className="relative aspect-4/3 overflow-hidden rounded-[3px] bg-mint"
           data-lenis-prevent
         >
           {showMap && mapNear ? (
@@ -172,7 +173,7 @@ export default function Location() {
             </a>
           </li>
         </ul>
-        {!IS_ANDROID && (
+        {!IS_ANDROID && !event.naverMapUrl && (
           <p className="mt-3 text-center">
             <a
               href={naverWebHref}

@@ -8,18 +8,15 @@ import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import type { GalleryImage } from '@/config/types'
 import { wedding } from '@/config/wedding'
-import { Bleed, CurtainLight, PetalDrift } from '@/effects'
-import { EASE_OUT } from '@/lib/motion'
-import { hasMore, spansBothColumns, splitTiles, tileTilt, toSlides, toggleLabel } from './layout'
+import { Bleed, Daylight } from '@/effects'
+import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
+import { hasMore, spansBothColumns, splitTiles, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
 
-// gap-3 leaves room for the opposite tilts of neighbouring frames so their corners never touch
-const GRID = 'grid grid-cols-2 gap-3'
+const GRID = 'grid grid-cols-2 gap-4'
 const FRAME =
-  'block w-full overflow-hidden rounded-xl bg-white p-1.5 ring-1 ring-line/70 ' +
-  'shadow-(--shadow-soft) ' +
-  'transition-[rotate,scale,opacity] duration-300 ease-out active:scale-[0.98] active:duration-(--press-duration) motion-reduce:transition-none motion-reduce:active:scale-100 ' +
-  'hover:rotate-0 focus-visible:rotate-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+  'pressable block w-full ' +
+  'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
 
 interface TileProps {
   image: GalleryImage
@@ -31,25 +28,27 @@ interface TileProps {
 
 function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
   return (
-    <button
-      type="button"
-      ref={(el) => tileRef(index, el)}
-      onClick={() => onOpen(index)}
-      aria-label={`${image.alt} 크게 보기`}
-      aria-busy={busy || undefined}
-      className={`${FRAME} ${tileTilt(index)} ${spansBothColumns(index) ? 'col-span-2' : ''} ${busy ? 'opacity-70' : ''}`}
-    >
-      <img
-        src={image.src}
-        width={image.width}
-        height={image.height}
-        alt={image.alt}
-        loading="lazy"
-        decoding="async"
-        style={{ aspectRatio: `${image.width} / ${image.height}` }}
-        className="block h-auto w-full rounded-[6px] bg-accent-soft/60 object-cover"
-      />
-    </button>
+    <Reveal className={spansBothColumns(index) ? 'col-span-2' : undefined}>
+      <button
+        type="button"
+        ref={(el) => tileRef(index, el)}
+        onClick={() => onOpen(index)}
+        aria-label={`${image.alt} 크게 보기`}
+        aria-busy={busy || undefined}
+        className={`${FRAME} ${busy ? 'opacity-70' : ''}`}
+      >
+        <img
+          src={image.src}
+          width={image.width}
+          height={image.height}
+          alt={image.alt}
+          loading="lazy"
+          decoding="async"
+          style={{ aspectRatio: `${image.width} / ${image.height}` }}
+          className="photo-feather block h-auto w-full object-cover"
+        />
+      </button>
+    </Reveal>
   )
 }
 
@@ -122,7 +121,7 @@ export default function Gallery() {
     if (expanded) {
       const el = document.getElementById('gallery')
       if (el && el.getBoundingClientRect().top < 0) {
-        if (lenis) lenis.scrollTo(el, { duration: 0.6 })
+        if (lenis) lenis.scrollTo(el, SCROLL_OPTIONS)
         else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
       }
     }
@@ -149,20 +148,12 @@ export default function Gallery() {
       top="lg"
       bottom="sm"
       backdrop={
-        <>
-          {/* Capped at 60rem: rotated bands shift sideways by (h/2)·tan θ at the edges, so on the full ~2,000 px
-              section they would leave the top-right corner unlit */}
-          <Bleed top="-10rem" mask="y" fade="12rem" className="h-[min(calc(100%_+_10rem),60rem)]">
-            <CurtainLight tone="warm" intensity="soft" bands={5} angle={-12} seed={3} />
-          </Bleed>
-          {/* Leaves fall from the last rows into Location (3 petals, 6 nodes) */}
-          <Bleed bottom="-12rem" className="h-[28rem]">
-            <PetalDrift count={3} seed={5} />
-          </Bleed>
-        </>
+        <Bleed top="-12rem" bottom="-12rem" mask="y" fade="12rem">
+          <Daylight />
+        </Bleed>
       }
     >
-      <Reveal amount="some">
+      <div>
         <div className="py-6">
           <div className={GRID}>{tiles(head, 0)}</div>
 
@@ -177,7 +168,7 @@ export default function Gallery() {
                 exit={reduce ? undefined : { opacity: 0 }}
                 transition={{ duration: reduce ? 0 : 0.35, ease: EASE_OUT }}
               >
-                <div className={`${GRID} pt-3`}>{tiles(tail, head.length)}</div>
+                <div className={`${GRID} pt-4`}>{tiles(tail, head.length)}</div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -197,7 +188,7 @@ export default function Gallery() {
         )}
 
         <p className="mt-6 text-center text-[0.9375rem] leading-[1.8] text-ink-muted">사진을 누르면 크게 볼 수 있습니다</p>
-      </Reveal>
+      </div>
     </Section>
   )
 }

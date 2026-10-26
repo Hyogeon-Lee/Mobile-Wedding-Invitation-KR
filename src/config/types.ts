@@ -52,6 +52,7 @@ export interface EventInfo {
   address: string
   /** Legacy lot-number address, shown as secondary line when present */
   addressJibun?: string
+  naverMapUrl?: string
   /** Coordinates for the map. Mark placeholder=true until confirmed on Kakao Map. */
   coords: { lat: number; lng: number; placeholder?: boolean }
   venuePhone?: string

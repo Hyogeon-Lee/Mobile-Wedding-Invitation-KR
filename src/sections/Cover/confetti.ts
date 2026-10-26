@@ -23,12 +23,12 @@ interface BurstOrigin {
 export async function burstConfetti(origin: BurstOrigin): Promise<void> {
   const { default: confetti } = await import('canvas-confetti')
   await confetti({
-    particleCount: 60,
-    spread: 70,
-    startVelocity: 30,
-    gravity: 0.9,
+    particleCount: 28,
+    spread: 60,
+    startVelocity: 16,
+    gravity: 0.6,
     decay: 0.92,
-    scalar: 0.9,
+    scalar: 0.75,
     ticks: 180,
     origin,
     colors: [token('--color-accent'), token('--color-sage'), token('--fx-petal-mint'), token('--color-orange')],

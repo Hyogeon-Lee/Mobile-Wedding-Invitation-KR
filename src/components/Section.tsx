@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { Wash, type WashTone } from '@/effects'
+import { Bleed, PetalDrift, Wash, type WashTone } from '@/effects'
+import Reveal from './Reveal'
 
 type Space = 'sm' | 'md' | 'lg'
 const PAD_TOP: Record<Space, string> = { sm: 'pt-12', md: 'pt-14', lg: 'pt-16' }
@@ -40,6 +41,7 @@ export default function Section({
   bottom = 'md',
   wash,
 }: SectionProps) {
+  const petalSeed = Array.from(id).reduce((sum, char) => sum + char.charCodeAt(0), 0)
   return (
     <section
       id={id}
@@ -48,17 +50,22 @@ export default function Section({
     >
       {wash && <Wash tone={wash} />}
       {backdrop}
+      <Bleed top="-4rem" bottom="-4rem" mask="y" fade="6rem">
+        <PetalDrift count={2} seed={petalSeed} />
+      </Bleed>
       {(eyebrow || title || badge) && (
         <header className="relative z-20 mb-8 text-center">
-          {eyebrow && (
-            <p className="font-display text-[0.875rem] tracking-[0.28em] text-accent uppercase mb-3">{eyebrow}</p>
-          )}
-          {title && (
-            <h2 id={`${id}-title`} className="font-serif text-2xl leading-snug whitespace-pre-line text-ink">
-              {title}
-            </h2>
-          )}
-          {badge && <div className="mt-3 flex justify-center">{badge}</div>}
+          <Reveal>
+            {eyebrow && (
+              <p className="font-sans text-[0.75rem] tracking-[0.2em] text-accent uppercase mb-4">{eyebrow}</p>
+            )}
+            {title && (
+              <h2 id={`${id}-title`} className="font-serif text-2xl leading-snug whitespace-pre-line text-ink">
+                {title}
+              </h2>
+            )}
+            {badge && <div className="mt-3 flex justify-center">{badge}</div>}
+          </Reveal>
         </header>
       )}
       <div className="relative z-10">{children}</div>
