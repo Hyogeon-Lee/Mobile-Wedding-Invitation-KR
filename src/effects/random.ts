@@ -1,8 +1,6 @@
-/** Shared deterministic helpers for effect parameter generators (petals, curtain light). */
-
 export const GOLDEN = 0.6180339887498949
 
-/** mulberry32: small, fast, deterministic 32-bit PRNG returning [0, 1). */
+/** Deterministic 32-bit PRNG (mulberry32) returning [0, 1) */
 export function mulberry32(state: number): () => number {
   let a = state >>> 0
   return () => {

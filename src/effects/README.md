@@ -106,7 +106,7 @@ positioned with `relative z-10` (non-positioned content paints *under* an absolu
 
 ## LightBloom
 
-Background of six large radial-gradient light blobs that drift (16–32 s, alternate, staggered) and
+Background of six large radial-gradient light blobs that drift (17–31 s, alternate, staggered) and
 breathe (scale 0.92 → 1.14, opacity low → high).
 
 | Prop | Type | Default | Notes |
@@ -146,7 +146,7 @@ Reduced motion: no sweep; the corner glow stays.
 
 ## CurtainLight
 
-Background of afternoon sunlight through sheer curtains: 3–10 tall, leaning bands of warm-white
+Background of afternoon sunlight through sheer curtains: 3–10 tall, leaning bands of cool green-white
 light (each a rotated div filled with a horizontal transparent → light → transparent gradient, 28–90 px
 wide, unevenly spaced) over one faint radial wash from the top-right corner where the window is.
 The whole band group drifts sideways ±6% of the layer width (50–90 s, alternate) while each band
@@ -184,9 +184,8 @@ spread with a golden-ratio sequence). `curtainDrift(seed = 1): CurtainDriftParam
 `{ duration, delay }`. `curtainBandSpan(rotationDeg, widthPx): CurtainBandSpan` returns `{ pct, px }`, the
 smallest band height that still covers the layer once rotated (`calc(pct% + px px)`, from
 H ≥ h / cos θ + w·tan θ); about 104–111% at the default lean, so tall sections such as the gallery do not
-paint bands far outside the box. Also exported: `clampBands`, `CURTAIN_MIN` (3), `CURTAIN_MAX` (10),
-`CURTAIN_DEFAULT` (6), types `CurtainTone`, `CurtainLightProps`, `CurtainBandParams`, `CurtainDriftParams`,
-`CurtainBandSpan`.
+paint bands far outside the box. Also exported from `curtain.ts`: `clampBands`, `CURTAIN_MIN` (3), `CURTAIN_MAX` (10),
+`CURTAIN_DEFAULT` (6), types `CurtainBandParams`, `CurtainDriftParams`, `CurtainBandSpan`.
 
 ## PetalDrift
 
@@ -213,7 +212,7 @@ Reduced motion: only the first 4 petals render, static at scattered resting posi
 
 `petalParams(index: number, seed = 1): PetalParams` returns
 `{ x, size, duration, delay, swayAmplitude, swayDuration, swayDelay, rotateFrom, rotateTo, opacity, restY, shape, color }`.
-Also exported: `PETAL_MAX` (18), `PETAL_DEFAULT` (12), types `PetalParams`, `PetalShape`, `PetalColor`.
+Also exported from `petals.ts`: `PETAL_MAX` (18), `PETAL_DEFAULT` (12), types `PetalParams`, `PetalShape`, `PetalColor`.
 
 ## GlowPulse
 
@@ -325,7 +324,7 @@ with a negative `bottom` must not sit in the last section of `<main>`: it would 
 
 `useInViewPause(ref: RefObject<Element | null>, rootMargin = '120px 0px'): void`
 
-Toggles `data-paused` on `ref.current` with an IntersectionObserver. `effects.css` pauses every
+Defined in `useInViewPause.ts` (not re-exported by the index). Toggles `data-paused` on `ref.current` with an IntersectionObserver. `effects.css` pauses every
 `.fx-anim` descendant under `[data-paused]`. Use it on the root of any custom effect you build,
 and give animated elements the `fx-anim` class so pause and reduced-motion rules apply.
 
