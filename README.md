@@ -8,10 +8,10 @@
 
 ## 계획 요약
 
-- 정보 구성: 공개 오픈소스 청첩장(heejin-hwang, S-jooyoung, juhonamnam, gpjeong 등)의 공통 섹션을 따른다.
+- 정보 구성: 표지, 인사말, 혼주·가족, 예식 일시·달력, 갤러리, 오시는 길, 마음 전하실 곳, 참석 여부, 방명록, 공유, 푸터(11개 섹션).
 - 스택: Vite + React 19 + TypeScript + Tailwind CSS v4.
 - 디자인·모션: Motion, Lenis, Swiper, PhotoSwipe, canvas-confetti를 핵심으로 하고 GSAP·Lottie·tsParticles는 선택.
-- 연동: 카카오맵, 카카오톡 공유, 네비 딥링크, Firebase Firestore(방명록·RSVP, 선택).
+- 연동: 카카오맵, 카카오톡 공유, 네비 딥링크, Google Apps Script + Google Sheets(방명록·RSVP).
 - 배포: GitHub Actions → GitHub Pages(1안), Vercel(2안).
 - 개인정보: 전화번호·계좌번호는 환경 변수로 주입하고 원본 사진은 저장소에 두지 않는다.
 
