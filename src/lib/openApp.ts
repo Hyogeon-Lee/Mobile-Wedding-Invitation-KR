@@ -5,14 +5,13 @@
  * and `onFail` runs. Dependencies are injectable so the logic is testable without a DOM.
  */
 export interface AppSchemeDeps {
-  /** Navigate the current page to the scheme URL. */
   navigate: (url: string) => void
-  /** true while the page is on screen; an opened app hides it. */
+  /** An opened app hides the page */
   isVisible: () => boolean
   now: () => number
-  /** Run fn after ms; returns a cancel function. */
+  /** Returns a cancel function */
   schedule: (fn: () => void, ms: number) => () => void
-  /** Call fn once the page is hidden or unloaded; returns an unsubscribe function. */
+  /** Fires when the page is hidden or unloaded, returns an unsubscribe function */
   onHidden: (fn: () => void) => () => void
 }
 

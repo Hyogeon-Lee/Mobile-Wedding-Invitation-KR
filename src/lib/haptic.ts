@@ -3,6 +3,6 @@ export function haptic(): void {
   try {
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) navigator.vibrate(10)
   } catch {
-    /* unsupported or blocked */
+    // Unsupported or blocked
   }
 }

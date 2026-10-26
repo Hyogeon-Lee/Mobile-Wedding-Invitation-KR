@@ -26,7 +26,7 @@ export interface RsvpInput {
 type Result<T> = { ok: true } & T
 type Failure = { ok: false; error: string }
 
-export const appsScriptUrl = import.meta.env.VITE_APPS_SCRIPT_URL ?? ''
+const appsScriptUrl = import.meta.env.VITE_APPS_SCRIPT_URL ?? ''
 export const isPreviewBackend = !appsScriptUrl
 
 const LS_KEY = 'wedding.preview.guestbook'
@@ -42,7 +42,7 @@ function previewWrite(entries: (GuestbookEntry & { password: string })[]) {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify(entries))
   } catch {
-    // storage unavailable (private mode); ignore
+    // Storage unavailable in private mode
   }
 }
 
@@ -79,11 +79,6 @@ export async function fetchGuestbook(): Promise<GuestbookFetch> {
   } catch {
     return { ok: false, entries: [], error: '네트워크 오류로 목록을 불러오지 못했습니다.' }
   }
-}
-
-/** @deprecated use fetchGuestbook(); kept for compatibility, swallows errors. */
-export async function listGuestbook(): Promise<GuestbookEntry[]> {
-  return (await fetchGuestbook()).entries
 }
 
 export async function addGuestbook(input: {

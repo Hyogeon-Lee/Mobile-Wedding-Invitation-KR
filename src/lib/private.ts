@@ -63,5 +63,4 @@ const accountsParsed = parseJson<Accounts>(import.meta.env.VITE_ACCOUNTS, SAMPLE
 
 export const contacts: Contacts = contactsParsed.value
 export const accounts: Accounts = accountsParsed.value
-/** true when any private value is a sample; the UI can show a small "예시" badge */
 export const isSampleData = contactsParsed.isSample || accountsParsed.isSample

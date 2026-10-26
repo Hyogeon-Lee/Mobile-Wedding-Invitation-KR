@@ -18,7 +18,6 @@ interface ScannedImage {
   height: number
 }
 
-/** Image files under `dir`, recursively, in natural order of their relative paths. */
 function scanImages(dir: string): ScannedImage[] {
   let entries: string[]
   try {

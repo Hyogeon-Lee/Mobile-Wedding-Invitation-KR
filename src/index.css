@@ -28,11 +28,9 @@
   --color-accent-tint-hover: #cfe6d1;
   --color-accent-tint-active: #cbe3cd;
   --color-accent-soft: #e6f2e4; /* pale fresh green tint: icon bubbles, chips (accent on it 4.68:1) */
-  --color-green: #3f7a5a; /* mid greenery green for icons and labels, 4.86:1 on bg (unused today) */
   --color-sage: #b0d9b9; /* pastel leaf green (decorative, 1.49:1 on bg) */
   --color-orange: #d9671f; /* point orange: large text (>= 24px) and decorative marks only, 3.4:1 on bg */
   --color-mint: #e9f4e8; /* pale mint tint */
-  --color-blush: #edf6ea; /* legacy name: now a pale leaf tint (no pink anywhere) */
   --color-butter: #f0f8ea; /* light through leaves: cool lime-white tint */
   --color-sand: #f1f6ef; /* cool off-white tint */
   --color-sky: #e6f1f2; /* cool window-light tint */
@@ -43,8 +41,6 @@
   --font-display: 'Cormorant Garamond', 'Noto Serif KR', serif;
 
   --content-max: 480px;
-  --gutter: 24px;
-  --radius: 16px;
   --shadow-soft: 0 16px 40px -24px rgb(55 118 86 / 0.3);
   /* Press feedback: respond on pointer-down, release a little slower */
   --press-duration: 120ms;
@@ -65,9 +61,7 @@
   --color-accent-tint-active: var(--color-accent-tint-active);
   --color-accent-soft: var(--color-accent-soft);
   --color-sage: var(--color-sage);
-  --color-green: var(--color-green);
   --color-orange: var(--color-orange);
-  --color-blush: var(--color-blush);
   --color-butter: var(--color-butter);
   --color-mint: var(--color-mint);
   --color-sand: var(--color-sand);
@@ -81,7 +75,6 @@
 @theme {
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 html {

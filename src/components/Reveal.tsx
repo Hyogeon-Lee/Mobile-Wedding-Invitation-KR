@@ -9,7 +9,6 @@ interface RevealProps {
   /** px to travel upward while fading in */
   y?: number
   className?: string
-  /** render as a different element; default div */
   as?: 'div' | 'p' | 'li' | 'span'
   /**
    * Visible fraction that triggers the reveal. Use 'some' for blocks that can be taller than the
@@ -19,10 +18,7 @@ interface RevealProps {
   amount?: number | 'some' | 'all'
 }
 
-/**
- * Fade + rise on first entry into the viewport. Honors prefers-reduced-motion.
- * Motion principle from the plan: 0.4–0.8 s, ease-out, one effect per element.
- */
+/** Fade and rise on first entry into the viewport. Honors prefers-reduced-motion. */
 export default function Reveal({ children, delay = 0, y = 16, className, as = 'div', amount = 0.25 }: RevealProps) {
   const reduce = useReducedMotion()
   const Tag = motion[as]
