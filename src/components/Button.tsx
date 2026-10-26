@@ -7,7 +7,7 @@ const base =
   'pressable inline-flex items-center justify-center gap-2 rounded-full font-normal tracking-[0.02em] select-none ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50'
 const variants: Record<Variant, string> = {
-  primary: 'bg-accent text-white hover:bg-accent/92 active:bg-accent/85',
+  primary: 'bg-accent-tint text-accent-deep hover:bg-accent-tint-hover active:bg-accent-tint-active',
   outline: 'border border-line bg-bg-elevated text-ink hover:bg-accent-soft/60 active:bg-accent-soft',
   ghost: 'text-ink-muted hover:text-ink active:bg-ink/5 active:text-ink',
 }

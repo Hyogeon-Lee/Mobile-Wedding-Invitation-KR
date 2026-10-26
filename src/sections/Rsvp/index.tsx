@@ -239,7 +239,7 @@ export default function Rsvp() {
                       <div className="flex items-center gap-3">
                         <div
                           className={`flex h-12 items-center rounded-full ${
-                            errors.count ? `bg-[rgb(47_107_79/0.05)] ${FIELD_INVALID_RING}` : FIELD_SURFACE
+                            errors.count ? `bg-[rgb(55_118_86/0.05)] ${FIELD_INVALID_RING}` : FIELD_SURFACE
                           }`}
                         >
                           <button

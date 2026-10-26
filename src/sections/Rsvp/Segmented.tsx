@@ -48,7 +48,7 @@ export default function Segmented<T extends string>({ label, value, options, onC
         role="radiogroup"
         aria-labelledby={labelId}
         onKeyDown={onKeyDown}
-        className={`relative grid auto-cols-fr grid-flow-col rounded-full bg-[rgb(47_107_79/0.08)] p-0.5 ${disabled ? 'opacity-50' : ''}`}
+        className={`relative grid auto-cols-fr grid-flow-col rounded-full bg-[rgb(55_118_86/0.08)] p-0.5 ${disabled ? 'opacity-50' : ''}`}
       >
         <motion.span
           aria-hidden="true"

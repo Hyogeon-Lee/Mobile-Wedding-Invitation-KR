@@ -37,7 +37,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0, y: 16, scale: 0.96 }}
               transition={SPRING_FAST}
               style={{ transformOrigin: '50% 100%' }}
-              className="material max-w-[min(100%,22.5rem)] rounded-full px-5 py-2.5 text-center text-[0.9375rem] text-ink [--material-shadow:0_10px_30px_-12px_rgb(47_107_79/0.35)]"
+              className="material max-w-[min(100%,22.5rem)] rounded-full px-5 py-2.5 text-center text-[0.9375rem] text-ink [--material-shadow:0_10px_30px_-12px_rgb(55_118_86/0.35)]"
             >
               <motion.span
                 key={toast.seq}

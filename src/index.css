@@ -12,25 +12,30 @@
 /* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
 :root {
   /*
-   * Palette (owner direction 2026-10-25, revision 3): fresh, cool greens. No pink, no apricot, no golden warmth.
-   * Ivory-white with a green cast, pastel and mint tints, deep fresh green as the text/button accent,
-   * and a clean orange reserved for large numerals and tiny decorative marks (sparks in the greenery).
+   * Palette (owner direction 2026-10-25, revision 4 "초록 더 연하게"): fresh, cool greens, one step paler.
+   * Ivory-white with a faint green cast, pastel and mint tints, a fresh green accent for labels and icons,
+   * pale-green primary buttons with deep green text, and a clean orange reserved for large numerals and
+   * tiny decorative marks. No pink, no apricot, no golden warmth, never near-black.
    */
-  --color-bg: #f5f8f3;
+  --color-bg: #f8fbf6;
   --color-bg-elevated: #ffffff;
-  --color-ink: #36423b; /* deep green-charcoal, 9.8:1 on bg */
-  --color-ink-muted: #5f6f66; /* 4.96:1 on bg, 5.31:1 on white */
+  --color-ink: #36423b; /* deep green-charcoal, 10.0:1 on bg */
+  --color-ink-muted: #5f6f66; /* 5.09:1 on bg, 5.31:1 on white */
   --color-line: #dbe5da;
-  --color-accent: #2f6b4f; /* fresh deep green, 5.87:1 on bg, 6.29:1 on white; white on it 6.29:1 */
-  --color-accent-soft: #dcecdb; /* pale fresh green tint */
-  --color-green: #3f7a5a; /* mid greenery green for icons and labels, 4.7:1 on bg */
-  --color-sage: #9fcfa9; /* pastel leaf green (decorative) */
-  --color-orange: #d9671f; /* point orange: large text (>= 24px) and decorative marks only, 3.3:1 on bg */
-  --color-mint: #e2efe0; /* pale mint tint */
-  --color-blush: #e7f2e3; /* legacy name: now a pale leaf tint (no pink anywhere) */
-  --color-butter: #eef6e3; /* light through leaves: cool lime-white tint */
-  --color-sand: #eef3ea; /* cool off-white tint */
-  --color-sky: #dfecef; /* cool window-light tint */
+  --color-accent: #377656; /* fresh green for labels, links, icons, focus rings: 5.17:1 on bg, 5.40:1 on white; white on it 5.40:1 */
+  --color-accent-deep: #2f6b4f; /* text on the pale primary button: 5.01:1 on accent-tint, 4.62:1 on accent-tint-active */
+  --color-accent-tint: #d6ebd7; /* primary button fill (1.26:1 against white, so it still reads as a button) */
+  --color-accent-tint-hover: #cfe6d1;
+  --color-accent-tint-active: #cbe3cd;
+  --color-accent-soft: #e6f2e4; /* pale fresh green tint: icon bubbles, chips (accent on it 4.68:1) */
+  --color-green: #3f7a5a; /* mid greenery green for icons and labels, 4.8:1 on bg (unused today) */
+  --color-sage: #b0d9b9; /* pastel leaf green (decorative, 1.49:1 on bg) */
+  --color-orange: #d9671f; /* point orange: large text (>= 24px) and decorative marks only, 3.4:1 on bg */
+  --color-mint: #e9f4e8; /* pale mint tint */
+  --color-blush: #edf6ea; /* legacy name: now a pale leaf tint (no pink anywhere) */
+  --color-butter: #f0f8ea; /* light through leaves: cool lime-white tint */
+  --color-sand: #f1f6ef; /* cool off-white tint */
+  --color-sky: #e6f1f2; /* cool window-light tint */
 
   --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo',
     'Noto Sans KR', sans-serif;
@@ -40,7 +45,7 @@
   --content-max: 480px;
   --gutter: 24px;
   --radius: 16px;
-  --shadow-soft: 0 16px 40px -24px rgb(47 107 79 / 0.3);
+  --shadow-soft: 0 16px 40px -24px rgb(55 118 86 / 0.3);
   /* Press feedback: respond on pointer-down, release a little slower */
   --press-duration: 120ms;
   --release-duration: 220ms;
@@ -54,6 +59,10 @@
   --color-ink-muted: var(--color-ink-muted);
   --color-line: var(--color-line);
   --color-accent: var(--color-accent);
+  --color-accent-deep: var(--color-accent-deep);
+  --color-accent-tint: var(--color-accent-tint);
+  --color-accent-tint-hover: var(--color-accent-tint-hover);
+  --color-accent-tint-active: var(--color-accent-tint-active);
   --color-accent-soft: var(--color-accent-soft);
   --color-sage: var(--color-sage);
   --color-green: var(--color-green);
@@ -130,7 +139,7 @@ img {
 }
 @media (min-width: 560px) {
   body {
-    background: linear-gradient(160deg, #e9f1e6 0%, #e3edee 100%);
+    background: linear-gradient(160deg, #f0f6ec 0%, #eaf2f1 100%);
   }
   .app-frame {
     box-shadow: 0 0 0 1px var(--color-line), 0 20px 60px rgba(0, 0, 0, 0.08);

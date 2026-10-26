@@ -5,21 +5,21 @@
 
 :root {
   /* Glow tints as RGB triplets so gradients can vary alpha: rgb(var(--fx-glow-butter) / 0.5) */
-  --fx-glow-butter: 226 242 208; /* cool leaf-light */
-  --fx-glow-mint: 200 234 212;
-  --fx-glow-blush: 214 238 226; /* legacy name: cool mint (no pink, no apricot) */
-  --fx-glow-sage: 176 220 190;
+  --fx-glow-butter: 233 246 224; /* cool leaf-light */
+  --fx-glow-mint: 214 240 222;
+  --fx-glow-blush: 224 242 232; /* legacy name: cool mint (no pink, no apricot) */
+  --fx-glow-sage: 196 230 204;
 
-  /* Decorative fills, a step deeper than the page tints so they read on #f9f7f2; sage follows the page token */
+  /* Decorative fills, a step deeper than the page tints so they read on #f8fbf6; sage follows the page token */
   --fx-petal-sage: var(--color-sage);
-  --fx-petal-mint: #a9d9b6;
-  --fx-petal-blush: #8fcba0; /* legacy name: fresh leaf green */
+  --fx-petal-mint: #b8e0c2;
+  --fx-petal-blush: #a6d6b2; /* legacy name: fresh leaf green */
 
   /* CurtainLight: band light and corner wash (butter / sky follow the page tokens) */
-  --fx-curtain-light-warm: 247 255 244; /* cool green-white light */
+  --fx-curtain-light-warm: 250 255 248; /* cool green-white light */
   --fx-curtain-light-neutral: 255 255 255;
-  --fx-curtain-wash-warm: 226 242 220;
-  --fx-curtain-wash-neutral: 223 236 239;
+  --fx-curtain-wash-warm: 234 246 230;
+  --fx-curtain-wash-neutral: 230 240 242;
 }
 
 /* ---------- Off-screen pause (set by useInViewPause) ---------- */
@@ -271,18 +271,18 @@
       rgb(var(--fx-wash-tint) / 0) 100%
     );
 }
-/* Peaks are capped so text-ink-muted stays >= 4.6:1 on the composite (see README) */
+/* Peaks are capped so text-ink-muted stays >= 4.8:1 on the composite (see README) */
 .fx-wash-leaf {
-  --fx-wash-tint: var(--fx-glow-butter); /* 226 242 208 -> rgb(236 245 226) at peak */
-  --fx-wash-peak: 0.5;
+  --fx-wash-tint: var(--fx-glow-butter); /* 233 246 224 -> rgb(241 249 236) at peak */
+  --fx-wash-peak: 0.44;
 }
 .fx-wash-mint {
-  --fx-wash-tint: var(--fx-glow-mint); /* 200 234 212 -> rgb(229 243 232) */
-  --fx-wash-peak: 0.36;
+  --fx-wash-tint: var(--fx-glow-mint); /* 214 240 222 -> rgb(237 247 238) */
+  --fx-wash-peak: 0.32;
 }
 .fx-wash-sky {
-  --fx-wash-tint: var(--fx-curtain-wash-neutral); /* 223 236 239 -> rgb(234 242 241) */
-  --fx-wash-peak: 0.5;
+  --fx-wash-tint: var(--fx-curtain-wash-neutral); /* 230 240 242 -> rgb(240 246 244) */
+  --fx-wash-peak: 0.44;
 }
 
 /* The last section's wash must not extend the page past <main> */

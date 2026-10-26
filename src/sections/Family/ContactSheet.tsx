@@ -103,7 +103,7 @@ export default function ContactSheet({ open, onClose, groups, sample }: ContactS
           aria-labelledby={TITLE_ID}
           tabIndex={-1}
           data-lenis-prevent=""
-          className="fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[85dvh] w-full max-w-[480px] overflow-y-auto overscroll-contain material rounded-t-[28px] px-6 pt-0 [--material-bg:rgb(255_255_255/0.88)] [--material-shadow:0_-12px_40px_-20px_rgb(47_107_79/0.35)] pb-[calc(24px+env(safe-area-inset-bottom))] outline-none"
+          className="fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[85dvh] w-full max-w-[480px] overflow-y-auto overscroll-contain material rounded-t-[28px] px-6 pt-0 [--material-bg:rgb(255_255_255/0.88)] [--material-shadow:0_-12px_40px_-20px_rgb(55_118_86/0.35)] pb-[calc(24px+env(safe-area-inset-bottom))] outline-none"
           drag={reduce ? false : 'y'}
           dragListener={false}
           dragControls={controls}

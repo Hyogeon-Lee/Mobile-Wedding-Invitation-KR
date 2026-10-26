@@ -32,10 +32,10 @@ const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap">
 <style>
-  html,body{margin:0;width:1200px;height:630px;background:radial-gradient(900px 500px at 20% 10%, #eef6e3 0%, transparent 60%), radial-gradient(800px 500px at 85% 90%, #dfecef 0%, transparent 60%), #f5f8f3;color:#36423b;font-family:'Pretendard Variable',sans-serif}
+  html,body{margin:0;width:1200px;height:630px;background:radial-gradient(900px 500px at 20% 10%, #f0f8ea 0%, transparent 60%), radial-gradient(800px 500px at 85% 90%, #e6f1f2 0%, transparent 60%), #f8fbf6;color:#36423b;font-family:'Pretendard Variable',sans-serif}
   .wrap{position:relative;width:1200px;height:630px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
   .frame{position:absolute;inset:28px;border:1px solid #dbe5da;border-radius:16px}
-  .eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;letter-spacing:.35em;font-size:22px;color:#2f6b4f}
+  .eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;letter-spacing:.35em;font-size:22px;color:#377656}
   .names{font-family:'Noto Serif KR',serif;font-weight:300;font-size:72px;letter-spacing:.04em}
   .names span{color:#d9671f;font-size:40px;margin:0 22px;vertical-align:middle;font-family:'Cormorant Garamond',serif;font-style:italic}
   .desc{font-size:26px;color:#5f6f66}

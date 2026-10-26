@@ -1,5 +1,5 @@
 /** iOS-style filled text field, shared by RSVP, GuestbookForm and EntryCard. */
-export const FIELD_SURFACE = 'bg-[rgb(47_107_79/0.05)] shadow-[inset_0_0_0_1px_rgb(54_66_59/0.12)]'
+export const FIELD_SURFACE = 'bg-[rgb(55_118_86/0.05)] shadow-[inset_0_0_0_1px_rgb(54_66_59/0.12)]'
 export const FIELD_INVALID_RING = 'shadow-[inset_0_0_0_1.5px_var(--color-accent)]'
 export const FIELD =
   'w-full rounded-[12px] border-0 px-4 text-[1rem] text-ink placeholder:text-ink-muted caret-accent ' +

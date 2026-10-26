@@ -5,9 +5,9 @@
  * only a fallback when the stylesheet is absent.
  */
 const FALLBACK: Record<string, string> = {
-  '--color-accent': '#2f6b4f',
-  '--color-sage': '#9fcfa9',
-  '--fx-petal-mint': '#a9d9b6',
+  '--color-accent': '#377656',
+  '--color-sage': '#b0d9b9',
+  '--fx-petal-mint': '#b8e0c2',
   '--color-orange': '#d9671f',
 }
 

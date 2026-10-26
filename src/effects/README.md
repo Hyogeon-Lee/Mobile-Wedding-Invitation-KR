@@ -170,8 +170,8 @@ parameters come from the pure `curtainParams(index, seed)` in `curtain.ts`.
 The root is `absolute inset-0 z-0`, so the parent must be a `Bleed` or `relative isolate overflow-hidden`, and
 content above it `relative z-10` (see Layering). The bands are lighter than the page background, so
 they only raise text contrast. The wash is the one part that darkens the background slightly; its
-peak alpha is capped so `text-ink-muted` stays at or above 4.5:1 over `bg` (4.59:1 under the warm medium
-wash, 4.55:1 under the neutral medium wash). If it sits over another tinted layer, check small
+peak alpha is capped so `text-ink-muted` stays at or above 4.5:1 over `bg` (4.91:1 under the warm medium
+wash, 4.91:1 under the neutral medium wash). If it sits over another tinted layer, check small
 muted text again.
 
 Reduced motion: no drift and no breathing; bands stay at their base opacity and the wash at 0.9.
@@ -262,7 +262,7 @@ radial highlight sits near the top-left. Usually rendered through `Section`'s `w
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `tone` | `'leaf' \| 'mint' \| 'sky'` | `'leaf'` | Peak 0.5 of `226 242 208` (leaf), 0.36 of `200 234 212` (mint), 0.5 of `223 236 239` (sky) |
+| `tone` | `'leaf' \| 'mint' \| 'sky'` | `'leaf'` | Peak 0.44 of `233 246 224` (leaf), 0.32 of `214 240 222` (mint), 0.44 of `230 240 242` (sky) |
 | `reachTop` | `number` (px) | `160` | How far the layer extends above the parent |
 | `reachBottom` | `number` (px) | `160` | How far the layer extends below the parent; clamped to `0` automatically in the last section |
 | `className` | `string` | `''` | Appended to the root |
@@ -275,13 +275,13 @@ Rules: the parent must be `relative` and never `isolate`, `overflow-hidden`, tra
 otherwise the wash is clipped to the parent's box or painted inside it instead of across the boundary.
 Over a short section the plateau collapses and the wash becomes a soft hump; that is intended.
 
-Contrast at the densest point (sRGB alpha-over on bg `#f5f8f3`, WCAG ratio):
+Contrast at the densest point (sRGB alpha-over on bg `#f8fbf6`, WCAG ratio):
 
 | Tint | Peak composite | `text-ink-muted` | `text-accent` |
 | --- | --- | --- | --- |
-| mint | `rgb(229 243 232)` | 4.63:1 | 5.49:1 |
-| leaf | `rgb(236 245 226)` | 4.73:1 | 5.61:1 |
-| sky (unused) | `rgb(234 242 241)` | 4.67:1 | 5.54:1 |
+| mint | `rgb(237 247 238)` | 4.86:1 | 4.94:1 |
+| leaf | `rgb(241 249 236)` | 4.93:1 | 5.01:1 |
+| sky (unused) | `rgb(240 246 244)` | 4.86:1 | 4.94:1 |
 
 Do not stack a wash on a `LightBloom` that sits under small muted text without recomputing. Hidden under
 `prefers-contrast: more` and `forced-colors: active`; kept under `prefers-reduced-transparency` (it is a
