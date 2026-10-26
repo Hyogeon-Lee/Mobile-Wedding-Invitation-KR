@@ -1,4 +1,4 @@
-// Screenshots against a running preview server (local QA only; Playwright is pre-installed globally).
+// Screenshots against a running preview server (local QA only). Playwright is not a dependency of this project.
 // Usage: BASE_URL=http://localhost:4173 node scripts/qa-screenshots.mjs
 // Output: qa/<device>-full.png, qa/<device>-<section>.png, qa/iphone-14-state-*.png
 import { createRequire } from 'node:module'
@@ -54,20 +54,17 @@ for (const t of targets) {
     }
   }
   if (t.states) {
-    // contact sheet
     const contact = page.getByRole('button', { name: /연락하기/ }).first()
     if (await contact.count()) {
       await contact.scrollIntoViewIfNeeded(); await contact.click(); await page.waitForTimeout(700)
       await page.screenshot({ path: `${out}/${t.name}-state-contact.png` })
       await page.keyboard.press('Escape'); await page.waitForTimeout(500)
     }
-    // account accordion
     const acc = page.getByRole('button', { name: /신랑 ?측 계좌/ }).first()
     if (await acc.count()) {
       await acc.scrollIntoViewIfNeeded(); await acc.click(); await page.waitForTimeout(700)
       await page.locator('#account').screenshot({ path: `${out}/${t.name}-state-account-open.png` })
     }
-    // gallery lightbox
     const tile = page.locator('#gallery button, #gallery a').first()
     if (await tile.count()) {
       await tile.scrollIntoViewIfNeeded(); await tile.click(); await page.waitForTimeout(1200)

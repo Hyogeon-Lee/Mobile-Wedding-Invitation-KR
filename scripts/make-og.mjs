@@ -1,26 +1,20 @@
-// Renders public/og-image.png (1200x630) from config/wedding.json using Playwright (pre-installed).
-// Usage: node scripts/make-og.mjs [--dry-run]   — bump ?v= in index.html afterwards (KakaoTalk caches by URL).
+// Renders public/og-image.png (1200x630) from config/wedding.json with Playwright (not a dependency of this project).
+// Usage: node scripts/make-og.mjs [--dry-run]. Bump ?v= in index.html afterwards (KakaoTalk caches by URL).
 // --dry-run prints the text lines without launching a browser or writing the file.
+// Needs Node 22.18+ or 23.6+ because it imports TypeScript sources from src/config.
 import { createRequire } from 'node:module'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { shareDescriptionOf } from '../src/config/resolve.ts'
+import { validateWedding } from '../src/config/validate.ts'
 
-const cfg = JSON.parse(readFileSync('config/wedding.json', 'utf8'))
-const groom = cfg.couple?.groom?.name || '신랑'
-const bride = cfg.couple?.bride?.name || '신부'
-const venue = cfg.event?.venueName ?? ''
-const startsAt = cfg.event?.startsAt ?? ''
-const placeholder = cfg.event?.datePlaceholder === true
-// Same rule as dateLineOf in src/config/resolve.ts: "YYYY년 OO월 OO일" until the date is confirmed, then the KST date.
-const dateLine = (() => {
-  if (!startsAt) return ''
-  if (placeholder) return `${startsAt.slice(0, 4)}년 OO월 OO일`
-  const d = new Date(new Date(startsAt).getTime() + 9 * 3600 * 1000)
-  const w = ['일', '월', '화', '수', '목', '금', '토'][d.getUTCDay()]
-  return `${d.getUTCFullYear()}년 ${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일 ${w}요일`
-})()
-const desc = cfg.share?.kakaoDescription?.trim() || [dateLine, venue].filter(Boolean).join(' · ')
+const cfg = validateWedding(JSON.parse(readFileSync('config/wedding.json', 'utf8')))
+const groom = cfg.couple.groom.name
+const bride = cfg.couple.bride.name
+const venue = cfg.event.venueName
+const desc = shareDescriptionOf(cfg)
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 // Skip the venue line when the description already names it.
-const venueLine = venue && !desc.includes(venue) ? `<div class="venue">${venue}</div>` : ''
+const venueLine = venue && !desc.includes(venue) ? `<div class="venue">${esc(venue)}</div>` : ''
 
 if (process.argv.includes('--dry-run')) {
   console.log({ groom, bride, desc, venue: venueLine ? venue : '(in description)' })
@@ -41,9 +35,9 @@ const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
   .desc{font-size:26px;color:#5f6f66}
   .venue{font-size:22px;color:#5f6f66;letter-spacing:.05em}
 </style></head><body><div class="wrap"><div class="frame"></div>
-<div class="eyebrow">${cfg.cover?.eyebrow || 'WEDDING INVITATION'}</div>
-<div class="names">${groom}<span>&</span>${bride}</div>
-<div class="desc">${desc}</div>
+<div class="eyebrow">${esc(cfg.cover.eyebrow || 'WEDDING INVITATION')}</div>
+<div class="names">${esc(groom)}<span>&amp;</span>${esc(bride)}</div>
+<div class="desc">${esc(desc)}</div>
 ${venueLine}
 </div></body></html>`
 
