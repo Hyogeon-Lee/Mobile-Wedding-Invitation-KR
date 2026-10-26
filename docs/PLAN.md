@@ -13,38 +13,24 @@
 
 ### 1.2 원칙
 
-1. 정보 구성은 검증된 오픈소스 청첩장의 공통 섹션을 따른다. 하객이 기대하는 정보가 빠지면 안 된다.
+1. 정보 구성에서 하객이 기대하는 정보가 빠지면 안 된다.
 2. 디자인과 모션은 GitHub에서 널리 쓰이는 오픈소스 라이브러리로 구현하되, 라이브러리 수는 최소로 유지한다.
 3. 모바일 우선. 카카오톡 인앱 브라우저를 1순위 대상 환경으로 본다.
 4. 서버를 두지 않는 정적 사이트로 만든다. 방명록·참석 여부처럼 저장이 필요한 기능만 외부 무료 서비스에 위임한다.
 5. 공개 저장소에 개인정보(전화번호, 계좌번호, 원본 사진)를 커밋하지 않는다.
 6. 접근성을 지킨다. 연로한 하객을 위해 글자 크기, 명도 대비, 모션 축소 옵션을 제공한다.
 
-## 2. 참고 오픈소스 조사 결과
+## 2. 전제 조건
 
-조사일 2026-10-25, GitHub 저장소 페이지 기준. Star 수는 조사 시점 값이다.
-
-| 저장소 | Stars | 스택 | 특징 | 라이선스 |
-|---|---|---|---|---|
-| [heejin-hwang/mobile-wedding-invitation](https://github.com/heejin-hwang/mobile-wedding-invitation) | 441 | React, TypeScript, Vite, Emotion | 카카오맵(react-kakao-maps-sdk), PhotoSwipe 갤러리, 컨페티, Firebase 방명록·좋아요(선택), 카카오페이·토스 송금 링크, Vercel 배포, `src/data.json` 단일 설정 | MIT |
-| [S-jooyoung/WEDDING_INVITATION](https://github.com/S-jooyoung/WEDDING_INVITATION) | 115 | Gatsby 5, React 18, TypeScript 5 | 카카오맵 임베드, 스와이프 갤러리, 계좌 복사, 카카오톡 공유, 배경음악 토글, OG 미리보기, 이미지 WebP 변환·폰트 서브셋 스크립트, `src/data/invitation.ts` 단일 설정, 명도 대비 4.5:1 요구 | MIT |
-| [juhonamnam/wedding-invitation](https://github.com/juhonamnam/wedding-invitation) | 70 (Fork 114) | React, TypeScript, Vite, SASS | 네이버 지도, 카카오톡 공유, 방명록·참석 여부(별도 서버, `VITE_STATIC_ONLY`로 생략 가능), GitHub Actions → GitHub Pages 배포, rem 단위 스케일링 | MIT |
-| [gpjeong/wedding](https://github.com/gpjeong/wedding) | 0 | React 19, Vite 7, Tailwind 4, Framer Motion | 섹션 구성이 가장 완전함(표지·인사말·혼주(고인 표기)·달력 D-day·갤러리·지도·네비 링크 3종·계좌 아코디언·RSVP·방명록·공유·푸터·BGM·낙엽 파티클), Firestore + Google Sheets 동기화, `site:down`/`site:up` 스크립트 | MIT |
-| [TennisRitchie/mobile-wedding-invitation](https://github.com/TennisRitchie/mobile-wedding-invitation) | 0 | Next.js 15, TypeScript, Tailwind, GSAP | GSAP ScrollTrigger 기반 스크롤 애니메이션, 스무스 스크롤, 교통편 안내 섹션 | MIT |
-| [coderwin/mobile-wedding-invitation](https://github.com/coderwin/mobile-wedding-invitation) | 0 | Next.js, TypeScript | 연락처·계좌번호를 환경 변수로 분리, 검색 엔진 색인 기본 차단, 인앱 브라우저용 클립보드 폴백 | 미확인 |
-| [HyunIm/wedding-invitation](https://github.com/HyunIm/wedding-invitation) | 0 | HTML, JavaScript (`config.js`) | 큰 글씨 보기, 퀵 메뉴, 키보드 조작 다이얼로그, 색 테마 6종·폰트 3종, Google Apps Script로 방명록·RSVP, 섹션별 `enabled` 플래그 | MIT |
-
-조사에서 확인된 공통점은 다음과 같다.
-
-- 설정 파일 하나(`data.json`, `invitation.ts`, `wedding.ts`, `config.js`)에 모든 내용을 모은다.
+- 설정 파일 하나에 모든 내용을 모은다.
 - 지도는 카카오맵 또는 네이버 지도, 공유는 카카오 JavaScript SDK를 쓴다. 둘 다 개발자 콘솔에서 키 발급과 도메인 등록이 필요하다.
 - 방명록·참석 여부는 Firebase, Google Sheets(Apps Script), 별도 서버 중 하나에 저장한다.
 - 배포는 GitHub Pages, Vercel, Netlify 중 하나이며 모두 무료 범위에서 운영한다.
-- 여러 저장소가 공개 저장소에 개인정보를 올리지 말라고 경고한다. 한 번 커밋되면 git 이력에 남는다.
+- 공개 저장소에 개인정보를 올리면 안 된다. 한 번 커밋되면 git 이력에 남는다.
 
 ## 3. 포함 정보(섹션) 정의
 
-2장의 교집합에서 도출했다. "필수"는 하객이 반드시 찾는 정보, "선택"은 두 사람의 취향으로 결정할 항목이다.
+"필수"는 하객이 반드시 찾는 정보, "선택"은 두 사람의 취향으로 결정할 항목이다.
 
 | # | 섹션 | 구분 | 내용 | 비고 |
 |---|---|---|---|---|
@@ -73,7 +59,7 @@
 근거:
 
 - 서버 렌더링이 필요 없다. 청첩장은 내용이 고정된 단일 페이지이고, OG 메타 태그는 `index.html`에 정적으로 둔다(메신저 크롤러가 JavaScript를 실행하지 않는다고 가정하는 것이 안전하다).
-- 참고 오픈소스 대부분이 같은 조합이라 문제 해결 사례가 많다.
+- 널리 쓰이는 조합이라 문제 해결 사례가 많다.
 - 빌드 결과가 정적 파일이므로 GitHub Pages, Vercel, Netlify 어디든 올릴 수 있다.
 - Next.js는 OG 이미지 동적 생성 등 추가 기능이 필요할 때만 고려한다. 현재 요구사항에는 과하다.
 
@@ -99,7 +85,7 @@
 
 채택 기준: 핵심 5종(Motion, Lenis, Swiper, PhotoSwipe, canvas-confetti)으로 기본 연출을 모두 구현하고, 선택 항목은 15번 개성 요소의 디자인이 확정된 뒤 필요한 것만 추가한다. 초기 JavaScript 번들은 gzip 기준 200KB 이하를 목표로 한다.
 
-대안 메모: 갤러리 확대 보기는 React 전용 [yet-another-react-lightbox](https://github.com/igordanchenko/yet-another-react-lightbox)(1.3k, MIT)도 가능하다. PhotoSwipe를 1안으로 둔 이유는 참고 템플릿(heejin-hwang)에서 검증된 조합이고 프레임워크 독립이라 교체가 쉽기 때문이다.
+대안 메모: 갤러리 확대 보기는 React 전용 [yet-another-react-lightbox](https://github.com/igordanchenko/yet-another-react-lightbox)(1.3k, MIT)도 가능하다. PhotoSwipe를 1안으로 둔 이유는 프레임워크 독립이라 교체가 쉽기 때문이다.
 
 ### 4.3 지도
 
@@ -236,7 +222,7 @@ export interface WeddingConfig {
 ### 7.5 개인정보·운영
 
 - 공개 저장소에는 변환된 사진만 커밋하고 원본은 올리지 않는다. 사진 비공개가 필요하면 저장소를 비공개로 두고 Vercel로 배포한다.
-- 예식 후 일정 기간이 지나면 `site:down` 스크립트로 빈 페이지를 배포해 링크를 닫는다(gpjeong 방식).
+- 예식 후 일정 기간이 지나면 `site:down` 스크립트로 빈 페이지를 배포해 링크를 닫는다.
 - Apps Script에서 입력 길이 제한, 비밀번호 해시 검증, 스크립트 락을 적용한다. 시트 자체는 비공개로 둔다.
 
 ## 8. 단계별 계획
@@ -294,7 +280,6 @@ export interface WeddingConfig {
 
 조사일 2026-10-25. 아래 중 developers.kakao.com, devtalk.kakao.com, webkit.org, firebase.google.com, supabase.com 페이지는 이 작업 환경에서 직접 열리지 않아 검색 결과 요약에 의존했다. 해당 항목은 착수 시 원문 재확인이 필요하다.
 
-- 오픈소스 청첩장: 2장 표의 각 GitHub 저장소
 - 라이브러리: 4.2장 표의 각 GitHub 저장소, [@gsap/react](https://github.com/greensock/react)
 - 카카오맵 API 정책 변경(2026-07-21): [카카오맵 공통 가이드](https://developers.kakao.com/docs/latest/ko/kakaomap/common), [DevTalk 공지](https://devtalk.kakao.com/t/api-notice-on-new-kakao-map-api-features-and-free-quota-policy/150222) — 원문 미확인
 - 카카오톡 공유 JavaScript: [공식 가이드](https://developers.kakao.com/docs/latest/ko/kakaotalk-share/js-link) — 원문 미확인
