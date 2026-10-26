@@ -1,9 +1,6 @@
 /**
- * Split greeting body text into paragraphs.
- *
- * Lines are separated by "\n". One or more empty (or whitespace-only) lines end a
- * paragraph; consecutive non-empty lines stay together so the renderer can place a
- * single <br> between them. Leading/trailing blank lines produce no empty paragraphs.
+ * Splits body text into paragraphs of lines. Blank (or whitespace-only) lines end a paragraph;
+ * consecutive non-empty lines stay together for a single <br> between them.
  */
 export function splitParagraphs(body: string): string[][] {
   const paragraphs: string[][] = []

@@ -1,14 +1,10 @@
 import { monthGrid } from '@/lib/date'
 
 /** A day number, or null for a blank cell that pads the first and last week. */
-export type CalendarCell = number | null
+type CalendarCell = number | null
 
 const DAYS_PER_WEEK = 7
 
-/**
- * Cells of a month laid out on a Sunday-first week:
- * `firstWeekday` leading blanks, then 1..daysInMonth, then blanks up to a multiple of 7.
- */
 export function calendarCells(year: number, month: number): CalendarCell[] {
   const { daysInMonth, firstWeekday } = monthGrid(year, month)
   const cells: CalendarCell[] = Array.from({ length: firstWeekday }, () => null)
@@ -18,7 +14,6 @@ export function calendarCells(year: number, month: number): CalendarCell[] {
   return cells
 }
 
-/** The same cells split into rows of 7, one per table row. */
 export function calendarWeeks(year: number, month: number): CalendarCell[][] {
   const cells = calendarCells(year, month)
   const weeks: CalendarCell[][] = []

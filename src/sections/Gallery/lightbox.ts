@@ -9,7 +9,7 @@ let modulePromise: Promise<PhotoSwipeCtor> | null = null
  * Loads PhotoSwipe and its stylesheet on first use only, so neither is in the initial
  * bundle. A failed load clears the cache so the next tap retries.
  */
-export function loadPhotoSwipe(): Promise<PhotoSwipeCtor> {
+function loadPhotoSwipe(): Promise<PhotoSwipeCtor> {
   if (!modulePromise) {
     modulePromise = Promise.all([import('photoswipe'), import('photoswipe/style.css')]).then(([m]) => m.default)
     modulePromise.catch(() => {
@@ -19,14 +19,13 @@ export function loadPhotoSwipe(): Promise<PhotoSwipeCtor> {
   return modulePromise
 }
 
-export interface OpenLightboxOptions {
+interface OpenLightboxOptions {
   dataSource: SlideData[]
   index: number
   /** Fired once the gallery has been removed from the DOM (close, Escape, swipe-down or destroy()). */
   onDestroy?: () => void
 }
 
-/** Opens the lightbox at `index` with pinch-zoom, swipe-down-to-close and the "1 / 12" counter. */
 export async function openLightbox({ dataSource, index, onDestroy }: OpenLightboxOptions): Promise<PhotoSwipe> {
   const Ctor = await loadPhotoSwipe()
   const pswp = new Ctor({
@@ -54,7 +53,7 @@ export async function openLightbox({ dataSource, index, onDestroy }: OpenLightbo
   })
   if (onDestroy) pswp.on('destroy', onDestroy)
   pswp.init()
-  // Lenis listens on window; mark the overlay so wheel events over it never scroll the page.
+  // Lenis listens on window, so mark the overlay to keep wheel events over it from scrolling the page
   pswp.element?.setAttribute('data-lenis-prevent', '')
   return pswp
 }

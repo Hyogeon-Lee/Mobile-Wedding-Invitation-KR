@@ -1,9 +1,6 @@
-/**
- * Pure builders for the share section. Kept free of `window` so they can be unit-tested
- * in the node environment; the component supplies `siteUrl()` and the config values.
- */
+/** Pure builders, free of `window` so they run in the node test environment */
 
-export interface ShareContent {
+interface ShareContent {
   title: string
   description: string
   /** Absolute URL of the preview image (Kakao rejects relative paths). */
@@ -15,7 +12,7 @@ export interface ShareContent {
 type KakaoLink = { mobileWebUrl: string; webUrl: string }
 
 /** Settings object for `Kakao.Share.sendDefault` (feed template). */
-export type KakaoFeedSettings = {
+type KakaoFeedSettings = {
   objectType: 'feed'
   content: { title: string; description: string; imageUrl: string; link: KakaoLink }
   buttons: { title: string; link: KakaoLink }[]
@@ -37,10 +34,7 @@ export function kakaoFeedPayload({ title, description, imageUrl, url }: ShareCon
   }
 }
 
-/**
- * Toast shown after the link was copied instead of opening KakaoTalk. Distinguishes
- * "no key configured" (expected in preview) from "SDK failed to load" (network/key error).
- */
+/** Toast after copying the link instead of opening KakaoTalk. No key is expected in preview, while a key means the SDK failed to load. */
 export function fallbackCopyMessage(hasKey: boolean): string {
   return hasKey ? '카카오톡 공유를 불러오지 못해 링크를 복사했습니다' : '링크를 복사했습니다'
 }

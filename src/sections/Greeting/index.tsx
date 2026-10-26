@@ -20,7 +20,7 @@ export default function Greeting() {
       bottom="sm"
       wash="leaf"
       backdrop={
-        // Leaves fall from mid-greeting past the sprig into Family's header (3 petals, 6 nodes).
+        // Leaves fall from mid-greeting past the sprig into Family's header (3 petals, 6 nodes)
         <Bleed top="45%" bottom="-14rem">
           <PetalDrift count={5} seed={2} density="light" />
         </Bleed>

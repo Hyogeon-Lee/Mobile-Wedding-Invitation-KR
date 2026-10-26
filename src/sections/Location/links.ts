@@ -1,9 +1,9 @@
 /**
  * Pure URL builders for the three navigation apps. Coordinates are WGS84 (lat, lng).
- * Kakao is a web link usable everywhere; Naver and T map are app schemes that need
- * a fallback when the app is missing: an Android intent URL on Android, openApp.ts elsewhere.
+ * Naver and T map are app schemes that need a fallback when the app is missing:
+ * an Android intent URL on Android, openApp.ts elsewhere.
  */
-export interface Place {
+interface Place {
   name: string
   lat: number
   lng: number
@@ -55,7 +55,7 @@ export function isAndroidUserAgent(ua: string): boolean {
   return /Android/i.test(ua)
 }
 
-/** "example.com" from "https://example.com/path"; "" when the input is not a URL. */
+/** Host of a URL, or "" when the input is not a URL */
 export function hostOf(url: string): string {
   try {
     return new URL(url).host

@@ -13,9 +13,8 @@ import { EASE_OUT } from '@/lib/motion'
 import { hasMore, spansBothColumns, splitTiles, tileTilt, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
 
-// gap-3 leaves room for the opposite tilts of neighbouring frames so their corners never touch.
+// gap-3 leaves room for the opposite tilts of neighbouring frames so their corners never touch
 const GRID = 'grid grid-cols-2 gap-3'
-// Soft polaroid frame: 6px white mat, hairline ring, faint sage-tinted drop shadow.
 const FRAME =
   'block w-full overflow-hidden rounded-xl bg-white p-1.5 ring-1 ring-line/70 ' +
   'shadow-(--shadow-soft) ' +
@@ -82,7 +81,7 @@ export default function Gallery() {
       setPending(index)
       try {
         const pswp = await openLightbox({
-          // `element` lets PhotoSwipe zoom out of the tapped tile; hidden tiles fall back to a fade.
+          // `element` lets PhotoSwipe zoom out of the tapped tile, and hidden tiles fall back to a fade
           dataSource: slides.map((s, i) => ({ ...s, element: tilesRef.current[i] ?? undefined, thumbCropped: true })),
           index,
           onDestroy: () => {
@@ -106,7 +105,7 @@ export default function Gallery() {
     [slides, lenis, toast],
   )
 
-  // Destroy any open lightbox when the section unmounts; `onDestroy` restores Lenis.
+  // Destroy any open lightbox on unmount, its onDestroy restores Lenis
   useEffect(() => {
     mountedRef.current = true
     return () => {
@@ -118,7 +117,7 @@ export default function Gallery() {
 
   if (images.length === 0) return null
 
-  // The tail can run past 1,000px; collapsing from below would strand the reader in a later section.
+  // The tail can run past 1,000px, and collapsing from below would strand the reader in a later section
   const toggle = () => {
     if (expanded) {
       const el = document.getElementById('gallery')
@@ -151,13 +150,12 @@ export default function Gallery() {
       bottom="sm"
       backdrop={
         <>
-          {/* Curtain light rising from under the heading over the first rows; a static mask feathers both ends.
-              Capped at 60rem: rotated bands shift sideways by (h/2)·tan θ at the edges, so on the full ~2,000 px
-              section they would leave the top-right corner unlit. */}
+          {/* Capped at 60rem: rotated bands shift sideways by (h/2)·tan θ at the edges, so on the full ~2,000 px
+              section they would leave the top-right corner unlit */}
           <Bleed top="-10rem" mask="y" fade="12rem" className="h-[min(calc(100%_+_10rem),60rem)]">
             <CurtainLight tone="warm" intensity="soft" bands={5} angle={-12} seed={3} />
           </Bleed>
-          {/* Leaves fall from the last rows into Location (3 petals, 6 nodes). */}
+          {/* Leaves fall from the last rows into Location (3 petals, 6 nodes) */}
           <Bleed bottom="-12rem" className="h-[28rem]">
             <PetalDrift count={3} seed={5} />
           </Bleed>
@@ -173,7 +171,7 @@ export default function Gallery() {
               <motion.div
                 id={tailId}
                 key="tail"
-                // Opacity/transform only: animating height would relayout every section below on each frame.
+                // Opacity/transform only, since animating height would relayout every section below on each frame
                 initial={reduce ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduce ? undefined : { opacity: 0 }}

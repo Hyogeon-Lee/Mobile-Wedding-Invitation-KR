@@ -10,12 +10,11 @@ import { kakaoKey, loadKakaoSdk, siteUrl } from '@/lib/kakao'
 import { REVEAL_STEP } from '@/lib/motion'
 import { fallbackCopyMessage, isShareAbort, kakaoFeedPayload, shareImageUrl } from './share'
 
-/** Start fetching the Kakao SDK this far before the buttons scroll in, so a tap calls sendDefault without a network wait. */
+/** Fetch the Kakao SDK this far before the buttons scroll in, so a tap calls sendDefault without a network wait */
 const SDK_PRELOAD_MARGIN = '400px 0px'
-/** Preview image under public/; regenerate with `npm run og`. */
+/** Preview image under public/, regenerated with `npm run og` */
 const OG_IMAGE_PATH = 'og-image.png'
 
-/** Speech-bubble glyph in Kakao's style; colour comes from the button text. */
 function KakaoBubble() {
   return (
     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
@@ -53,7 +52,7 @@ export default function Share() {
           )
           return
         } catch (error) {
-          // KakaoError (invalid settings/template) is thrown synchronously; fall through to Web Share / copy.
+          // KakaoError (invalid settings/template) is thrown synchronously, so fall through to Web Share / copy
           console.warn('[share] Kakao sendDefault failed', error)
         }
       }
