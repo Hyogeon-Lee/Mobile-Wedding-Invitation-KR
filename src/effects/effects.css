@@ -15,7 +15,7 @@
   --fx-petal-mint: #b8e0c2;
   --fx-petal-blush: #a6d6b2; /* legacy name: fresh leaf green */
 
-  /* CurtainLight: band light and corner wash (hand-tuned near the butter / sky tints) */
+  /* CurtainLight band light and corner wash (hand-tuned near the butter / sky tints), light-warm also tints LightLeak */
   --fx-curtain-light-warm: 250 255 248; /* cool green-white light */
   --fx-curtain-light-neutral: 255 255 255;
   --fx-curtain-wash-warm: 234 246 230;
@@ -67,18 +67,18 @@
 .fx-leak-vignette {
   background: radial-gradient(
     130% 95% at 0% 0%,
-    rgb(255 238 200 / 0.42) 0%,
-    rgb(255 238 200 / 0.16) 32%,
-    rgb(255 238 200 / 0) 58%
+    rgb(var(--fx-curtain-light-warm) / 0.42) 0%,
+    rgb(var(--fx-curtain-light-warm) / 0.16) 32%,
+    rgb(var(--fx-curtain-light-warm) / 0) 58%
   );
 }
 .fx-leak-band {
   background: linear-gradient(
     105deg,
     rgb(255 255 255 / 0) 22%,
-    rgb(255 250 232 / 0.22) 40%,
+    rgb(var(--fx-curtain-light-warm) / 0.22) 40%,
     rgb(255 255 255 / 0.35) 50%,
-    rgb(255 250 232 / 0.22) 60%,
+    rgb(var(--fx-curtain-light-warm) / 0.22) 60%,
     rgb(255 255 255 / 0) 78%
   );
   opacity: 0;

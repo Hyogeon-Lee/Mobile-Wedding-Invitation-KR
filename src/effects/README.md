@@ -6,11 +6,13 @@ a swaying botanical ornament, and two static helpers that let tints and leaves c
 (`Wash`, `Bleed`).
 
 ```tsx
-import { LightBloom, LightLeak, CurtainLight, PetalDrift, GlowPulse, BotanicalDivider, Wash, Bleed, fadeMask, useInViewPause } from '@/effects'
+import { LightBloom, LightLeak, CurtainLight, PetalDrift, GlowPulse, BotanicalDivider, Wash, Bleed, fadeMask } from '@/effects'
 ```
 
 Importing from `@/effects` also loads `effects.css` (keyframes, pause and reduced-motion rules).
-Always import from the index, never from individual files, so the stylesheet is present.
+Always import from the index, never from individual files, so the stylesheet is present. The index exports only
+the components, `fadeMask`, `WashTone` and `GlowPulseProps`; the parameter generators and `useInViewPause` are
+imported from their own files inside `src/effects`.
 
 ## Rules every effect already follows
 
@@ -124,7 +126,7 @@ Reduced motion: blobs stay at rest at their middle opacity.
 
 ## LightLeak
 
-Overlay for a photo frame: a static warm glow in the top-left corner and a soft, semi-transparent
+Overlay for a photo frame: a static pale green-white glow in the top-left corner and a soft, semi-transparent
 diagonal white band (normal compositing, alpha 0.22–0.35) that sweeps across once per cycle. Place it after the image inside a
 `relative overflow-hidden` frame; it inherits the frame's border radius.
 
@@ -337,8 +339,8 @@ return <div ref={ref} aria-hidden="true">…<span className="fx-sway fx-anim" />
 
 - Glow tints (RGB triplets for `rgb(var(--x) / alpha)`): `--fx-glow-butter`, `--fx-glow-mint`, `--fx-glow-blush`, `--fx-glow-sage`.
 - Decorative fills: `--fx-petal-sage`, `--fx-petal-mint`, `--fx-petal-blush`.
-- CurtainLight (RGB triplets): `--fx-curtain-light-warm`, `--fx-curtain-light-neutral` (bands),
-  `--fx-curtain-wash-warm` (butter), `--fx-curtain-wash-neutral` (sky).
+- CurtainLight (RGB triplets, `--fx-curtain-light-warm` also tints LightLeak): `--fx-curtain-light-warm`, `--fx-curtain-light-neutral` (bands),
+  `--fx-curtain-wash-warm` (leaf), `--fx-curtain-wash-neutral` (sky).
 
 These are for decoration only. Text keeps using `text-ink`, `text-ink-muted` or `text-accent`.
 
