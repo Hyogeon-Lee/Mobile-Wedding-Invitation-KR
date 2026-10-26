@@ -2,7 +2,7 @@
 
 | 날짜 | 항목 | 결정 | 근거·비고 |
 |---|---|---|---|
-| 2026-10-25 | 프레임워크 | Vite 8 + React 19 + TypeScript 6 + Tailwind CSS 4 | 정적 단일 페이지, 참고 오픈소스와 같은 조합 |
+| 2026-10-25 | 프레임워크 | Vite 8 + React 19 + TypeScript 6 + Tailwind CSS 4 | 정적 단일 페이지, 서버 렌더링 불필요 |
 | 2026-10-25 | 배포 | GitHub Actions → GitHub Pages | 사용자 지시. `deploy.yml`, `VITE_BASE=/<repo>/` |
 | 2026-10-25 | 방명록·RSVP 저장소 | Google Apps Script + Google Sheets | 사용자 지시. Google 로그인은 추후. 그 전까지 localStorage 미리보기 모드 |
 | 2026-10-25 | 디자인 초안 | 편집형 미니멀(아이보리 배경, 먹색 글자, 더스티 로즈 강조, 명조 제목) | 초안용 기본값. 같은 날 아래 결정으로 대체 |
