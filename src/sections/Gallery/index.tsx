@@ -10,7 +10,7 @@ import type { GalleryImage } from '@/config/types'
 import { wedding } from '@/config/wedding'
 import { Bleed, Daylight } from '@/effects'
 import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
-import { hasMore, spansBothColumns, splitTiles, toSlides, toggleLabel } from './layout'
+import { hasMore, splitTiles, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
 
 const GRID = 'grid grid-cols-2 gap-4'
@@ -28,7 +28,7 @@ interface TileProps {
 
 function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
   return (
-    <Reveal className={spansBothColumns(index) ? 'col-span-2' : undefined}>
+    <Reveal className={image.width > image.height ? 'col-span-2' : undefined}>
       <button
         type="button"
         ref={(el) => tileRef(index, el)}

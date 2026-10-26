@@ -1,13 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { COLLAPSED_COUNT, hasMore, spansBothColumns, splitTiles, toSlides, toggleLabel } from './layout'
-
-describe('spansBothColumns', () => {
-  it('spans every third tile so the 2-column grid reads as pair, full, pair, full', () => {
-    expect([0, 1, 2, 3, 4, 5, 6, 7, 8].map(spansBothColumns)).toEqual([
-      false, false, true, false, false, true, false, false, true,
-    ])
-  })
-})
+import { hasMore, splitTiles, toSlides, toggleLabel } from './layout'
 
 describe('splitTiles / hasMore', () => {
   const items = Array.from({ length: 12 }, (_, i) => i)
@@ -17,12 +9,6 @@ describe('splitTiles / hasMore', () => {
     expect(head).toEqual([0, 1, 2, 3, 4])
     expect(tail).toEqual([5, 6, 7, 8, 9, 10, 11])
     expect(hasMore(items.length)).toBe(true)
-  })
-
-  it('starts the expanded tail with a full-width tile after the final pair', () => {
-    expect(spansBothColumns(COLLAPSED_COUNT - 2)).toBe(false)
-    expect(spansBothColumns(COLLAPSED_COUNT - 1)).toBe(false)
-    expect(spansBothColumns(COLLAPSED_COUNT)).toBe(true)
   })
 
   it('needs no toggle for five or fewer photos', () => {

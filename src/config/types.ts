@@ -77,7 +77,7 @@ export interface WeddingContent {
     /** Alt text per file name in config/images/gallery/, e.g. { "03.jpg": "..." } */
     captions?: Record<string, string>
   }
-  location: SectionHeading & { transport: TransportInfo }
+  location: SectionHeading & { transport: TransportInfo; transportLinks?: Partial<Record<keyof TransportInfo, string>> }
   account: SectionHeading & { intro: string[] }
   rsvp: SectionHeading & { intro: string[] }
   guestbook: SectionHeading

@@ -1,17 +1,8 @@
 /**
- * Phone numbers and bank accounts are injected at build time from VITE_CONTACTS / VITE_ACCOUNTS
+ * Bank accounts are injected at build time from VITE_ACCOUNTS
  * (JSON strings) so they never enter git history. Missing or malformed values fall back to
  * clearly fake samples so the draft still renders.
  */
-export interface Contacts {
-  groom: string
-  bride: string
-  groomFather?: string
-  groomMother?: string
-  brideFather?: string
-  brideMother?: string
-}
-
 export interface Account {
   holder: string
   bank: string
@@ -24,15 +15,6 @@ export interface Account {
 export interface Accounts {
   groom: Account[]
   bride: Account[]
-}
-
-const SAMPLE_CONTACTS: Contacts = {
-  groom: '010-0000-0000',
-  bride: '010-0000-0000',
-  groomFather: '010-0000-0000',
-  groomMother: '010-0000-0000',
-  brideFather: '010-0000-0000',
-  brideMother: '010-0000-0000',
 }
 
 const SAMPLE_ACCOUNTS: Accounts = {
@@ -58,9 +40,7 @@ function parseJson<T>(raw: string | undefined, fallback: T): { value: T; isSampl
   }
 }
 
-const contactsParsed = parseJson<Contacts>(import.meta.env.VITE_CONTACTS, SAMPLE_CONTACTS)
 const accountsParsed = parseJson<Accounts>(import.meta.env.VITE_ACCOUNTS, SAMPLE_ACCOUNTS)
 
-export const contacts: Contacts = contactsParsed.value
 export const accounts: Accounts = accountsParsed.value
-export const isSampleData = contactsParsed.isSample || accountsParsed.isSample
+export const isSampleData = accountsParsed.isSample

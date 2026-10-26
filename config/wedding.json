@@ -1,33 +1,33 @@
 {
   "couple": {
     "groom": {
-      "name": "이OO",
+      "name": "이효건",
       "relation": "아들",
-      "father": { "name": "이OO" },
-      "mother": { "name": "김OO" }
+      "father": { "name": "이용희" },
+      "mother": { "name": "조경숙" }
     },
     "bride": {
-      "name": "박OO",
+      "name": "박민경",
       "relation": "딸",
-      "father": { "name": "박OO" },
-      "mother": { "name": "최OO" }
+      "father": { "name": "박재영" },
+      "mother": { "name": "김금란" }
     }
   },
   "event": {
-    "startsAt": "2027-05-15T12:00:00+09:00",
-    "datePlaceholder": true,
+    "startsAt": "2027-06-27T13:00:00+09:00",
+    "datePlaceholder": false,
     "venueName": "노블발렌티 삼성",
-    "hall": "OO홀",
+    "hall": "",
     "address": "서울특별시 강남구 봉은사로 637",
     "addressJibun": "삼성동 109-6",
     "naverMapUrl": "https://naver.me/5uIYZdsZ",
-    "coords": { "lat": 37.5094, "lng": 127.0623, "placeholder": true }
+    "coords": { "lat": 37.5153463, "lng": 127.0648868, "placeholder": false }
   },
   "cover": {
     "enabled": true,
     "eyebrow": "WEDDING INVITATION",
-    "image": "cover.jpg",
-    "alt": "메인 사진"
+    "image": "cover.webp",
+    "alt": "햇빛이 들어오는 창가에 나란히 앉은 이효건과 박민경"
   },
   "greeting": {
     "enabled": true,
@@ -56,17 +56,33 @@
     "eyebrow": "GALLERY",
     "title": "우리의 순간",
     "alt": "신랑 신부 사진",
-    "captions": {}
+    "captions": {
+      "01.webp": "부케를 들고 서로를 바라보며 웃는 두 사람",
+      "02.webp": "꽃 앞에서 어깨를 맞대고 선 두 사람",
+      "03.webp": "햇빛이 비치는 소파 양쪽에 앉은 두 사람",
+      "04.webp": "노을이 비치는 창가 테이블에서 마주 보는 두 사람",
+      "05.webp": "꽃을 사이에 두고 얼굴을 가까이 맞댄 두 사람",
+      "06.webp": "돌담길을 함께 걷는 두 사람",
+      "07.webp": "밝은 창가에 나란히 앉은 두 사람",
+      "08.webp": "노을 진 도시를 배경으로 함께 선 두 사람",
+      "09.webp": "노을 앞에서 다정하게 입맞춤하는 두 사람",
+      "10.webp": "나란히 놓인 두 개의 작은 인형"
+    }
   },
   "location": {
     "enabled": true,
     "eyebrow": "LOCATION",
     "title": "오시는 길",
     "transport": {
-      "subway": ["OO호선 OO역 O번 출구에서 도보 O분"],
-      "bus": ["간선 OOO, 지선 OOOO · OO정류장 하차"],
+      "subway": ["9호선 봉은사역 4번 출구에서 약 360m", "2호선 삼성역 7번 출구에서는 강남01 또는 3417번 버스 이용"],
+      "bus": ["봉은사역3번출구·삼성1파출소 정류장 하차 (23192)", "간선 143 · 146 · 301 · 343 · 345 · 401", "지선 2413 · 2415 · 3217 · 3414 · 4318", "직행 9407 · 9507 · 9607"],
       "car": ["내비게이션에 \"노블발렌티 삼성\" 또는 \"봉은사로 637\" 입력"],
-      "parking": ["건물 내 주차 O시간 무료 (안내데스크 등록)"]
+      "parking": ["주차 최초 2시간 무료 · 발렛 무료", "이후 10분당 1,000원 (최대 30,000원)", "행사 당일 주차요원의 안내에 따라 주차해 주세요."]
+    },
+    "transportLinks": {
+      "subway": "https://map.naver.com/p/search/봉은사역%204번%20출구",
+      "bus": "https://map.naver.com/p/search/봉은사역3번출구.삼성1파출소",
+      "parking": "https://m.place.naver.com/place/12390329/information"
     }
   },
   "account": {
@@ -98,11 +114,11 @@
     "eyebrow": "SHARE",
     "title": "청첩장 전하기",
     "intro": "청첩장을 소중한 분들께 전해 주세요.",
-    "kakaoTitle": "이OO ♥ 박OO 결혼합니다",
+    "kakaoTitle": "이효건 ♥ 박민경 결혼합니다",
     "buttonLabel": "카카오톡으로 공유하기"
   },
   "footer": {
     "enabled": true,
-    "credit": "이OO · 박OO 2027"
+    "credit": "이효건 · 박민경 2027"
   }
 }

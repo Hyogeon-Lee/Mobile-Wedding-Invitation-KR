@@ -159,7 +159,7 @@ export default function Location() {
         <ul className="mt-4 grid grid-cols-3 gap-2" aria-label="길찾기">
           <li>
             <a href={kakaoHref} target="_blank" rel="noopener noreferrer" className={navLinkClass}>
-              카카오내비
+              카카오맵
             </a>
           </li>
           <li>
@@ -206,6 +206,16 @@ export default function Location() {
                         {line}
                       </p>
                     ))}
+                    {location.transportLinks?.[key] && (
+                      <a
+                        href={location.transportLinks[key]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="pressable mt-2 inline-flex min-h-11 items-center text-[0.875rem] text-accent underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                      >
+                        네이버 지도에서 {label} 안내 보기
+                      </a>
+                    )}
                   </dd>
                 </div>
               )

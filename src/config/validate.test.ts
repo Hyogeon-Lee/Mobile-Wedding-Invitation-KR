@@ -71,6 +71,19 @@ describe('validateWedding', () => {
     cfg.footer._memo = '메모'
     expect(() => validateWedding(cfg)).not.toThrow()
   })
+
+  it('accepts optional HTTPS transport links', () => {
+    const cfg = clone()
+    delete cfg.location.transportLinks
+    expect(validateWedding(cfg).location.transportLinks).toEqual({})
+    cfg.location.transportLinks = { subway: 'https://map.naver.com/' }
+    expect(validateWedding(cfg).location.transportLinks).toEqual({ subway: 'https://map.naver.com/' })
+  })
+
+  it('rejects unsafe transport links and unknown transport keys', () => {
+    expectError((c) => (c.location.transportLinks = { bus: 'javascript:alert(1)' }), 'location.transportLinks.bus')
+    expectError((c) => (c.location.transportLinks = { buses: 'https://map.naver.com/' }), 'location.transportLinks.buses')
+  })
 })
 
 describe('resolveWedding', () => {

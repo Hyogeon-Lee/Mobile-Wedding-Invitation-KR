@@ -1,12 +1,6 @@
 import type { GalleryImage } from '@/config/types'
 
-// Five tiles end on a complete pair, so the expanded tail starts with a full-width photo
 export const COLLAPSED_COUNT = 5
-
-/** Every third tile (the 4:3 photos in the config order) spans both columns. */
-export function spansBothColumns(index: number): boolean {
-  return index % 3 === 2
-}
 
 export function hasMore(total: number): boolean {
   return total > COLLAPSED_COUNT

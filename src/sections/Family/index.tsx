@@ -1,17 +1,10 @@
-import { Phone } from 'lucide-react'
-import { Fragment, useCallback, useState } from 'react'
-import Button from '@/components/Button'
+import { Fragment } from 'react'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import type { Parent, Person } from '@/config/types'
 import { wedding } from '@/config/wedding'
-import { REVEAL_STEP } from '@/lib/motion'
 import { Bleed, Daylight } from '@/effects'
-import { contacts, isSampleData } from '@/lib/private'
-import ContactSheet from './ContactSheet'
-import { buildContactGroups, DECEASED_MARK, presentParents, SIDE_LABEL, SIDES, THIN_SPACE, type Side } from './family'
-
-const groups = buildContactGroups(wedding.couple, contacts)
+import { DECEASED_MARK, presentParents, SIDE_LABEL, SIDES, THIN_SPACE, type Side } from './family'
 
 function ParentName({ parent }: { parent: Parent }) {
   return (
@@ -55,9 +48,6 @@ function FamilyColumn({ side, person }: { side: Side; person: Person }) {
 }
 
 export default function Family() {
-  const [open, setOpen] = useState(false)
-  const close = useCallback(() => setOpen(false), [])
-
   return (
     <Section
       id="family"
@@ -78,17 +68,6 @@ export default function Family() {
           ))}
         </div>
       </Reveal>
-
-      {groups.length > 0 && (
-        <Reveal delay={REVEAL_STEP} className="mt-8 flex justify-center">
-          <Button variant="primary" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
-            <Phone size={16} aria-hidden="true" />
-            연락하기
-          </Button>
-        </Reveal>
-      )}
-
-      <ContactSheet open={open} onClose={close} groups={groups} sample={isSampleData} />
     </Section>
   )
 }
