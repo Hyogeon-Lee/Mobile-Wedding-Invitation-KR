@@ -5,9 +5,8 @@ const STYLE_KEYS = ['overflow', 'position', 'top', 'left', 'right', 'width'] as 
 type StyleKey = (typeof STYLE_KEYS)[number]
 
 /**
- * Locks page scroll while `locked` is true.
- * Fixes <body> at the current scroll offset (overflow:hidden alone is ignored by iOS
- * in-app browsers) and pauses Lenis when SmoothScroll mounted it. Restores both on unlock.
+ * While `locked`, fixes <body> at the current scroll offset (overflow:hidden alone is ignored
+ * by iOS in-app browsers) and pauses Lenis when SmoothScroll mounted it. Restores both on unlock.
  */
 export function useBodyScrollLock(locked: boolean): void {
   const lenis = useLenis()

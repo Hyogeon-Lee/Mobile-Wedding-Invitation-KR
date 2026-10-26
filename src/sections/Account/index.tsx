@@ -38,7 +38,6 @@ function AccountRow({ account }: { account: Account }) {
                 link.external
                   ? undefined
                   : (e) => {
-                      // App schemes give no failure signal; infer "not installed" from the page staying visible.
                       e.preventDefault()
                       openAppScheme(link.href, {
                         timeoutMs: 2500,

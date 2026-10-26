@@ -16,17 +16,6 @@ export function presentParents(person: Person): Parent[] {
   return [person.father, person.mother].filter((p): p is Parent => Boolean(p && p.name.trim()))
 }
 
-export function parentDisplayName(parent: Parent): string {
-  return parent.deceased ? `${DECEASED_MARK}${THIN_SPACE}${parent.name}` : parent.name
-}
-
-/** "이OO · 김OO의 아들"; "김OO의 아들" with one parent; "" when none is configured. */
-export function parentsLine(person: Person): string {
-  const parents = presentParents(person)
-  if (parents.length === 0) return ''
-  return `${parents.map(parentDisplayName).join(' · ')}의 ${person.relation}`
-}
-
 export interface ContactEntry {
   key: string
   /** "신랑", "신부 어머니" ... */

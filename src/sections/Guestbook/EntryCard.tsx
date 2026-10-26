@@ -19,7 +19,6 @@ interface DeletePromptProps {
   onDeleted: (id: string) => void
 }
 
-/** Inline password prompt under an entry. Escape cancels; errors stay next to the input. */
 function DeletePrompt({ id, entry, onCancel, onDeleted }: DeletePromptProps) {
   const toast = useToast()
   const inputRef = useRef<HTMLInputElement>(null)

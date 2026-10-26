@@ -8,12 +8,10 @@ interface AccordionProps {
   id: string
   title: string
   children: ReactNode
-  defaultOpen?: boolean
 }
 
-/** Disclosure card: heading button with aria-expanded, panel region animated on height. */
-export default function Accordion({ id, title, children, defaultOpen = false }: AccordionProps) {
-  const [open, setOpen] = useState(defaultOpen)
+export default function Accordion({ id, title, children }: AccordionProps) {
+  const [open, setOpen] = useState(false)
   const reduce = useReducedMotion()
   const buttonId = `${id}-button`
   const panelId = `${id}-panel`

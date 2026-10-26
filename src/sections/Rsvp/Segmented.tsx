@@ -2,13 +2,12 @@ import { motion, useReducedMotion } from 'motion/react'
 import { useId, useRef, type KeyboardEvent } from 'react'
 import { SPRING_FAST } from '@/lib/motion'
 
-export interface SegmentedOption<T extends string> {
+interface SegmentedOption<T extends string> {
   value: T
   label: string
 }
 
 interface SegmentedProps<T extends string> {
-  /** Visible label rendered above the control */
   label: string
   value: T
   options: readonly SegmentedOption<T>[]
@@ -32,7 +31,6 @@ export default function Segmented<T extends string>({ label, value, options, onC
     const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
     if (step === 0 || disabled) return
     e.preventDefault()
-    const index = options.findIndex((o) => o.value === value)
     const nextIndex = (index + step + options.length) % options.length
     onChange(options[nextIndex].value)
     groupRef.current?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[nextIndex]?.focus()
