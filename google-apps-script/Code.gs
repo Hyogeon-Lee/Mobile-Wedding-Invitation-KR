@@ -1,7 +1,7 @@
 /**
- * Guestbook + RSVP backend on Google Apps Script (Web App) backed by one Google Sheet.
+ * Guestbook + RSVP backend: a Google Apps Script web app writing to one Google Sheet.
  *
- * Setup (once Google login is available):
+ * Setup:
  *  1. Create a Google Sheet. Note its ID from the URL.
  *  2. Extensions > Apps Script. Paste this file. Set SHEET_ID below.
  *  3. Deploy > New deployment > Web app. Execute as: Me. Who has access: Anyone.
@@ -11,12 +11,13 @@
  * Content-Type text/plain and a JSON body, so the browser skips preflight.
  * Responses are JSON. GET ?action=list returns the public guestbook entries.
  *
- * Sheets: "guestbook" (ts, name, message, pwHash, ip-less), "rsvp" (ts, side, name, attending, count, meal, note)
+ * Sheets: "guestbook" (id, ts, name, message, pwHash, deleted), "rsvp" (ts, side, name, attending, count, meal, note)
  */
 var SHEET_ID = 'PASTE_SHEET_ID';
 var MAX_NAME = 20;
 var MAX_MESSAGE = 300;
 var LIST_LIMIT = 100;
+var GUESTBOOK_HEADER = ['id', 'ts', 'name', 'message', 'pwHash', 'deleted'];
 
 function sheet_(name, header) {
   var ss = SpreadsheetApp.openById(SHEET_ID);
@@ -37,8 +38,15 @@ function sha256_(text) {
   return bytes.map(function (b) { return ('0' + (b & 0xff).toString(16)).slice(-2); }).join('');
 }
 
-function clean_(s, max) {
-  return String(s || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, max);
+// Only multi-line fields (guestbook message, RSVP note) keep newlines, other control characters become spaces
+function clean_(s, max, multiline) {
+  var control = multiline ? /[\u0000-\u0009\u000b-\u001f]/g : /[\u0000-\u001f]/g;
+  return String(s || '').replace(control, ' ').trim().slice(0, max);
+}
+
+// A leading apostrophe stops Sheets from parsing a value that starts with = + - @ as a formula
+function cell_(s) {
+  return /^[=+\-@]/.test(s) ? "'" + s : s;
 }
 
 function doGet(e) {
@@ -49,8 +57,8 @@ function doGet(e) {
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
-  lock.waitLock(5000);
   try {
+    lock.waitLock(5000);
     var body = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     switch (body.action) {
       case 'guestbook.add': return json_(addGuestbook_(body));
@@ -66,7 +74,7 @@ function doPost(e) {
 }
 
 function listGuestbook_() {
-  var sh = sheet_('guestbook', ['id', 'ts', 'name', 'message', 'pwHash', 'deleted']);
+  var sh = sheet_('guestbook', GUESTBOOK_HEADER);
   var rows = sh.getDataRange().getValues().slice(1);
   var out = [];
   for (var i = rows.length - 1; i >= 0 && out.length < LIST_LIMIT; i--) {
@@ -79,18 +87,18 @@ function listGuestbook_() {
 
 function addGuestbook_(b) {
   var name = clean_(b.name, MAX_NAME);
-  var message = clean_(b.message, MAX_MESSAGE);
+  var message = clean_(b.message, MAX_MESSAGE, true);
   var password = String(b.password || '');
   if (!name || !message) return { ok: false, error: '이름과 메시지를 입력해 주세요.' };
   if (password.length < 4) return { ok: false, error: '비밀번호는 4자 이상이어야 합니다.' };
-  var sh = sheet_('guestbook', ['id', 'ts', 'name', 'message', 'pwHash', 'deleted']);
+  var sh = sheet_('guestbook', GUESTBOOK_HEADER);
   var id = Utilities.getUuid();
-  sh.appendRow([id, new Date(), name, message, sha256_(password), false]);
+  sh.appendRow([id, new Date(), cell_(name), cell_(message), sha256_(password), false]);
   return { ok: true, entry: { id: id, ts: new Date().toISOString(), name: name, message: message } };
 }
 
 function deleteGuestbook_(b) {
-  var sh = sheet_('guestbook', ['id', 'ts', 'name', 'message', 'pwHash', 'deleted']);
+  var sh = sheet_('guestbook', GUESTBOOK_HEADER);
   var data = sh.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) {
     if (String(data[i][0]) === String(b.id)) {
@@ -108,9 +116,9 @@ function addRsvp_(b) {
   var attending = b.attending === true || b.attending === 'yes';
   var count = Math.max(0, Math.min(10, parseInt(b.count, 10) || 0));
   var meal = b.meal === 'yes' ? 'yes' : b.meal === 'no' ? 'no' : '';
-  var note = clean_(b.note, MAX_MESSAGE);
+  var note = clean_(b.note, MAX_MESSAGE, true);
   if (!name) return { ok: false, error: '성함을 입력해 주세요.' };
   var sh = sheet_('rsvp', ['ts', 'side', 'name', 'attending', 'count', 'meal', 'note']);
-  sh.appendRow([new Date(), side, name, attending, count, meal, note]);
+  sh.appendRow([new Date(), side, cell_(name), attending, count, meal, cell_(note)]);
   return { ok: true };
 }

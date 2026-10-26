@@ -1,9 +1,9 @@
 // Generates placeholder photos as JPEG into config/images/ (cover.jpg, gallery/01.jpg … 12.jpg) and the map
-// fallback SVG into public/images/. Renders each SVG with Playwright (pre-installed). Run: npm run placeholders
-// Replace the JPEGs with real photos by hand; see config/README.md.
+// fallback SVG into public/images/. Renders each SVG with Playwright (not a dependency of this project).
+// Run: npm run placeholders. Overwrites those JPEGs, so do not run it once real photos are in place.
 import { createRequire } from 'node:module'
 import { mkdirSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 const { chromium } = createRequire(import.meta.url)('playwright')
 
 const imagesDir = join(process.cwd(), 'config', 'images')
@@ -12,12 +12,12 @@ const publicDir = join(process.cwd(), 'public', 'images')
 for (const dir of [galleryDir, publicDir]) mkdirSync(dir, { recursive: true })
 
 const palettes = [
-  ['#eef3ea', '#cfdccb'], // cool off-white / sage
-  ['#e3f0e1', '#b9d8bd'], // pale green
-  ['#f1f5ef', '#d6e3d4'], // white-green
-  ['#e9f2f3', '#cfdfe1'], // cool sky
-  ['#e6f1e4', '#a9d4b4'], // fresh mint
-  ['#edf4e6', '#c8dcb6'], // lime-white
+  ['#eef3ea', '#cfdccb'],
+  ['#e3f0e1', '#b9d8bd'],
+  ['#f1f5ef', '#d6e3d4'],
+  ['#e9f2f3', '#cfdfe1'],
+  ['#e6f1e4', '#a9d4b4'],
+  ['#edf4e6', '#c8dcb6'],
 ]
 
 function svg(w, h, label, [c1, c2]) {
@@ -38,7 +38,7 @@ async function writeJpeg(file, w, h, label, palette) {
   await page.setContent(`<!doctype html><html><body style="margin:0">${svg(w, h, label, palette)}</body></html>`)
   const jpeg = await page.screenshot({ type: 'jpeg', quality: 75, clip: { x: 0, y: 0, width: w, height: h } })
   writeFileSync(file, jpeg)
-  console.log(`${file.replace(`${process.cwd()}/`, '')} ${w}x${h} ${(jpeg.length / 1024).toFixed(1)} KB`)
+  console.log(`${relative(process.cwd(), file)} ${w}x${h} ${(jpeg.length / 1024).toFixed(1)} KB`)
 }
 
 await writeJpeg(join(imagesDir, 'cover.jpg'), 1200, 1600, 'MAIN PHOTO', palettes[0])

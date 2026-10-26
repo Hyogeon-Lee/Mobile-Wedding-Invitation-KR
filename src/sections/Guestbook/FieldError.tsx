@@ -6,7 +6,6 @@ interface FieldErrorProps {
   className?: string
 }
 
-/** Persistent inline error tied to a field via aria-describedby; same look as the RSVP form. */
 export default function FieldError({ id, message, className = 'mt-2' }: FieldErrorProps) {
   if (!message) return null
   return (

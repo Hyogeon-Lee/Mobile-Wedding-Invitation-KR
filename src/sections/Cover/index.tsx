@@ -7,7 +7,6 @@ import { EASE_OUT } from '@/lib/motion'
 import { burstConfetti } from './confetti'
 import { coverDateLine, coverVenueLine } from './format'
 
-// Children animate in DOM order, each 0.07 s after the previous one.
 const stagger: Variants = {
   hidden: {},
   shown: { transition: { staggerChildren: 0.07 } },
@@ -21,7 +20,7 @@ const photo: Variants = {
   shown: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: EASE_OUT } },
 }
 
-// A `transform` string (not `y`) lets Motion hand the loop to WAAPI, so it runs on the compositor.
+// A transform string (not y) lets Motion hand the loop to WAAPI, so it runs on the compositor
 const cueBob: TargetAndTransition = {
   transform: ['translateY(0px)', 'translateY(6px)', 'translateY(0px)'],
   transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
@@ -30,21 +29,21 @@ const cueRest: TargetAndTransition = { transform: 'translateY(0px)', transition:
 
 // Photo is 3:4 and at most 58svh tall. On short screens it shrinks to the height left after
 // ~22rem of text, frame ring, scroll cue and padding (rem, so large-text mode is covered too),
-// keeping the scroll cue on the first screen. svh does not change when browser toolbars collapse.
-// The frame carries the ring, shadow and light leak; the inner box clips the photo.
+// keeping the scroll cue on the first screen. svh does not change when browser toolbars collapse
 const photoFrame =
   'relative block w-[min(100%,calc(58svh*3/4),max(9rem,calc((100svh_-_22rem_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))*3/4)))] rounded-2xl shadow-(--shadow-soft) ring-4 ring-white/80'
+// Frame holds the ring and shadow, the inner box clips the photo
 const photoInner = 'block w-full overflow-hidden rounded-[inherit]'
 
-// Static pool of white light behind small text. Where a warm CurtainLight band crosses it, the
-// tinted background lowers text-ink-muted / text-accent contrast; 72% white keeps them above 4.5:1. Feathered with
-// a horizontal gradient and a vertical mask so it reads as diffused light, not a box.
+// White light behind small text: where a warm CurtainLight band crosses it, the tinted background
+// lowers text-ink-muted / text-accent contrast, and 72% white keeps them above 4.5:1.
+// The horizontal gradient and vertical mask feather it so it does not read as a box
 const lightPool =
   'relative before:pointer-events-none before:absolute before:-inset-x-10 before:-inset-y-3 before:-z-10 before:bg-[linear-gradient(90deg,rgb(255_255_255/0)_0,rgb(255_255_255/0.72)_40px,rgb(255_255_255/0.72)_calc(100%_-_40px),rgb(255_255_255/0)_100%)] before:[mask-image:linear-gradient(transparent,#000_12px,#000_calc(100%_-_12px),transparent)]'
 
 const CURTAIN_FADE = fadeMask('bottom', '200px')
 
-/** Hero screen: eyebrow, cover photo, names, date and venue. Not wrapped in <Section>. */
+/** Hero screen. Not wrapped in <Section>. */
 export default function Cover() {
   const reduce = useReducedMotion()
   const { couple, event, cover } = wedding
@@ -58,7 +57,7 @@ export default function Cover() {
     const now = Date.now()
     if (now - lastBurstAt.current < 500) return
     lastBurstAt.current = now
-    // Keyboard activation reports clientX/Y = 0; burst from the photo centre then.
+    // Keyboard activation reports clientX/Y = 0, so burst from the photo centre then
     const r = e.currentTarget.getBoundingClientRect()
     const x = (e.clientX || r.left + r.width / 2) / window.innerWidth
     const y = (e.clientY || r.top + r.height / 2) / window.innerHeight
@@ -79,7 +78,7 @@ export default function Cover() {
 
   const scrollToNext = () => {
     const behavior: ScrollBehavior = reduce ? 'auto' : 'smooth'
-    // Skip decorative siblings (e.g. a BotanicalDivider) so the cue lands on the next section.
+    // Skip decorative siblings (e.g. a BotanicalDivider) so the cue lands on the next section
     let next = sectionRef.current?.nextElementSibling
     while (next && next.getAttribute('aria-hidden') === 'true') next = next.nextElementSibling
     if (next instanceof HTMLElement) next.scrollIntoView({ behavior, block: 'start' })
@@ -93,12 +92,9 @@ export default function Cover() {
       aria-label="표지"
       className="relative isolate flex min-h-svh flex-col items-center overflow-hidden px-6 pt-[calc(32px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
     >
-      {/* Animated nodes on this screen: curtain 8 (6 bands + wash + drifting group)
-          + petal 2 (one sage sprig: fall + sway wrappers) + leak 1 + glow 1 + scroll cue 1 = 13,
-          within the ~20 budget in src/effects/README.md. CurtainLight is the only background layer:
-          the README says to use it instead of LightBloom, not on top of it. */}
-      {/* Sunlight through sheer curtains: the warm wash supplies the window glow, painted below petals and text. */}
-      {/* The curtain fades out over its last 200 px, where the greeting's leaf wash shows through from below. */}
+      {/* Animated nodes on this screen: curtain 8 + petal 2 + leak 1 + glow 1 + scroll cue 1 = 13, within the
+          ~20 budget in src/effects/README.md. CurtainLight is the only background layer, used instead of LightBloom */}
+      {/* The curtain fades out over its last 200 px, where the greeting's leaf wash shows through from below */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0" style={CURTAIN_FADE}>
         <CurtainLight tone="warm" intensity="medium" bands={6} />
       </div>
@@ -119,7 +115,7 @@ export default function Cover() {
           </motion.p>
         )}
 
-        {/* The confetti burst is motion-only, so under reduced motion the photo is not a control. */}
+        {/* The confetti burst is motion-only, so under reduced motion the photo is not a control */}
         <motion.div variants={photo} className={photoFrame}>
           {reduce ? (
             <div className={photoInner}>{photoImg}</div>

@@ -8,7 +8,7 @@ export type CurtainTone = 'warm' | 'neutral'
 export interface CurtainLightProps {
   /** Number of light bands, clamped 3–10. Default 6 */
   bands?: number
-  /** 'warm': warm-white bands and a butter wash; 'neutral': white bands and a sky wash. Default 'warm' */
+  /** 'warm' (default): cool green-white bands and a leaf wash. 'neutral': white bands and a sky wash */
   tone?: CurtainTone
   /** Band opacity 0.5–0.65 (soft) or 0.5–0.8 (medium), plus a stronger wash. Default 'soft' */
   intensity?: 'soft' | 'medium'
@@ -28,7 +28,6 @@ const WASH_ALPHA = {
   neutral: { soft: 0.26, medium: 0.34 },
 } as const
 
-/** Breathing range around each band's base opacity (±15%). */
 const BREATHE = 0.15
 
 /**

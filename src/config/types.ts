@@ -1,6 +1,6 @@
 /**
  * `WeddingContent` mirrors config/wedding.json as written by hand; `WeddingConfig` is the same data after
- * `wedding.ts` resolved image file names into URLs and filled defaults. Private data (phones, accounts)
+ * `resolve.ts` resolved image file names into URLs and filled defaults. Private data (phones, accounts)
  * comes from `lib/private.ts`, never from the JSON.
  */
 
@@ -11,7 +11,6 @@ export interface Parent {
 }
 
 export interface Person {
-  /** Family name + given name as displayed, e.g. "이OO" */
   name: string
   /** "장남", "차녀" ... shown next to the parents' names */
   relation: string
@@ -34,22 +33,8 @@ export interface TransportInfo {
   shuttle?: string[]
 }
 
-export type SectionId =
-  | 'cover'
-  | 'greeting'
-  | 'family'
-  | 'calendar'
-  | 'gallery'
-  | 'location'
-  | 'account'
-  | 'rsvp'
-  | 'guestbook'
-  | 'share'
-  | 'footer'
-
 export interface SectionHeading {
   enabled: boolean
-  /** Small uppercase label above the title */
   eyebrow: string
   title: string
 }
@@ -69,7 +54,6 @@ export interface EventInfo {
   addressJibun?: string
   /** Coordinates for the map. Mark placeholder=true until confirmed on Kakao Map. */
   coords: { lat: number; lng: number; placeholder?: boolean }
-  /** Phone number of the venue, optional */
   venuePhone?: string
 }
 
@@ -100,7 +84,7 @@ export interface WeddingContent {
     intro: string
     /** Title of the KakaoTalk card, the browser tab and og:title */
     kakaoTitle: string
-    /** Defaults to "<dateLine> · <venueName>" */
+    /** Defaults to the formatted date line, " · ", then the venue name */
     kakaoDescription?: string
     buttonLabel: string
   }

@@ -9,9 +9,8 @@ import { calendarTitle, ddaySentence, monthLabel } from './format'
 import { calendarWeeks, isWeddingCell } from './grid'
 
 const REFRESH_MS = 60_000
-/** Mint glow behind the wedding-day circle; small enough to stay clear of neighbouring day numbers. */
+/** Small enough to stay clear of neighbouring day numbers */
 const DAY_GLOW_PX = 56
-const BLOOM_CLASS = 'opacity-60'
 
 export default function Calendar() {
   const { couple, event } = wedding
@@ -24,7 +23,7 @@ export default function Calendar() {
     const refresh = () => setDays(daysUntil(startsAt))
     refresh()
     const id = window.setInterval(refresh, REFRESH_MS)
-    // In-app browsers pause timers in the background; recompute when the tab returns.
+    // In-app browsers pause timers in the background, so recompute when the tab returns
     const onVisibility = () => {
       if (document.visibilityState === 'visible') refresh()
     }
@@ -39,8 +38,8 @@ export default function Calendar() {
     <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)} top="md" bottom="sm">
       <Reveal className="mx-auto max-w-[340px]">
         <div className="relative isolate overflow-hidden rounded-2xl border border-line bg-bg-elevated px-2.5 pt-6 pb-5">
-          {/* Dimmed so the peak mint tint keeps text-accent / text-ink-muted at or above 4.5:1 on this card. */}
-          <LightBloom palette={['mint', 'butter', 'mint']} className={BLOOM_CLASS} />
+          {/* Dimmed so the peak mint tint keeps text-accent / text-ink-muted at or above 4.5:1 on this card */}
+          <LightBloom palette={['mint', 'butter', 'mint']} className="opacity-60" />
           <table className="relative z-10 w-full table-fixed border-collapse">
             <caption className="caption-top pb-4 text-center font-serif text-[1.0625rem] text-ink-muted">
               {monthLabel(target.year, target.month, datePlaceholder)}

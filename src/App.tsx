@@ -29,8 +29,7 @@ const s = {
   footer: wedding.footer.enabled,
 }
 
-// Page order. Sections stay direct children of <main>; the cover's scroll cue targets the next sibling that is not
-// aria-hidden. The two line-free ornaments below (and the footer's own sprig) are the only ones on the page.
+// Sections stay direct children of <main>: the cover's scroll cue targets the next sibling that is not aria-hidden
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">

@@ -12,12 +12,12 @@ export interface StorageLike {
   setItem(key: string, value: string): void
 }
 
-export interface ClassListLike {
+interface ClassListLike {
   classList: { toggle(token: string, force?: boolean): boolean }
 }
 
 /** Reading `localStorage` itself throws when site data is blocked, so the lookup is guarded. */
-export function safeLocalStorage(): StorageLike | null {
+function safeLocalStorage(): StorageLike | null {
   try {
     return typeof localStorage === 'undefined' ? null : localStorage
   } catch {
@@ -25,7 +25,7 @@ export function safeLocalStorage(): StorageLike | null {
   }
 }
 
-/** true when the viewer previously turned large text on. Any failure reads as "off". */
+/** True when the viewer previously turned large text on. Any failure reads as "off". */
 export function readTextLg(store: StorageLike | null = safeLocalStorage()): boolean {
   try {
     return store?.getItem(TEXT_LG_STORAGE_KEY) === '1'
@@ -39,7 +39,7 @@ export function writeTextLg(enabled: boolean, store: StorageLike | null = safeLo
   try {
     store?.setItem(TEXT_LG_STORAGE_KEY, enabled ? '1' : '0')
   } catch {
-    // ignored: the class on <html> still applies for this visit
+    // The class on <html> still applies for this visit
   }
 }
 

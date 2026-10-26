@@ -1,6 +1,6 @@
 import { AlertCircle, Check, Loader2, Minus, Plus, Send } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { Fragment, useCallback, useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { Fragment, useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import Button from '@/components/Button'
 import { FIELD, FIELD_INVALID_RING, FIELD_SURFACE } from '@/components/field'
 import PreviewNotice from '@/components/PreviewNotice'
@@ -39,10 +39,16 @@ const STEP_BUTTON =
 
 type Status = 'idle' | 'submitting' | 'success'
 
-function FieldError({ id, message }: { id: string; message?: string }) {
+interface FieldErrorProps {
+  id: string
+  message?: string | null
+  className?: string
+}
+
+function FieldError({ id, message, className = 'mt-2' }: FieldErrorProps) {
   if (!message) return null
   return (
-    <p id={id} role="alert" className="mt-2 flex items-start gap-1.5 text-[0.9375rem] leading-relaxed text-ink">
+    <p id={id} role="alert" className={`${className} flex items-start gap-1.5 text-[0.9375rem] leading-relaxed text-ink`}>
       <AlertCircle size={15} aria-hidden="true" className="mt-[4px] shrink-0 text-accent" />
       <span>{message}</span>
     </p>
@@ -80,9 +86,8 @@ export default function Rsvp() {
   const submitting = status === 'submitting'
   const count = form.count ?? COUNT_MIN
 
-  const update = useCallback(<K extends keyof RsvpForm>(key: K, value: RsvpForm[K]) => {
+  const update = <K extends keyof RsvpForm>(key: K, value: RsvpForm[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }))
-  }, [])
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -109,14 +114,14 @@ export default function Rsvp() {
     }
   }
 
-  const reset = useCallback(() => {
+  const reset = () => {
     setForm(defaultForm())
     setAttempted(false)
     setServerError(null)
     setSent(null)
     setStatus('idle')
     setRound((r) => r + 1)
-  }, [])
+  }
 
   useEffect(() => {
     if (status === 'success') successRef.current?.focus({ preventScroll: true })
@@ -320,16 +325,7 @@ export default function Rsvp() {
             </div>
 
             <div className="pt-1">
-              {serverError && (
-                <p
-                  id={serverErrorId}
-                  role="alert"
-                  className="mb-3 flex items-start gap-1.5 text-[0.9375rem] leading-relaxed text-ink"
-                >
-                  <AlertCircle size={15} aria-hidden="true" className="mt-[4px] shrink-0 text-accent" />
-                  <span>{serverError}</span>
-                </p>
-              )}
+              <FieldError id={serverErrorId} message={serverError} className="mb-3" />
               <Button
                 type="submit"
                 variant="primary"

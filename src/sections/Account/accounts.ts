@@ -1,14 +1,8 @@
 import type { Account, Accounts } from '@/lib/private'
-
-export type Side = 'groom' | 'bride'
-
-export const SIDES: readonly Side[] = ['groom', 'bride']
-
-export const SIDE_LABEL: Record<Side, string> = { groom: '신랑', bride: '신부' }
+import { SIDE_LABEL, SIDES, type Side } from '@/sections/Family/family'
 
 export interface AccountGroup {
   side: Side
-  /** "신랑측 계좌번호" */
   title: string
   entries: Account[]
 }

@@ -9,7 +9,7 @@ export interface LightLeakProps {
 }
 
 /**
- * Overlay for an image frame: a static warm glow in the top-left corner and a soft diagonal
+ * Overlay for an image frame: a static pale glow in the top-left corner and a soft diagonal
  * light band that sweeps across once per `interval`. Parent must be `relative overflow-hidden`.
  */
 export function LightLeak({ interval = 7, className = '' }: LightLeakProps) {

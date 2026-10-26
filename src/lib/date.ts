@@ -1,9 +1,8 @@
 /**
  * Date helpers fixed to KST (UTC+9) regardless of the viewer's time zone.
  *
- * Principle: convert an instant to "KST wall-clock" by adding 9h to the UTC epoch and
- * reading the UTC getters. D-day is the difference in whole KST calendar days:
- *   D = floor(kstMidnight(event) / 86_400_000) - floor(kstMidnight(now) / 86_400_000)
+ * An instant becomes KST wall-clock by adding 9 h to the UTC epoch and reading the UTC getters.
+ * D-day is the difference in whole KST calendar days: floor((t + 9 h) / 24 h) for target minus now.
  */
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000
 const DAY_MS = 24 * 60 * 60 * 1000

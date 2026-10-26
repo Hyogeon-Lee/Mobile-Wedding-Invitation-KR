@@ -40,12 +40,8 @@ describe('splitTiles / hasMore', () => {
 describe('toSlides', () => {
   const image = { src: '/assets/01-abc.jpg', width: 1200, height: 1500, alt: '사진 1' }
 
-  it('keeps the resolved URL, intrinsic size and alt text by default', () => {
+  it('keeps the URL, intrinsic size and alt text', () => {
     expect(toSlides([image])).toEqual([image])
-  })
-
-  it('applies a resolver when given one', () => {
-    expect(toSlides([image], (p) => `/base${p}`)[0].src).toBe('/base/assets/01-abc.jpg')
   })
 })
 

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { images } from 'virtual:content-images'
 import raw from '../../config/wedding.json'
-import { galleryFiles, resolveWedding, shareDescriptionOf } from './resolve'
+import { dateLineOf, galleryFiles, resolveWedding, shareDescriptionOf } from './resolve'
 import { ContentError, validateWedding } from './validate'
-import { dateLine, wedding } from './wedding'
+import { wedding } from './wedding'
 
 const clone = () => structuredClone(raw) as Record<string, Record<string, unknown>>
 
@@ -41,7 +41,7 @@ describe('config/wedding.json', () => {
       return { src: url, width, height, alt: content.gallery.captions?.[name] ?? `${content.gallery.alt} ${i + 1}` }
     })
     expect(wedding.gallery.images).toEqual(expected)
-    expect(wedding.share.kakaoDescription).toBe(content.share.kakaoDescription ?? `${dateLine} · ${wedding.event.venueName}`)
+    expect(wedding.share.kakaoDescription).toBe(content.share.kakaoDescription ?? `${dateLineOf(wedding.event)} · ${wedding.event.venueName}`)
   })
 })
 

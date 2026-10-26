@@ -75,7 +75,7 @@ function Dots() {
 /** Sway pivot per variant, in % of the 120×28 box: the stem base for sprig and leaf. */
 const ORIGIN = { sprig: '50% 86%', leaf: '28% 68%', dots: '50% 50%' } as const
 
-/** Centered, line-free botanical ornament (44 px tall) with a gentle ±2.5° sway. Decorative only. */
+/** Centered, line-free ornament (44 px tall) with a gentle ±2.5° sway */
 export function BotanicalDivider({ variant = 'sprig', className = '' }: BotanicalDividerProps) {
   const ref = useRef<HTMLDivElement>(null)
   useInViewPause(ref)

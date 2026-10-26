@@ -26,7 +26,7 @@ export interface RsvpErrors {
   note?: string
 }
 
-export type RsvpField = keyof RsvpErrors
+type RsvpField = keyof RsvpErrors
 
 export const SIDE_OPTIONS = [
   { value: 'groom', label: '신랑 측' },
@@ -56,10 +56,7 @@ export function defaultForm(): RsvpForm {
   return { side: 'groom', name: '', attending: true, count: COUNT_MIN, meal: '', note: '' }
 }
 
-/**
- * Pure validation. Name is required (trimmed, ≤ 20 chars); count must be an integer in
- * [1, 10] but only while attending; the note is optional and ≤ 300 chars after trimming.
- */
+/** Count is validated only while attending, name and note are trimmed first */
 export function validateRsvp(form: RsvpForm): RsvpErrors {
   const errors: RsvpErrors = {}
   const name = form.name.trim()
@@ -84,7 +81,6 @@ export function firstInvalidField(errors: RsvpErrors): RsvpField | null {
   return FIELD_ORDER.find((field) => errors[field] !== undefined) ?? null
 }
 
-/** Rounds to an integer and clamps into [COUNT_MIN, COUNT_MAX]; non-finite input becomes COUNT_MIN. */
 export function clampCount(value: number): number {
   if (!Number.isFinite(value)) return COUNT_MIN
   return Math.min(COUNT_MAX, Math.max(COUNT_MIN, Math.round(value)))
@@ -124,7 +120,7 @@ export function summaryLine(input: RsvpInput): string {
 
 type EventInfo = Pick<WeddingConfig['event'], 'startsAt' | 'datePlaceholder' | 'venueName'>
 
-/** "2027년 5월 15일 토요일 · 노블발렌티 삼성"; only the year is printed while the date is a placeholder. */
+/** Date and venue on one line, only the year is printed while the date is a placeholder */
 export function rsvpEventLine(event: EventInfo): string {
   const date = event.datePlaceholder ? `${toKstParts(event.startsAt).year}년 OO월 OO일` : formatDateKo(event.startsAt)
   return `${date} · ${event.venueName}`

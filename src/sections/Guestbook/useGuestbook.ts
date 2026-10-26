@@ -5,9 +5,8 @@ import { prependEntry, removeEntry, sanitizeEntries } from './guestbook'
 const LOAD_FAILED = '방명록을 불러오지 못했습니다.'
 
 /**
- * Guestbook entries, loaded on mount. A failed load sets `error` (instead of looking like an
- * empty guestbook) and `reload` retries. `insert`/`remove` update the local list so a
- * successful add or delete shows at once without a second round trip to the backend.
+ * Guestbook entries, loaded on mount. A failed load sets `error` instead of looking like an
+ * empty guestbook. `insert`/`remove` update the local list without refetching.
  */
 export function useGuestbook() {
   const [entries, setEntries] = useState<GuestbookEntry[]>([])

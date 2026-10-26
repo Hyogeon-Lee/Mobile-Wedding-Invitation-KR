@@ -8,11 +8,7 @@ import { wedding } from '@/config/wedding'
 import { Bleed, BotanicalDivider, LightBloom } from '@/effects'
 import { applyTextLg, readTextLg, scrollTopBehavior, writeTextLg } from './textSize'
 
-/**
- * Compact page footer: botanical sprig, couple names, credit, and two utilities
- * (large-text toggle persisted in localStorage, scroll to top), over a faint butter light bloom.
- * Not wrapped in <Section>: the footer has no heading and a tighter rhythm.
- */
+/** Not wrapped in <Section>: the footer has no heading and a tighter rhythm */
 export default function Footer() {
   const { groom, bride } = wedding.couple
   const { credit } = wedding.footer
@@ -20,7 +16,7 @@ export default function Footer() {
   const lenis = useLenis()
   const [textLg, setTextLg] = useState(() => readTextLg())
 
-  // The class on <html> is derived from state; this keeps the DOM in sync, including the restored value.
+  // Keeps the class on <html> in sync with state, including the value restored from storage
   useEffect(() => {
     applyTextLg(document.documentElement, textLg)
   }, [textLg])
@@ -33,7 +29,7 @@ export default function Footer() {
 
   const scrollToTop = () => {
     const behavior = scrollTopBehavior(reduce)
-    // Lenis owns the scroll when mounted; a native smooth scroll would fight its raf loop.
+    // Lenis owns the scroll when mounted, and a native smooth scroll would fight its raf loop
     if (lenis && behavior === 'smooth') {
       lenis.scrollTo(0)
       return
@@ -43,7 +39,7 @@ export default function Footer() {
 
   return (
     <footer id="footer" className="relative px-6 pt-6 pb-12 text-center">
-      {/* Light rises from under the Share buttons and fades in over 14rem; it never reaches past the page end. */}
+      {/* Light rises from under the Share buttons and never reaches past the page end */}
       <Bleed top="-14rem" bottom="0" mask="top" fade="14rem">
         <LightBloom palette={['butter']} intensity="soft" className="opacity-70" />
       </Bleed>

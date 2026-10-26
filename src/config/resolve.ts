@@ -10,7 +10,7 @@ export interface ContentImage {
 }
 export type ContentImages = Record<string, ContentImage>
 
-/** "2027년 OO월 OO일" until the date is confirmed, then "2027년 5월 15일 토요일"; used by the Kakao card and index.html. */
+/** "2027년 OO월 OO일" until the date is confirmed, then "2027년 5월 15일 토요일" */
 export function dateLineOf(event: Pick<EventInfo, 'startsAt' | 'datePlaceholder'>): string {
   return event.datePlaceholder ? `${event.startsAt.slice(0, 4)}년 OO월 OO일` : formatDateKo(event.startsAt)
 }

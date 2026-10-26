@@ -34,7 +34,7 @@ interface GuestbookFormProps {
 export default function GuestbookForm({ onAdded }: GuestbookFormProps) {
   const toast = useToast()
   const [values, setValues] = useState<GuestbookFormValues>(EMPTY_FORM)
-  // Errors stay inline: a bottom toast sits behind the iOS keyboard and hides after 1.8 s.
+  // Errors stay inline: a bottom toast can sit behind the iOS keyboard and disappears on its own
   const [error, setError] = useState<FormError | null>(null)
   const [serverError, setServerError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)

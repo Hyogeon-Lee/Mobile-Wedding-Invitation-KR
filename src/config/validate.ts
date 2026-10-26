@@ -82,10 +82,10 @@ function imageName(o: Obj, key: string, path: string): string {
   return v
 }
 
-// "2027-05-15T12:00:00+09:00"; seconds optional.
+// KST ISO 8601 such as "2027-05-15T12:00:00+09:00", seconds optional
 const KST_ISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?\+09:00$/
 
-/** Date parsing rolls "02-31" over to March; reject any field that does not survive a round trip. */
+/** Date parsing rolls "02-31" over to March, so reject any field that does not survive a round trip */
 function isRealDateTime(v: string): boolean {
   const m = KST_ISO.exec(v)
   if (!m) return false
@@ -139,7 +139,6 @@ function transport(value: unknown, path: string): TransportInfo {
   return result
 }
 
-/** enabled + eyebrow + title, the common head of most sections. */
 function heading(o: Obj, path: string) {
   return { enabled: boolean(o, 'enabled', path), eyebrow: string(o, 'eyebrow', path), title: string(o, 'title', path) }
 }

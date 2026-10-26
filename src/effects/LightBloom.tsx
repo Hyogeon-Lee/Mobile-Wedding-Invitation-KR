@@ -46,7 +46,6 @@ export function LightBloom({ palette = DEFAULT_PALETTE, intensity = 'soft', clas
       className={`fx-bloom pointer-events-none absolute inset-0 z-0 overflow-hidden ${className}`}
     >
       {BLOBS.map((b, i) => {
-        // Small per-blob variation so the layer never looks uniform.
         const k = 1 - (i % 3) * 0.08
         const style: FxStyle = {
           left: `${b.x}%`,

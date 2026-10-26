@@ -9,7 +9,7 @@ import { wedding } from '@/config/wedding'
 import { Bleed, LightBloom } from '@/effects'
 import { asset } from '@/lib/env'
 import { REVEAL_STEP } from '@/lib/motion'
-import { siteUrl } from '@/lib/kakao'
+import { kakaoKey, siteUrl } from '@/lib/kakao'
 import MapBoundary from './MapBoundary'
 import {
   androidIntentUrl,
@@ -28,7 +28,6 @@ import { transportEntries, type TransportKey } from './transport'
 
 const KakaoMap = lazy(() => import('./KakaoMap'))
 
-const KAKAO_KEY = import.meta.env.VITE_KAKAO_JS_KEY ?? ''
 const FALLBACK_IMAGE = 'images/map-fallback.svg'
 const NO_KEY_LABEL = '지도 준비 중입니다'
 const MAP_FAILED_LABEL = '지도를 불러오지 못했습니다'
@@ -36,9 +35,9 @@ const LOADING_LABEL = '지도를 불러오는 중'
 const PLACEHOLDER_COORDS_LABEL = '지도 위치는 예식장 확정 후 정확히 표시됩니다'
 const TMAP_MISSING = '티맵 앱이 설치되어 있어야 합니다'
 const NAVER_MISSING = '네이버지도 앱이 설치되어 있어야 합니다'
-/** iOS can keep the page visible while it asks "Open in app?", so wait longer than the default. */
+/** iOS can keep the page visible while it asks "Open in app?", so wait longer than the default */
 const APP_TIMEOUT_MS = 2500
-/** Start loading the map chunk, SDK and tiles shortly before the box scrolls into view. */
+/** Loads the map chunk, SDK and tiles shortly before the box scrolls into view */
 const MAP_PRELOAD_MARGIN = '300px 0px'
 const IS_ANDROID = typeof navigator !== 'undefined' && isAndroidUserAgent(navigator.userAgent)
 
@@ -54,7 +53,7 @@ const navLinkClass =
   'pressable inline-flex min-h-11 w-full items-center justify-center rounded-full border border-line bg-bg-elevated px-1 py-2 leading-tight ' +
   'text-[0.9375rem] tracking-[0.02em] text-ink select-none hover:bg-mint active:bg-mint ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
-/** App-scheme links: an iOS long-press "Open in New Tab" would open a dead scheme URL. */
+/** App-scheme links: an iOS long-press "Open in New Tab" would open a dead scheme URL */
 const appLinkClass = `${navLinkClass} [-webkit-touch-callout:none]`
 
 function MapFallback({ label }: { label: string }) {
@@ -80,7 +79,7 @@ export default function Location() {
   const mapBoxRef = useRef<HTMLDivElement>(null)
   const mapNear = useInView(mapBoxRef, { once: true, margin: MAP_PRELOAD_MARGIN })
 
-  const place = useMemo(() => ({ name: venueName, lat: coords.lat, lng: coords.lng }), [venueName, coords.lat, coords.lng])
+  const place = { name: venueName, lat: coords.lat, lng: coords.lng }
   const appName = useMemo(() => hostOf(siteUrl()) || window.location.host, [])
   const kakaoHref = kakaoNaviUrl(place)
   const naverHref = naverAppUrl(place, appName)
@@ -88,7 +87,7 @@ export default function Location() {
   const tmapHref = tmapUrl(place)
   const entries = transportEntries(transport)
 
-  // On Android the OS picks app or fallback from the intent URL; elsewhere a timer guesses.
+  // On Android the OS picks app or fallback from the intent URL, and elsewhere a timer guesses
   const openNaver = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     openAppScheme(naverHref, { timeoutMs: APP_TIMEOUT_MS, onFail: () => toast.show(NAVER_MISSING) })
@@ -104,7 +103,7 @@ export default function Location() {
     ? { href: androidIntentUrl(tmapHref, TMAP_PACKAGE, TMAP_STORE_URL) }
     : { href: tmapHref, onClick: openTmap }
 
-  const hasKey = KAKAO_KEY.length > 0
+  const hasKey = kakaoKey.length > 0
   const showMap = hasKey && !mapFailed
 
   return (
@@ -115,8 +114,7 @@ export default function Location() {
       top="sm"
       bottom="sm"
       backdrop={
-        // Starts under the gallery hint and fades in and out over 12rem. Dimmed to 0.65 so even two
-        // overlapping blob peaks keep text-ink-muted at 4.5:1 under the address lines.
+        // Dimmed to 0.65 so even two overlapping blob peaks keep text-ink-muted at 4.5:1 under the address lines
         <Bleed top="-8rem" bottom="0" mask="y" fade="12rem">
           <LightBloom palette={['butter', 'mint']} intensity="soft" className="opacity-65" />
         </Bleed>
@@ -124,7 +122,7 @@ export default function Location() {
     >
       <Reveal className="text-center">
         <p className="font-serif text-[1.25rem] leading-snug text-ink">{venueName}</p>
-        <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>
+        {hall.trim() && <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>}
         <p className="mt-4 text-[0.9375rem] leading-[1.8] text-ink-muted">{address}</p>
         {addressJibun && <p className="mt-0.5 text-[0.9375rem] leading-[1.8] text-ink-muted">(지번) {addressJibun}</p>}
         <div className="mt-4 flex justify-center">
@@ -142,7 +140,7 @@ export default function Location() {
             <MapBoundary fallback={<MapFallback label={MAP_FAILED_LABEL} />}>
               <Suspense fallback={<MapFallback label={LOADING_LABEL} />}>
                 <KakaoMap
-                  appkey={KAKAO_KEY}
+                  appkey={kakaoKey}
                   lat={coords.lat}
                   lng={coords.lng}
                   title={venueName}

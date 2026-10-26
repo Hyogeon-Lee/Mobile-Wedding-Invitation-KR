@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Person } from '@/config/types'
 import type { Contacts } from '@/lib/private'
-import { buildContactGroups, parentsLine, phoneDigits, presentParents, smsHref, telHref } from './family'
+import { buildContactGroups, phoneDigits, presentParents, smsHref, telHref } from './family'
 
 const groom: Person = { name: '이OO', relation: '아들', father: { name: '이AA' }, mother: { name: '김BB' } }
 const bride: Person = { name: '박OO', relation: '딸', father: { name: '박CC' }, mother: { name: '최DD' } }
@@ -23,22 +23,6 @@ describe('presentParents', () => {
     expect(presentParents({ ...groom, father: undefined }).map((p) => p.name)).toEqual(['김BB'])
     expect(presentParents({ ...groom, mother: { name: '  ' } }).map((p) => p.name)).toEqual(['이AA'])
     expect(presentParents({ name: '이OO', relation: '아들' })).toEqual([])
-  })
-})
-
-describe('parentsLine', () => {
-  it('joins both parents with a middle dot', () => {
-    expect(parentsLine(groom)).toBe('이AA · 김BB의 아들')
-  })
-  it('renders a single parent without a dangling dot', () => {
-    expect(parentsLine({ ...groom, father: undefined })).toBe('김BB의 아들')
-    expect(parentsLine({ ...groom, mother: undefined })).toBe('이AA의 아들')
-  })
-  it('prefixes 故 and a thin space for a deceased parent', () => {
-    expect(parentsLine({ ...groom, father: { name: '이AA', deceased: true } })).toBe('故 이AA · 김BB의 아들')
-  })
-  it('is empty when no parent is configured', () => {
-    expect(parentsLine({ name: '이OO', relation: '아들' })).toBe('')
   })
 })
 

@@ -24,15 +24,12 @@ const DISMISS_VELOCITY = 500
 const ACTION =
   'pressable flex size-11 items-center justify-center rounded-full bg-accent-soft text-accent [-webkit-touch-callout:none] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 
-/** Bottom-sheet dialog listing phone/SMS links for the couple and their parents. */
 export default function ContactSheet({ open, onClose, groups, sample }: ContactSheetProps) {
   const reduce = useReducedMotion()
   const panelRef = useRef<HTMLDivElement>(null)
   const controls = useDragControls()
   useBodyScrollLock(open)
 
-  // Focus management: move focus into the sheet, keep Tab inside it, close on Escape,
-  // and return focus to the opener when the sheet closes.
   useEffect(() => {
     if (!open) return
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
@@ -77,8 +74,6 @@ export default function ContactSheet({ open, onClose, groups, sample }: ContactS
     const h = panelRef.current?.offsetHeight ?? 0
     if (info.offset.y > h * DISMISS_FRACTION || (info.offset.y > 0 && info.velocity.y > DISMISS_VELOCITY)) onClose()
   }
-
-  if (typeof document === 'undefined') return null
 
   return createPortal(
     <AnimatePresence>

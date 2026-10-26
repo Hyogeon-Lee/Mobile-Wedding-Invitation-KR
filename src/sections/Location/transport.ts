@@ -1,11 +1,10 @@
 import type { TransportInfo } from '@/config/types'
 
-/** Display order of the transport blocks. */
-export const TRANSPORT_ORDER = ['subway', 'bus', 'car', 'parking', 'shuttle'] as const
+const TRANSPORT_ORDER = ['subway', 'bus', 'car', 'parking', 'shuttle'] as const
 
 export type TransportKey = (typeof TRANSPORT_ORDER)[number]
 
-export const TRANSPORT_LABEL: Record<TransportKey, string> = {
+const TRANSPORT_LABEL: Record<TransportKey, string> = {
   subway: '지하철',
   bus: '버스',
   car: '자가용',
@@ -13,7 +12,7 @@ export const TRANSPORT_LABEL: Record<TransportKey, string> = {
   shuttle: '셔틀',
 }
 
-export interface TransportEntry {
+interface TransportEntry {
   key: TransportKey
   label: string
   lines: string[]

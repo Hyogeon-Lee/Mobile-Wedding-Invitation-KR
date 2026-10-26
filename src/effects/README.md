@@ -6,11 +6,13 @@ a swaying botanical ornament, and two static helpers that let tints and leaves c
 (`Wash`, `Bleed`).
 
 ```tsx
-import { LightBloom, LightLeak, CurtainLight, PetalDrift, GlowPulse, BotanicalDivider, Wash, Bleed, fadeMask, useInViewPause } from '@/effects'
+import { LightBloom, LightLeak, CurtainLight, PetalDrift, GlowPulse, BotanicalDivider, Wash, Bleed, fadeMask } from '@/effects'
 ```
 
 Importing from `@/effects` also loads `effects.css` (keyframes, pause and reduced-motion rules).
-Always import from the index, never from individual files, so the stylesheet is present.
+Always import from the index, never from individual files, so the stylesheet is present. The index exports only
+the components, `fadeMask`, `WashTone` and `GlowPulseProps`; the parameter generators and `useInViewPause` are
+imported from their own files inside `src/effects`.
 
 ## Rules every effect already follows
 
@@ -104,7 +106,7 @@ positioned with `relative z-10` (non-positioned content paints *under* an absolu
 
 ## LightBloom
 
-Background of six large radial-gradient light blobs that drift (16–32 s, alternate, staggered) and
+Background of six large radial-gradient light blobs that drift (17–31 s, alternate, staggered) and
 breathe (scale 0.92 → 1.14, opacity low → high).
 
 | Prop | Type | Default | Notes |
@@ -124,7 +126,7 @@ Reduced motion: blobs stay at rest at their middle opacity.
 
 ## LightLeak
 
-Overlay for a photo frame: a static warm glow in the top-left corner and a soft, semi-transparent
+Overlay for a photo frame: a static pale green-white glow in the top-left corner and a soft, semi-transparent
 diagonal white band (normal compositing, alpha 0.22–0.35) that sweeps across once per cycle. Place it after the image inside a
 `relative overflow-hidden` frame; it inherits the frame's border radius.
 
@@ -144,7 +146,7 @@ Reduced motion: no sweep; the corner glow stays.
 
 ## CurtainLight
 
-Background of afternoon sunlight through sheer curtains: 3–10 tall, leaning bands of warm-white
+Background of afternoon sunlight through sheer curtains: 3–10 tall, leaning bands of cool green-white
 light (each a rotated div filled with a horizontal transparent → light → transparent gradient, 28–90 px
 wide, unevenly spaced) over one faint radial wash from the top-right corner where the window is.
 The whole band group drifts sideways ±6% of the layer width (50–90 s, alternate) while each band
@@ -182,9 +184,8 @@ spread with a golden-ratio sequence). `curtainDrift(seed = 1): CurtainDriftParam
 `{ duration, delay }`. `curtainBandSpan(rotationDeg, widthPx): CurtainBandSpan` returns `{ pct, px }`, the
 smallest band height that still covers the layer once rotated (`calc(pct% + px px)`, from
 H ≥ h / cos θ + w·tan θ); about 104–111% at the default lean, so tall sections such as the gallery do not
-paint bands far outside the box. Also exported: `clampBands`, `CURTAIN_MIN` (3), `CURTAIN_MAX` (10),
-`CURTAIN_DEFAULT` (6), types `CurtainTone`, `CurtainLightProps`, `CurtainBandParams`, `CurtainDriftParams`,
-`CurtainBandSpan`.
+paint bands far outside the box. Also exported from `curtain.ts`: `clampBands`, `CURTAIN_MIN` (3), `CURTAIN_MAX` (10),
+`CURTAIN_DEFAULT` (6), types `CurtainBandParams`, `CurtainDriftParams`, `CurtainBandSpan`.
 
 ## PetalDrift
 
@@ -211,7 +212,7 @@ Reduced motion: only the first 4 petals render, static at scattered resting posi
 
 `petalParams(index: number, seed = 1): PetalParams` returns
 `{ x, size, duration, delay, swayAmplitude, swayDuration, swayDelay, rotateFrom, rotateTo, opacity, restY, shape, color }`.
-Also exported: `PETAL_MAX` (18), `PETAL_DEFAULT` (12), types `PetalParams`, `PetalShape`, `PetalColor`.
+Also exported from `petals.ts`: `PETAL_MAX` (18), `PETAL_DEFAULT` (12), types `PetalParams`, `PetalShape`, `PetalColor`.
 
 ## GlowPulse
 
@@ -323,7 +324,7 @@ with a negative `bottom` must not sit in the last section of `<main>`: it would 
 
 `useInViewPause(ref: RefObject<Element | null>, rootMargin = '120px 0px'): void`
 
-Toggles `data-paused` on `ref.current` with an IntersectionObserver. `effects.css` pauses every
+Defined in `useInViewPause.ts` (not re-exported by the index). Toggles `data-paused` on `ref.current` with an IntersectionObserver. `effects.css` pauses every
 `.fx-anim` descendant under `[data-paused]`. Use it on the root of any custom effect you build,
 and give animated elements the `fx-anim` class so pause and reduced-motion rules apply.
 
@@ -337,8 +338,8 @@ return <div ref={ref} aria-hidden="true">…<span className="fx-sway fx-anim" />
 
 - Glow tints (RGB triplets for `rgb(var(--x) / alpha)`): `--fx-glow-butter`, `--fx-glow-mint`, `--fx-glow-blush`, `--fx-glow-sage`.
 - Decorative fills: `--fx-petal-sage`, `--fx-petal-mint`, `--fx-petal-blush`.
-- CurtainLight (RGB triplets): `--fx-curtain-light-warm`, `--fx-curtain-light-neutral` (bands),
-  `--fx-curtain-wash-warm` (butter), `--fx-curtain-wash-neutral` (sky).
+- CurtainLight (RGB triplets, `--fx-curtain-light-warm` also tints LightLeak): `--fx-curtain-light-warm`, `--fx-curtain-light-neutral` (bands),
+  `--fx-curtain-wash-warm` (leaf), `--fx-curtain-wash-neutral` (sky).
 
 These are for decoration only. Text keeps using `text-ink`, `text-ink-muted` or `text-accent`.
 

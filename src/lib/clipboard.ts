@@ -9,7 +9,7 @@ export async function copyText(text: string): Promise<boolean> {
       return true
     }
   } catch {
-    // fall through to legacy path
+    // Fall through to the legacy path
   }
   try {
     const ta = document.createElement('textarea')
