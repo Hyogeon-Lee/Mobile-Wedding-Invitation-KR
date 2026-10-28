@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { wedding } from '@/config/wedding'
 import { EASE_SOFT } from '@/lib/motion'
-import lettering from './opening-lettering.json'
+import { letteringStrokes, OPENING_DURATION_SECONDS, OPENING_FADE_SECONDS, underlineStrokes } from './opening-motion'
 
 interface OpeningProps {
   onComplete: () => void
@@ -10,9 +10,10 @@ interface OpeningProps {
 
 export default function Opening({ onComplete }: OpeningProps) {
   const { cover, couple } = wedding
+  const reduce = useReducedMotion()
 
   useEffect(() => {
-    const timer = window.setTimeout(onComplete, 3400)
+    const timer = window.setTimeout(onComplete, OPENING_DURATION_SECONDS * 1000)
     return () => window.clearTimeout(timer)
   }, [onComplete])
 
@@ -20,7 +21,7 @@ export default function Opening({ onComplete }: OpeningProps) {
     <motion.div
       className="absolute inset-0 z-30 flex flex-col items-center justify-center overflow-hidden bg-ink px-6 text-center text-white"
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: EASE_SOFT }}
+      transition={{ duration: reduce ? 0 : OPENING_FADE_SECONDS, ease: 'easeInOut' }}
     >
       <motion.img
         src={cover.image.src}
@@ -44,31 +45,34 @@ export default function Opening({ onComplete }: OpeningProps) {
         <p className="sr-only">We're getting married! 우리, 결혼합니다</p>
         <svg aria-hidden="true" className="mx-auto w-[min(17.5rem,74vw)]" viewBox="0 0 300 250" fill="none">
           <g transform="scale(2.4)" stroke="currentColor" strokeWidth="0.62" strokeLinecap="round" strokeLinejoin="round">
-            {lettering.map((d, index) => (
+            {letteringStrokes.map(({ d, delay, duration }, index) => (
               <motion.path
                 key={index}
                 d={d}
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ pathLength: { duration: 0.7, delay: 0.6 + index * 0.7, ease: 'linear' }, opacity: { duration: 0.1, delay: 0.6 + index * 0.7 } }}
+                transition={{ pathLength: { duration, delay, ease: 'linear' }, opacity: { duration: 0.01, delay } }}
               />
             ))}
           </g>
-          <motion.path
-            d="M73 226 Q150 228 247 214 M89 236 Q170 234 237 226"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ pathLength: { duration: 0.35, delay: 2.7, ease: EASE_SOFT }, opacity: { duration: 0.1, delay: 2.7 } }}
-          />
+          {underlineStrokes.map(({ d, delay, duration }) => (
+            <motion.path
+              key={d}
+              d={d}
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ pathLength: { duration, delay, ease: EASE_SOFT }, opacity: { duration: 0.01, delay } }}
+            />
+          ))}
         </svg>
         <motion.p
           className="mt-8 font-serif text-[1rem]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 2.3 }}
+          transition={{ duration: 0.8, delay: underlineStrokes[0].delay }}
         >
           {couple.groom.name} · {couple.bride.name}
         </motion.p>

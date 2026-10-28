@@ -1,24 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { wedding } from '@/config/wedding'
-import { EASE_OUT, EASE_SOFT, SCROLL_OPTIONS } from '@/lib/motion'
+import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
 import { coverDateLine, coverVenueLine } from './format'
 import Opening from './Opening'
-
-const stagger: Variants = {
-  hidden: {},
-  shown: { transition: { staggerChildren: 0.08 } },
-}
-const line: Variants = {
-  hidden: { opacity: 0, y: 8 },
-  shown: { opacity: 1, y: 0, transition: { duration: 0.85, ease: EASE_SOFT } },
-}
-const photo: Variants = {
-  hidden: { opacity: 0, scale: 0.99 },
-  shown: { opacity: 1, scale: 1, transition: { duration: 1.1, ease: EASE_SOFT } },
-}
 
 // Reserve room for the names, date and scroll control, including large-text mode
 const photoFrame =
@@ -32,6 +19,7 @@ export default function Cover() {
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
     (!window.location.hash || window.location.hash === '#cover'),
   )
+  const [ready, setReady] = useState(!opening)
   const finishOpening = useCallback(() => setOpening(false), [])
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -70,42 +58,39 @@ export default function Cover() {
       aria-label="표지"
       className="relative isolate flex min-h-svh flex-col items-center overflow-hidden px-6 pt-[calc(36px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
     >
-      <AnimatePresence>
+      <AnimatePresence onExitComplete={() => setReady(true)}>
         {opening && <Opening key="opening" onComplete={finishOpening} />}
       </AnimatePresence>
-      <motion.div
-        inert={opening}
+      <div
+        inert={!ready}
         className="relative z-10 flex w-full flex-1 flex-col items-center justify-center text-center"
-        variants={stagger}
-        initial={reduce ? false : 'hidden'}
-        animate={opening ? 'hidden' : 'shown'}
       >
-        <motion.div variants={line} className="mb-7 w-full">
+        <div className="mb-7 w-full">
           <h1 className="font-serif text-[clamp(1.5rem,8vw,2rem)] leading-snug text-ink">
             {couple.groom.name}
             <span aria-hidden="true" className="mx-3 font-display text-[1.5rem] italic text-accent">&</span>
             <span className="sr-only"> 그리고 </span>
             {couple.bride.name}
           </h1>
-        </motion.div>
+        </div>
 
-        <motion.div variants={photo} className={photoFrame}>{photoImg}</motion.div>
+        <div className={photoFrame}>{photoImg}</div>
 
-        <motion.div variants={line} className="mt-7">
+        <div className="mt-7">
           <p className="text-[0.9375rem] leading-relaxed text-ink tabular-nums">{coverDateLine(event)}</p>
           <p className="mt-2 font-serif text-[1rem] leading-relaxed text-ink-muted">{coverVenueLine(event)}</p>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       <motion.button
         type="button"
-        disabled={opening}
+        disabled={!ready}
         onClick={scrollToNext}
         aria-label="초대장 보기, 다음 내용으로 이동"
         className="pressable z-10 mt-5 inline-flex min-h-11 items-center gap-2 px-3 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         initial={reduce ? false : { opacity: 0 }}
-        animate={{ opacity: opening ? 0 : 1 }}
-        transition={{ duration: 0.6, delay: 0.9, ease: EASE_OUT }}
+        animate={{ opacity: ready ? 1 : 0 }}
+        transition={{ duration: reduce ? 0 : 0.6, ease: EASE_OUT }}
       >
         <span className="text-[0.875rem]">초대장 보기</span>
         <ChevronDown size={16} strokeWidth={1.5} aria-hidden="true" />
