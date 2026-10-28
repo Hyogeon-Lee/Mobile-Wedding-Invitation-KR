@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useId, useRef, useState, type MouseEvent } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useInView, useReducedMotion, type TargetAndTransition, type Variants } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { wedding } from '@/config/wedding'
-import { Daylight, fadeMask, LeafShade, LightLeak, PetalDrift } from '@/effects'
+import { Daylight, fadeMask, LeafShade, LightLeak } from '@/effects'
 import { EASE_OUT, EASE_SOFT, SCROLL_OPTIONS } from '@/lib/motion'
-import { burstConfetti } from './confetti'
 import { coverDateLine, coverVenueLine } from './format'
 import Opening from './Opening'
 
@@ -61,19 +60,6 @@ export default function Cover() {
   const sectionRef = useRef<HTMLElement>(null)
   const cueRef = useRef<HTMLSpanElement>(null)
   const cueInView = useInView(cueRef)
-  const lastBurstAt = useRef(0)
-  const photoHintId = useId()
-
-  const onPhotoClick = (e: MouseEvent<HTMLButtonElement>) => {
-    const now = Date.now()
-    if (now - lastBurstAt.current < 500) return
-    lastBurstAt.current = now
-    // Keyboard activation reports clientX/Y = 0, so burst from the photo centre then
-    const r = e.currentTarget.getBoundingClientRect()
-    const x = (e.clientX || r.left + r.width / 2) / window.innerWidth
-    const y = (e.clientY || r.top + r.height / 2) / window.innerHeight
-    burstConfetti({ x, y }).catch(() => {})
-  }
 
   const photoImg = (
     <img
@@ -83,7 +69,7 @@ export default function Cover() {
       alt={cover.image.alt}
       loading="eager"
       fetchPriority="high"
-      className="photo-feather block aspect-[3/4] h-auto w-full object-cover [--photo-fade:24px]!"
+      className="block aspect-[3/4] h-auto w-full object-cover"
     />
   )
 
@@ -111,7 +97,6 @@ export default function Cover() {
         <Daylight />
         <LeafShade />
       </div>
-      <PetalDrift count={3} seed={8} className="z-[5]" />
 
       <motion.div
         inert={opening}
@@ -129,24 +114,9 @@ export default function Cover() {
           </motion.p>
         )}
 
-        {/* The confetti burst is motion-only, so under reduced motion the photo is not a control */}
         <motion.div variants={photo} className={photoFrame}>
-          {reduce ? (
-            <div className={photoInner}>{photoImg}</div>
-          ) : (
-            <button
-              type="button"
-              onClick={onPhotoClick}
-              aria-describedby={photoHintId}
-              className={`${photoInner} pressable [--press-scale:0.985] focus-visible:outline-2 focus-visible:outline-offset-[8px] focus-visible:outline-accent`}
-            >
-              {photoImg}
-              <span id={photoHintId} hidden>
-                누르면 축하 꽃가루가 날립니다
-              </span>
-            </button>
-          )}
-          <LightLeak interval={16} className="photo-feather [--photo-fade:24px]!" />
+          <div className={photoInner}>{photoImg}</div>
+          <LightLeak interval={16} />
         </motion.div>
 
         <motion.div variants={line} className="mt-8 grid w-full place-items-center">

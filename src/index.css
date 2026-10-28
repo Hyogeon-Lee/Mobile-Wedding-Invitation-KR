@@ -120,18 +120,6 @@ img {
   -webkit-user-drag: none;
 }
 
-.photo-feather {
-  --photo-fade: 12px;
-  -webkit-mask-image:
-    linear-gradient(90deg, transparent, #000 var(--photo-fade), #000 calc(100% - var(--photo-fade)), transparent),
-    linear-gradient(transparent, #000 var(--photo-fade), #000 calc(100% - var(--photo-fade)), transparent);
-  mask-image:
-    linear-gradient(90deg, transparent, #000 var(--photo-fade), #000 calc(100% - var(--photo-fade)), transparent),
-    linear-gradient(transparent, #000 var(--photo-fade), #000 calc(100% - var(--photo-fade)), transparent);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
-}
-
 /* Mobile frame: content column centered on wide screens */
 .app-frame {
   position: relative;

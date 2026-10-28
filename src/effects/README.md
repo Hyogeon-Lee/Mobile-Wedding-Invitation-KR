@@ -48,14 +48,14 @@ Current page layer costs by section. Count neighbouring Bleeds too when they sha
 
 | Section | Continuous animated nodes |
 | --- | --- |
-| Cover | 11 (daylight 2 + leaf shade 1 + leak 1 + scroll cue 1 + three petals 6) |
-| Greeting | 6 (daylight 2 + two petals 4) |
-| Family | 6 (daylight 2 + two petals 4) |
-| Calendar | 5 (date glow 1 + two petals 4) |
-| Gallery | 6 (daylight 2 + two petals 4) |
-| Location | 6 (daylight 2 + two petals 4) |
-| Account, RSVP, guestbook, Share | 4 each (two petals) |
-| Footer, reaching into Share | 6 (daylight 2 + two petals 4) |
+| Cover | 5 (daylight 2 + leaf shade 1 + leak 1 + scroll cue 1) |
+| Greeting | 2 (daylight) |
+| Family | 2 (daylight) |
+| Calendar | 1 (date glow) |
+| Gallery | 2 (daylight) |
+| Location | 2 (daylight) |
+| Account, RSVP, guestbook, Share | 0 |
+| Footer, reaching into Share | 2 (daylight) |
 
 These are source-level layer costs, not device performance measurements. The scroll cue is a Motion/WAAPI
 loop, not `.fx-anim`. Finite text and photo entrances are separate from the continuous budget.

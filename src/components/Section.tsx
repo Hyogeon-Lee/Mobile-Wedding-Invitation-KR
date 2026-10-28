@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Bleed, PetalDrift, Wash, type WashTone } from '@/effects'
+import { Wash, type WashTone } from '@/effects'
 import Reveal from './Reveal'
 
 type Space = 'sm' | 'md' | 'lg'
@@ -41,7 +41,6 @@ export default function Section({
   bottom = 'md',
   wash,
 }: SectionProps) {
-  const petalSeed = Array.from(id).reduce((sum, char) => sum + char.charCodeAt(0), 0)
   return (
     <section
       id={id}
@@ -50,9 +49,6 @@ export default function Section({
     >
       {wash && <Wash tone={wash} />}
       {backdrop}
-      <Bleed top="-4rem" bottom="-4rem" mask="y" fade="6rem">
-        <PetalDrift count={2} seed={petalSeed} />
-      </Bleed>
       {(eyebrow || title || badge) && (
         <header className="relative z-20 mb-8 text-center">
           <Reveal>

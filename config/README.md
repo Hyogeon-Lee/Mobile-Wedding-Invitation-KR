@@ -6,7 +6,7 @@
 config/
   wedding.json        글 (이름, 날짜, 장소, 섹션 제목·안내 문구, 섹션 켜고 끄기)
   images/
-    cover.webp        첫 화면 사진
+    cover.webp        보관 중인 이전 표지 사진
     gallery/
       01.webp … 10.webp 갤러리 사진 (파일 이름 순서대로 표시)
 ```
@@ -57,7 +57,7 @@ config/
 
 | 섹션 | 추가 항목 | 설명 |
 |---|---|---|
-| `cover` (첫 화면) | `image`, `alt` | `image`는 `config/images/` 안의 파일 이름(`"cover.webp"`), `alt`는 화면 낭독기용 설명. 제목 없이 `eyebrow`만 쓴다 |
+| `cover` (첫 화면) | `image`, `alt` | `image`는 `config/images/` 기준 상대 경로(`"gallery/04.webp"`), `alt`는 화면 낭독기용 설명. 오프닝과 표지가 같은 사진을 쓴다. 제목 없이 `eyebrow`만 쓴다 |
 | `greeting` (인사말) | `body`, `quote` | `body`는 줄 단위 배열, `""`은 문단 구분. `quote`는 `{ "text": "...", "source": "..." }` (선택). 종교적 표현은 쓰지 않기로 했다 |
 | `family` (혼주) | 없음 | `couple`의 부모님 이름과 관계를 신랑 측·신부 측 두 열로 표시한다 |
 | `calendar` (달력) | 없음 | 제목은 날짜에서 자동으로 만든다. `title` 항목이 없다 |
@@ -76,7 +76,7 @@ config/
 ## 사진 바꾸기
 
 1. 사진을 `.jpg`, `.jpeg`, `.png`, `.webp` 중 하나로 준비한다.
-2. 첫 화면 사진은 `config/images/cover.webp`를 덮어쓴다. 다른 이름을 쓰면 `wedding.json`의 `cover.image`도 바꾼다.
+2. 첫 화면 사진은 `wedding.json`의 `cover.image`에 `config/images/` 기준 상대 경로를 적는다. 현재는 `gallery/04.webp`를 오프닝·표지·갤러리에서 함께 사용한다. 사진을 바꾸면 `cover.alt` 설명도 바꾼다.
 3. 갤러리 사진은 `config/images/gallery/`에 넣는다. 폴더 안의 모든 사진이 **파일 이름 순서**로 표시된다(`2.jpg`가 `10.jpg`보다 앞). `01.jpg`, `02.jpg`처럼 두 자리 번호를 권장한다. 빼려면 파일을 지운다.
 4. 가로·세로 크기는 빌드할 때 파일에서 읽으므로 따로 적지 않는다. 휴대폰 사진의 회전 정보(EXIF)도 반영한다.
 
@@ -84,7 +84,7 @@ config/
 
 | 사진 | 비율 | 크기 | 용량 |
 |---|---|---|---|
-| `cover.webp` | 3:4 세로 (화면에서 3:4로 잘린다) | 1200 x 1600 | 400 KB 이하 |
+| 첫 화면 사진 | 3:4 세로 (화면에서 3:4로 잘린다) | 1200 x 1600 | 400 KB 이하 |
 | 갤러리 세로 사진 | 4:5 | 1200 x 1500 | 300 KB 이하 |
 | 갤러리 가로 사진 | 4:3 | 1200 x 900 | 300 KB 이하 |
 

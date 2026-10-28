@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import Button from '@/components/Button'
 import Reveal from '@/components/Reveal'
 import { wedding } from '@/config/wedding'
-import { Bleed, Daylight, PetalDrift } from '@/effects'
+import { Bleed, Daylight } from '@/effects'
 import { SCROLL_OPTIONS } from '@/lib/motion'
 import { applyTextLg, readTextLg, scrollTopBehavior, writeTextLg } from './textSize'
 
@@ -43,7 +43,6 @@ export default function Footer() {
       {/* Light rises from under the Share buttons and never reaches past the page end */}
       <Bleed top="-14rem" bottom="0" mask="top" fade="14rem">
         <Daylight />
-        <PetalDrift count={2} seed={11} />
       </Bleed>
       <Reveal className="relative z-10">
         <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
