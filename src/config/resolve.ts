@@ -48,10 +48,18 @@ export function resolveWedding(content: WeddingContent, images: ContentImages): 
 
   const { image: _image, alt: coverAlt, ...cover } = content.cover
   const { alt: _alt, captions: _captions, ...gallery } = content.gallery
+  const locationImages = (content.location.images ?? []).map(({ image, alt }, i) => {
+    const photo = images[image]
+    if (!photo) {
+      throw new Error(`config/wedding.json 오류 — "location.images[${i}].image": config/images/${image} 파일이 없습니다.`)
+    }
+    return { src: photo.url, width: photo.width, height: photo.height, alt }
+  })
   return {
     ...content,
     cover: { ...cover, image: { src: coverImage.url, width: coverImage.width, height: coverImage.height, alt: coverAlt } },
     gallery: { ...gallery, images: galleryImages },
+    location: { ...content.location, images: locationImages },
     share: { ...content.share, kakaoDescription: shareDescriptionOf(content) },
   }
 }

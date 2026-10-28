@@ -23,6 +23,7 @@ describe('config/wedding.json', () => {
   it('names images that exist on disk with a readable size', () => {
     const content = validateWedding(raw)
     expect(images[content.cover.image]).toBeDefined()
+    for (const photo of content.location.images ?? []) expect(images[photo.image]).toBeDefined()
     for (const name of Object.keys(content.gallery.captions ?? {})) expect(images[`gallery/${name}`]).toBeDefined()
     expect(galleryFiles(images).length).toBeGreaterThan(0)
     for (const [key, { width, height }] of Object.entries(images)) {
@@ -41,6 +42,10 @@ describe('config/wedding.json', () => {
       return { src: url, width, height, alt: content.gallery.captions?.[name] ?? `${content.gallery.alt} ${i + 1}` }
     })
     expect(wedding.gallery.images).toEqual(expected)
+    expect(wedding.location.images).toEqual((content.location.images ?? []).map(({ image, alt }) => {
+      const { url, width, height } = images[image]
+      return { src: url, width, height, alt }
+    }))
     expect(wedding.share.kakaoDescription).toBe(content.share.kakaoDescription ?? `${dateLineOf(wedding.event)} · ${wedding.event.venueName}`)
   })
 })
@@ -80,6 +85,20 @@ describe('validateWedding', () => {
     expect(validateWedding(cfg).location.transportLinks).toEqual({ subway: 'https://map.naver.com/' })
   })
 
+  it('accepts omitted or empty venue photos', () => {
+    const cfg = clone()
+    delete cfg.location.images
+    expect(validateWedding(cfg).location.images).toEqual([])
+    cfg.location.images = []
+    expect(validateWedding(cfg).location.images).toEqual([])
+  })
+
+  it('rejects malformed venue photos, unsafe paths and blank descriptions', () => {
+    expectError((c) => (c.location.images = 'venue.jpg'), 'location.images')
+    expectError((c) => (c.location.images = [{ image: '../venue.jpg', alt: '입구' }]), 'location.images[0].image')
+    expectError((c) => (c.location.images = [{ image: 'venue.jpg', alt: ' ' }]), 'location.images[0].alt')
+  })
+
   it('rejects unsafe transport links and unknown transport keys', () => {
     expectError((c) => (c.location.transportLinks = { bus: 'javascript:alert(1)' }), 'location.transportLinks.bus')
     expectError((c) => (c.location.transportLinks = { buses: 'https://map.naver.com/' }), 'location.transportLinks.buses')
@@ -92,11 +111,13 @@ describe('resolveWedding', () => {
     'gallery/10.jpg': { url: '/a/10.jpg', width: 1, height: 1 },
     'gallery/2.png': { url: '/a/2.png', width: 2, height: 1 },
     'gallery/sub/x.jpg': { url: '/a/x.jpg', width: 1, height: 1 },
+    'venue/exterior.webp': { url: '/a/exterior.webp', width: 3, height: 2 },
+    'venue/entrance.webp': { url: '/a/entrance.webp', width: 8, height: 5 },
   }
   /** The committed JSON pinned to these fake images, so the owner's own file names and alt text do not matter here. */
   const fixture = () => {
     const cfg = clone()
-    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} } })
+    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, location: { ...cfg.location, images: [] } })
   }
 
   it('orders gallery files naturally and ignores sub-folders', () => {
@@ -116,6 +137,21 @@ describe('resolveWedding', () => {
     expect(() => resolveWedding({ ...content, cover: { ...content.cover, image: 'none.jpg' } }, images)).toThrow('cover.image')
     const withCaption = { ...content, gallery: { ...content.gallery, captions: { '99.jpg': 'x' } } }
     expect(() => resolveWedding(withCaption, images)).toThrow('gallery.captions.99.jpg')
+  })
+
+  it('resolves venue photos in configured order and names a missing photo', () => {
+    const content = fixture()
+    expect(resolveWedding(content, images).location.images).toEqual([])
+    content.location.images = [
+      { image: 'venue/entrance.webp', alt: '정면 입구' },
+      { image: 'venue/exterior.webp', alt: '건물 전경' },
+    ]
+    expect(resolveWedding(content, images).location.images).toEqual([
+      { src: '/a/entrance.webp', width: 8, height: 5, alt: '정면 입구' },
+      { src: '/a/exterior.webp', width: 3, height: 2, alt: '건물 전경' },
+    ])
+    content.location.images[1].image = 'venue/missing.webp'
+    expect(() => resolveWedding(content, images)).toThrow('location.images[1].image')
   })
 
   it('keeps an explicit share description', () => {

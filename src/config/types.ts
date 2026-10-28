@@ -77,7 +77,11 @@ export interface WeddingContent {
     /** Alt text per file name in config/images/gallery/, e.g. { "03.jpg": "..." } */
     captions?: Record<string, string>
   }
-  location: SectionHeading & { transport: TransportInfo; transportLinks?: Partial<Record<keyof TransportInfo, string>> }
+  location: SectionHeading & {
+    images?: { image: string; alt: string }[]
+    transport: TransportInfo
+    transportLinks?: Partial<Record<keyof TransportInfo, string>>
+  }
   account: SectionHeading & { intro: string[] }
   rsvp: SectionHeading & { intro: string[] }
   guestbook: SectionHeading
@@ -92,8 +96,9 @@ export interface WeddingContent {
   footer: { enabled: boolean; credit: string }
 }
 
-export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'gallery' | 'share'> {
+export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'gallery' | 'location' | 'share'> {
   cover: Omit<WeddingContent['cover'], 'image' | 'alt'> & { image: GalleryImage }
   gallery: Omit<WeddingContent['gallery'], 'alt' | 'captions'> & { images: GalleryImage[] }
+  location: Omit<WeddingContent['location'], 'images'> & { images: GalleryImage[] }
   share: WeddingContent['share'] & { kakaoDescription: string }
 }

@@ -5,7 +5,7 @@ let elapsed = 0.5
 
 export const letteringStrokes = lettering.flatMap((word) => {
   const strokes = word.map(({ d, length }) => {
-    const duration = Math.max(0.04, (length / totalLength) * 3.8)
+    const duration = Math.max(0.04, (length / totalLength) * 3)
     const stroke = { d, delay: elapsed, duration }
     elapsed += duration + 0.025
     return stroke

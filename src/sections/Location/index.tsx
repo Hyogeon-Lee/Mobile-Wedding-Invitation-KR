@@ -131,6 +131,25 @@ export default function Location() {
         </div>
       </Reveal>
 
+      {location.images.length > 0 && (
+        <Reveal className="mt-8 space-y-5">
+          {location.images.map((image) => (
+            <figure key={image.src}>
+              <img
+                src={image.src}
+                width={image.width}
+                height={image.height}
+                alt={image.alt}
+                loading="lazy"
+                decoding="async"
+                className="block h-auto w-full"
+              />
+              <figcaption className="mt-2 text-[0.9375rem] text-ink-muted">{image.alt}</figcaption>
+            </figure>
+          ))}
+        </Reveal>
+      )}
+
       <Reveal delay={REVEAL_STEP} className="mt-10">
         <div
           ref={mapBoxRef}

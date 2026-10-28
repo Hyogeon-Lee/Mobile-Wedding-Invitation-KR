@@ -191,7 +191,7 @@ export function validateWedding(input: unknown): WeddingContent {
   const family = object(root.family, 'family', ['enabled', 'eyebrow', 'title'])
   const calendar = object(root.calendar, 'calendar', ['enabled', 'eyebrow'])
   const gallery = object(root.gallery, 'gallery', ['enabled', 'eyebrow', 'title', 'alt', 'captions'])
-  const location = object(root.location, 'location', ['enabled', 'eyebrow', 'title', 'transport', 'transportLinks'])
+  const location = object(root.location, 'location', ['enabled', 'eyebrow', 'title', 'images', 'transport', 'transportLinks'])
   const account = object(root.account, 'account', ['enabled', 'eyebrow', 'title', 'intro'])
   const rsvp = object(root.rsvp, 'rsvp', ['enabled', 'eyebrow', 'title', 'intro'])
   const guestbook = object(root.guestbook, 'guestbook', ['enabled', 'eyebrow', 'title'])
@@ -225,6 +225,16 @@ export function validateWedding(input: unknown): WeddingContent {
       }
       captions[name] = string(raw, name, 'gallery.captions', { nonEmpty: true })
     }
+  }
+
+  const locationImages: NonNullable<WeddingContent['location']['images']> = []
+  if (location.images !== undefined) {
+    if (!Array.isArray(location.images)) fail('location.images', '사진 목록은 배열이어야 합니다.')
+    location.images.forEach((value, i) => {
+      const path = `location.images[${i}]`
+      const photo = object(value, path, ['image', 'alt'])
+      locationImages.push({ image: imageName(photo, 'image', path), alt: string(photo, 'alt', path, { nonEmpty: true }) })
+    })
   }
 
   const transportLinks: WeddingContent['location']['transportLinks'] = {}
@@ -273,7 +283,7 @@ export function validateWedding(input: unknown): WeddingContent {
       alt: string(gallery, 'alt', 'gallery', { nonEmpty: true }),
       ...(captions ? { captions } : {}),
     },
-    location: { ...heading(location, 'location'), transport: transport(present(location, 'transport', 'location'), 'location.transport'), transportLinks },
+    location: { ...heading(location, 'location'), images: locationImages, transport: transport(present(location, 'transport', 'location'), 'location.transport'), transportLinks },
     account: { ...heading(account, 'account'), intro: lines(account, 'intro', 'account') },
     rsvp: { ...heading(rsvp, 'rsvp'), intro: lines(rsvp, 'intro', 'rsvp') },
     guestbook: heading(guestbook, 'guestbook'),

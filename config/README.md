@@ -9,6 +9,9 @@ config/
     cover.webp        보관 중인 이전 표지 사진
     gallery/
       01.webp … 10.webp 갤러리 사진 (파일 이름 순서대로 표시)
+    venue/
+      exterior.webp     예식장 건물 전경
+      entrance.webp     예식장 정면 입구
 ```
 
 수정한 뒤 `npm run dev`로 확인한다. 개발 서버가 켜져 있으면 저장할 때 화면이 다시 불러와진다. 배포는 `main`에 푸시하면 GitHub Actions가 빌드한다.
@@ -62,7 +65,7 @@ config/
 | `family` (혼주) | 없음 | `couple`의 부모님 이름과 관계를 신랑 측·신부 측 두 열로 표시한다 |
 | `calendar` (달력) | 없음 | 제목은 날짜에서 자동으로 만든다. `title` 항목이 없다 |
 | `gallery` (갤러리) | `alt`, `captions` | `alt` 뒤에 번호가 붙는다("신랑 신부 사진 3"). 특정 사진만 설명을 바꾸려면 `"captions": { "03.jpg": "제주에서" }` |
-| `location` (오시는 길) | `transport`, `transportLinks` | `transport`는 `subway`, `bus`, `car`, `parking`, `shuttle` 각각 줄 단위 배열. `transportLinks`는 같은 키에 대응하는 HTTPS 지도 링크(선택). 필요 없는 항목은 지운다 |
+| `location` (오시는 길) | `images`, `transport`, `transportLinks` | `images`는 예식장 사진과 설명 목록(선택). `transport`는 `subway`, `bus`, `car`, `parking`, `shuttle` 각각 줄 단위 배열. `transportLinks`는 같은 키에 대응하는 HTTPS 지도 링크(선택). 필요 없는 항목은 지운다 |
 | `account` (마음 전하실 곳) | `intro` | 안내 문구 줄 배열. 계좌번호는 아래 "개인정보"를 본다 |
 | `rsvp` (참석 의사) | `intro` | 안내 문구 줄 배열 |
 | `guestbook` (방명록) | 없음 | |
@@ -79,6 +82,8 @@ config/
 2. 첫 화면 사진은 `wedding.json`의 `cover.image`에 `config/images/` 기준 상대 경로를 적는다. 현재는 `gallery/04.webp`를 오프닝·표지·갤러리에서 함께 사용한다. 사진을 바꾸면 `cover.alt` 설명도 바꾼다.
 3. 갤러리 사진은 `config/images/gallery/`에 넣는다. 폴더 안의 모든 사진이 **파일 이름 순서**로 표시된다(`2.jpg`가 `10.jpg`보다 앞). `01.jpg`, `02.jpg`처럼 두 자리 번호를 권장한다. 빼려면 파일을 지운다.
 4. 가로·세로 크기는 빌드할 때 파일에서 읽으므로 따로 적지 않는다. 휴대폰 사진의 회전 정보(EXIF)도 반영한다.
+
+예식장 사진은 `config/images/venue/`에 넣고 `location.images`에 `{ "image": "venue/exterior.webp", "alt": "노블발렌티 삼성 건물 전경" }`처럼 등록한다. 목록 순서대로 지도 위에 원본 비율로 표시하며, `alt`는 사진 아래 설명으로도 쓴다. 사진을 빼려면 해당 항목을 지운다.
 
 권장 크기와 용량:
 
