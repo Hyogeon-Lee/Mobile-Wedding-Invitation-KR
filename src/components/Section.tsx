@@ -1,25 +1,23 @@
 import type { ReactNode } from 'react'
 import { Wash, type WashTone } from '@/effects'
-import Reveal from './Reveal'
 
 type Space = 'sm' | 'md' | 'lg'
-const PAD_TOP: Record<Space, string> = { sm: 'pt-12', md: 'pt-14', lg: 'pt-16' }
-const PAD_BOTTOM: Record<Space, string> = { sm: 'pb-12', md: 'pb-14', lg: 'pb-16' }
+const PAD_TOP: Record<Space, string> = { sm: 'pt-16', md: 'pt-20', lg: 'pt-24' }
+const PAD_BOTTOM: Record<Space, string> = { sm: 'pb-12', md: 'pb-16', lg: 'pb-20' }
 
 interface SectionProps {
   id: string
-  /** Small uppercase label above the title, e.g. "GREETING" */
+  /** Fallback heading when title is absent */
   eyebrow?: string
   title?: string
+  align?: 'left' | 'center'
   /** Small chip rendered under the title, e.g. "예시 계좌" */
   badge?: ReactNode
   /** Bleed layers from @/effects; they paint at -z-10 in <main> and may extend past this section */
   backdrop?: ReactNode
   children: ReactNode
   className?: string
-  /** Padding above: sm 48px, md 56px, lg 64px. Default md */
   top?: Space
-  /** Padding below: sm 48px, md 56px, lg 64px. Default md */
   bottom?: Space
   /** Static tint that feathers 160px into both neighbours */
   wash?: WashTone
@@ -33,6 +31,7 @@ export default function Section({
   id,
   eyebrow,
   title,
+  align = 'left',
   badge,
   backdrop,
   children,
@@ -50,18 +49,14 @@ export default function Section({
       {wash && <Wash tone={wash} />}
       {backdrop}
       {(eyebrow || title || badge) && (
-        <header className="relative z-20 mb-8 text-center">
-          <Reveal>
-            {eyebrow && (
-              <p className="font-sans text-[0.75rem] tracking-[0.2em] text-accent uppercase mb-4">{eyebrow}</p>
-            )}
-            {title && (
-              <h2 id={`${id}-title`} className="font-serif text-2xl leading-snug whitespace-pre-line text-ink">
-                {title}
-              </h2>
-            )}
-            {badge && <div className="mt-3 flex justify-center">{badge}</div>}
-          </Reveal>
+        <header className={`relative z-20 mb-8 ${align === 'center' ? 'text-center' : 'text-left'}`}>
+          {title && (
+            <h2 id={`${id}-title`} className="font-serif text-[1.625rem] leading-[1.5] text-balance whitespace-pre-line text-ink">
+              {title}
+            </h2>
+          )}
+          {!title && eyebrow && <p className="font-serif text-xl text-ink">{eyebrow}</p>}
+          {badge && <div className={`mt-3 flex ${align === 'center' ? 'justify-center' : ''}`}>{badge}</div>}
         </header>
       )}
       <div className="relative z-10">{children}</div>

@@ -17,7 +17,7 @@ export default function Accordion({ id, title, children }: AccordionProps) {
   const panelId = `${id}-panel`
 
   return (
-    <div className="rounded-2xl border border-line bg-bg-elevated">
+    <div>
       <h3>
         <button
           type="button"
@@ -25,7 +25,7 @@ export default function Accordion({ id, title, children }: AccordionProps) {
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between gap-3 rounded-2xl px-5 py-4 text-left text-ink transition-colors hover:bg-mint/60 active:bg-mint/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="flex w-full items-center justify-between gap-3 py-5 text-left text-ink transition-colors hover:bg-mint/60 active:bg-mint/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <span className="font-serif text-[1.0625rem]">{title}</span>
           <motion.span
@@ -52,7 +52,7 @@ export default function Accordion({ id, title, children }: AccordionProps) {
             exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
             transition={reduce ? { duration: 0.2, ease: EASE_OUT } : SPRING_FAST}
           >
-            <div className="border-t border-line px-5">{children}</div>
+            <div className="border-t border-line">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

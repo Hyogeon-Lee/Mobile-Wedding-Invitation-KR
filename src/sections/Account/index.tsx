@@ -76,7 +76,7 @@ export default function Account() {
       }
     >
       <Reveal>
-        <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">
+        <p className="text-[0.9375rem] leading-[1.8] text-ink-muted">
           {wedding.account.intro.map((line, i) => (
             <Fragment key={i}>
               {i > 0 && <br />}
@@ -87,7 +87,7 @@ export default function Account() {
       </Reveal>
 
       {groups.length > 0 && (
-        <Reveal delay={REVEAL_STEP} className="mt-10 flex flex-col gap-3">
+        <Reveal delay={REVEAL_STEP} className="mt-10 divide-y divide-line border-y border-line">
           {groups.map((group) => (
             <Accordion key={group.side} id={`account-${group.side}`} title={group.title}>
               <ul className="divide-y divide-line">

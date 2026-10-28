@@ -13,7 +13,7 @@ import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
 import { hasMore, splitTiles, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
 
-const GRID = 'grid grid-cols-2 gap-4'
+const GRID = 'grid grid-cols-2 gap-2.5'
 const FRAME =
   'pressable block w-full ' +
   'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
@@ -154,7 +154,7 @@ export default function Gallery() {
       }
     >
       <div>
-        <div className="py-6">
+        <div>
           <div className={GRID}>{tiles(head, 0)}</div>
 
           <AnimatePresence initial={false}>
@@ -168,7 +168,7 @@ export default function Gallery() {
                 exit={reduce ? undefined : { opacity: 0 }}
                 transition={{ duration: reduce ? 0 : 0.35, ease: EASE_OUT }}
               >
-                <div className={`${GRID} pt-4`}>{tiles(tail, head.length)}</div>
+                <div className={`${GRID} pt-2.5`}>{tiles(tail, head.length)}</div>
               </motion.div>
             )}
           </AnimatePresence>

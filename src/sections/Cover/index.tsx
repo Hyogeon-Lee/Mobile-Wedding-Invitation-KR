@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useInView, useReducedMotion, type TargetAndTransition, type Variants } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { wedding } from '@/config/wedding'
-import { Daylight, fadeMask, LeafShade, LightLeak } from '@/effects'
 import { EASE_OUT, EASE_SOFT, SCROLL_OPTIONS } from '@/lib/motion'
 import { coverDateLine, coverVenueLine } from './format'
 import Opening from './Opening'
@@ -21,26 +20,9 @@ const photo: Variants = {
   shown: { opacity: 1, scale: 1, transition: { duration: 1.1, ease: EASE_SOFT } },
 }
 
-// A transform string (not y) lets Motion hand the loop to WAAPI, so it runs on the compositor
-const cueBob: TargetAndTransition = {
-  transform: ['translateY(0px)', 'translateY(3px)', 'translateY(0px)'],
-  transition: { duration: 3.6, repeat: Infinity, ease: 'easeInOut' },
-}
-const cueRest: TargetAndTransition = { transform: 'translateY(0px)', transition: { duration: 0.4, ease: EASE_OUT } }
-
-// Photo is 3:4 and at most 58svh tall. On short screens it shrinks to the height left after
-// ~22rem of text, scroll cue and padding (rem, so large-text mode is covered too),
-// keeping the scroll cue on the first screen. svh does not change when browser toolbars collapse
+// Reserve room for the names, date and scroll control, including large-text mode
 const photoFrame =
-  'relative block w-[min(100%,calc(58svh*3/4),max(9rem,calc((100svh_-_22rem_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))*3/4)))] rounded-[3px]'
-const photoInner = 'block w-full overflow-hidden rounded-[inherit]'
-
-// A white reading pool keeps small text clear of the moving leaf shade
-// The horizontal gradient and vertical mask feather it so it does not read as a box
-const lightPool =
-  'relative before:pointer-events-none before:absolute before:-inset-x-10 before:-inset-y-3 before:-z-10 before:bg-[linear-gradient(90deg,rgb(255_255_255/0)_0,rgb(255_255_255/0.72)_40px,rgb(255_255_255/0.72)_calc(100%_-_40px),rgb(255_255_255/0)_100%)] before:[mask-image:linear-gradient(transparent,#000_12px,#000_calc(100%_-_12px),transparent)]'
-
-const LIGHT_FADE = fadeMask('bottom', '200px')
+  'block w-[min(100%,calc(54svh*3/4),max(9rem,calc((100svh_-_20rem_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))*3/4)))]'
 
 /** Hero screen. Not wrapped in <Section>. */
 export default function Cover() {
@@ -58,8 +40,6 @@ export default function Cover() {
   }, [finishOpening])
   const { couple, event, cover } = wedding
   const sectionRef = useRef<HTMLElement>(null)
-  const cueRef = useRef<HTMLSpanElement>(null)
-  const cueInView = useInView(cueRef)
 
   const photoImg = (
     <img
@@ -88,16 +68,11 @@ export default function Cover() {
       id="cover"
       ref={sectionRef}
       aria-label="표지"
-      className="relative isolate flex min-h-svh flex-col items-center overflow-hidden px-6 pt-[calc(32px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
+      className="relative isolate flex min-h-svh flex-col items-center overflow-hidden px-6 pt-[calc(36px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
     >
       <AnimatePresence>
         {opening && <Opening key="opening" onComplete={finishOpening} />}
       </AnimatePresence>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0" style={LIGHT_FADE}>
-        <Daylight />
-        <LeafShade />
-      </div>
-
       <motion.div
         inert={opening}
         className="relative z-10 flex w-full flex-1 flex-col items-center justify-center text-center"
@@ -105,31 +80,20 @@ export default function Cover() {
         initial={reduce ? false : 'hidden'}
         animate={opening ? 'hidden' : 'shown'}
       >
-        {cover.eyebrow && (
-          <motion.p
-            variants={line}
-            className={`${lightPool} mb-7 font-display text-[0.9375rem] tracking-[0.26em] text-accent uppercase`}
-          >
-            {cover.eyebrow}
-          </motion.p>
-        )}
-
-        <motion.div variants={photo} className={photoFrame}>
-          <div className={photoInner}>{photoImg}</div>
-          <LightLeak interval={16} />
-        </motion.div>
-
-        <motion.div variants={line} className="mt-8 grid w-full place-items-center">
-          <h1 className="font-serif text-[1.75rem] leading-snug text-ink">
+        <motion.div variants={line} className="mb-7 w-full">
+          <h1 className="font-serif text-[clamp(1.5rem,8vw,2rem)] leading-snug text-ink">
             {couple.groom.name}
-            <span className="mx-3 text-sage">·</span>
+            <span aria-hidden="true" className="mx-3 font-display text-[1.5rem] italic text-accent">&</span>
+            <span className="sr-only"> 그리고 </span>
             {couple.bride.name}
           </h1>
         </motion.div>
 
-        <motion.div variants={line} className={`${lightPool} mt-3`}>
-          <p className="text-[0.9375rem] leading-relaxed tracking-[0.02em] text-ink-muted tabular-nums">{coverDateLine(event)}</p>
-          <p className="mt-1 text-[0.9375rem] leading-relaxed tracking-[0.02em] text-ink-muted">{coverVenueLine(event)}</p>
+        <motion.div variants={photo} className={photoFrame}>{photoImg}</motion.div>
+
+        <motion.div variants={line} className="mt-7">
+          <p className="text-[0.9375rem] leading-relaxed text-ink tabular-nums">{coverDateLine(event)}</p>
+          <p className="mt-2 font-serif text-[1rem] leading-relaxed text-ink-muted">{coverVenueLine(event)}</p>
         </motion.div>
       </motion.div>
 
@@ -137,20 +101,14 @@ export default function Cover() {
         type="button"
         disabled={opening}
         onClick={scrollToNext}
-        aria-label="Scroll, 다음 내용으로 이동"
-        className={`${lightPool} pressable z-10 mt-10 flex min-h-11 flex-col items-center gap-1 px-3 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent`}
+        aria-label="초대장 보기, 다음 내용으로 이동"
+        className="pressable z-10 mt-5 inline-flex min-h-11 items-center gap-2 px-3 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: opening ? 0 : 1 }}
         transition={{ duration: 0.6, delay: 0.9, ease: EASE_OUT }}
       >
-        <motion.span
-          ref={cueRef}
-          className="flex flex-col items-center gap-1"
-          animate={reduce || !cueInView ? cueRest : cueBob}
-        >
-          <span className="font-display text-[0.875rem] tracking-[0.28em] uppercase">Scroll</span>
-          <ChevronDown size={18} strokeWidth={1.5} aria-hidden="true" />
-        </motion.span>
+        <span className="text-[0.875rem]">초대장 보기</span>
+        <ChevronDown size={16} strokeWidth={1.5} aria-hidden="true" />
       </motion.button>
     </section>
   )

@@ -50,8 +50,8 @@ const TRANSPORT_ICON: Record<TransportKey, LucideIcon> = {
 }
 
 const navLinkClass =
-  'pressable inline-flex min-h-11 w-full items-center justify-center rounded-full border border-line bg-bg-elevated px-1 py-2 leading-tight ' +
-  'text-[0.9375rem] tracking-[0.02em] text-ink select-none hover:bg-mint active:bg-mint ' +
+  'pressable inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-line bg-transparent px-1 py-2 leading-tight ' +
+  'text-[0.9375rem] text-ink select-none hover:bg-mint active:bg-mint ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 /** App-scheme links: an iOS long-press "Open in New Tab" would open a dead scheme URL */
 const appLinkClass = `${navLinkClass} [-webkit-touch-callout:none]`
@@ -121,12 +121,12 @@ export default function Location() {
         </Bleed>
       }
     >
-      <Reveal className="text-center">
-        <p className="font-serif text-[1.25rem] leading-snug text-ink">{venueName}</p>
+      <Reveal>
+        <p className="font-serif text-[1.375rem] leading-snug text-ink">{venueName}</p>
         {hall.trim() && <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>}
         <p className="mt-4 text-[0.9375rem] leading-[1.8] text-ink-muted">{address}</p>
         {addressJibun && <p className="mt-0.5 text-[0.9375rem] leading-[1.8] text-ink-muted">(지번) {addressJibun}</p>}
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex">
           <CopyButton text={address} label="주소 복사" successMessage="주소가 복사되었습니다" />
         </div>
       </Reveal>
@@ -189,18 +189,16 @@ export default function Location() {
 
       {entries.length > 0 && (
         <Reveal delay={REVEAL_STEP * 2} className="mt-10">
-          <dl className="divide-y divide-line rounded-2xl border border-line bg-bg-elevated px-5">
+          <dl className="divide-y divide-line border-y border-line">
             {entries.map(({ key, label, lines }) => {
               const Icon = TRANSPORT_ICON[key]
               return (
-                <div key={key} className="py-5">
+                <div key={key} className="py-6">
                   <dt className="flex items-center gap-2.5 font-serif text-[1rem] text-ink">
-                    <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-mint text-accent">
-                      <Icon size={17} strokeWidth={1.75} aria-hidden="true" />
-                    </span>
+                    <Icon size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0 text-accent" />
                     {label}
                   </dt>
-                  <dd className="mt-1.5 min-w-0 pl-[2.875rem]">
+                  <dd className="mt-3 min-w-0">
                     {lines.map((line, i) => (
                       <p key={i} className="text-[0.9375rem] leading-[1.8] text-ink-muted">
                         {line}

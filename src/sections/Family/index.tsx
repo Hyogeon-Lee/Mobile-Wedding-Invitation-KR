@@ -23,10 +23,10 @@ function ParentName({ parent }: { parent: Parent }) {
 function FamilyColumn({ side, person }: { side: Side; person: Person }) {
   const parents = presentParents(person)
   return (
-    <div className="min-w-0 py-4 text-center">
-      <p className="text-[0.8125rem] tracking-[0.02em] text-accent">{SIDE_LABEL[side]} 측</p>
+    <div className="min-w-0 py-2 text-center">
+      <p className="text-[0.875rem] text-accent">{SIDE_LABEL[side]} 측</p>
       {parents.length > 0 && (
-        <p className="mt-3 text-[0.9375rem] leading-[1.8] text-ink-muted">
+        <p className="mt-5 text-[0.9375rem] leading-[1.9] text-ink-muted">
           {parents.map((parent, i) => (
             <Fragment key={i}>
               {i > 0 && (
@@ -40,7 +40,7 @@ function FamilyColumn({ side, person }: { side: Side; person: Person }) {
           <span className="block">의 {person.relation}</span>
         </p>
       )}
-      <p className={`${parents.length > 0 ? 'mt-1' : 'mt-3'} font-serif text-[1.25rem] leading-snug text-ink`}>
+      <p className={`${parents.length > 0 ? 'mt-4' : 'mt-3'} font-serif text-[1.5rem] leading-snug text-ink`}>
         {person.name}
       </p>
     </div>
@@ -53,6 +53,7 @@ export default function Family() {
       id="family"
       eyebrow={wedding.family.eyebrow}
       title={wedding.family.title}
+      align="center"
       top="sm"
       bottom="md"
       backdrop={
@@ -62,7 +63,7 @@ export default function Family() {
       }
     >
       <Reveal>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 divide-x divide-line">
           {SIDES.map((side) => (
             <FamilyColumn key={side} side={side} person={wedding.couple[side]} />
           ))}

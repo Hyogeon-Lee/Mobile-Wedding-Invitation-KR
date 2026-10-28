@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
-import { GlowPulse } from '@/effects'
 import { wedding } from '@/config/wedding'
 import { WEEKDAYS_KO, daysUntil, formatDday, toKstParts } from '@/lib/date'
 import { REVEAL_STEP } from '@/lib/motion'
@@ -9,8 +8,6 @@ import { calendarTitle, ddaySentence, monthLabel } from './format'
 import { calendarWeeks, isWeddingCell } from './grid'
 
 const REFRESH_MS = 60_000
-/** Small enough to stay clear of neighbouring day numbers */
-const DAY_GLOW_PX = 56
 
 export default function Calendar() {
   const { couple, event } = wedding
@@ -35,7 +32,7 @@ export default function Calendar() {
   }, [startsAt])
 
   return (
-    <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)} top="md" bottom="sm">
+    <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)} align="center" top="md" bottom="sm">
       <Reveal className="mx-auto max-w-[340px]">
         <div className="relative px-2.5 pt-6 pb-5">
           <table className="relative z-10 w-full table-fixed border-collapse">
@@ -62,7 +59,7 @@ export default function Calendar() {
                   {week.map((day, di) => {
                     const isWedding = isWeddingCell(day, target.day, datePlaceholder)
                     return (
-                      <td key={di} className="pt-2 text-center font-display text-[1.0625rem] leading-none tabular-nums text-ink">
+                      <td key={di} className="pt-2 text-center text-[0.9375rem] leading-none tabular-nums text-ink">
                         {day !== null && !isWedding && (
                           <span
                             className={`inline-flex aspect-square w-9 max-w-full items-center justify-center rounded-full ${di === 0 ? 'text-accent' : ''}`}
@@ -71,12 +68,10 @@ export default function Calendar() {
                           </span>
                         )}
                         {isWedding && (
-                          <GlowPulse color="mint" size={DAY_GLOW_PX}>
-                            <span className="inline-flex aspect-square w-9 max-w-full items-center justify-center rounded-full bg-accent font-medium text-white">
-                              {day}
-                              <span className="sr-only"> 결혼식</span>
-                            </span>
-                          </GlowPulse>
+                          <span className="inline-flex aspect-square w-9 max-w-full items-center justify-center rounded-full bg-accent font-medium text-white">
+                            {day}
+                            <span className="sr-only"> 결혼식</span>
+                          </span>
                         )}
                       </td>
                     )
@@ -91,8 +86,8 @@ export default function Calendar() {
         </div>
       </Reveal>
 
-      <Reveal delay={REVEAL_STEP} className="mt-12 text-center">
-        <p className="font-display text-[2.5rem] leading-none tracking-[-0.01em] tabular-nums lining-nums text-orange">
+      <Reveal delay={REVEAL_STEP} className="mx-auto mt-8 max-w-[340px] border-t border-line pt-8 text-center">
+        <p className="font-display text-[2.5rem] leading-none tracking-[-0.01em] tabular-nums lining-nums text-accent">
           {formatDday(days, datePlaceholder)}
         </p>
         <p className="mt-4 text-[0.9375rem] leading-[1.8] text-ink">

@@ -16,6 +16,7 @@ export default function Greeting() {
       id="greeting"
       eyebrow={greeting.eyebrow}
       title={greeting.title}
+      align="center"
       top="lg"
       bottom="sm"
       backdrop={
@@ -40,7 +41,7 @@ export default function Greeting() {
 
         {quote && (
           <Reveal delay={REVEAL_STEP} className="mt-12">
-            <blockquote className="rounded-2xl border border-line bg-bg-elevated px-6 py-7 text-center">
+            <blockquote className="border-y border-line px-4 py-7 text-center">
               <p className="font-serif text-[1.0625rem] leading-loose text-ink">{quote.text}</p>
               {quote.source && (
                 <footer className="mt-3 font-serif font-normal! text-[0.875rem] text-ink-muted">

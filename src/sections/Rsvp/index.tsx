@@ -135,7 +135,7 @@ export default function Rsvp() {
 
   return (
     <Section id="rsvp" eyebrow={rsvp.eyebrow} title={rsvp.title} top="md" bottom="sm">
-      <Reveal className="text-center">
+      <Reveal>
         <p className="text-[0.9375rem] leading-[1.8] text-ink-muted">
           {rsvp.intro.map((line, i) => (
             <Fragment key={i}>

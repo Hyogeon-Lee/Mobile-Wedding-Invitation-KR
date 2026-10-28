@@ -74,7 +74,7 @@ export default function Share() {
   return (
     <Section id="share" eyebrow={share.eyebrow} title={share.title} top="md" bottom="sm">
       <Reveal>
-        <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">{share.intro}</p>
+        <p className="text-[0.9375rem] leading-[1.8] text-ink-muted">{share.intro}</p>
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-10">
@@ -84,7 +84,7 @@ export default function Share() {
             onClick={shareViaKakao}
             disabled={busy}
             aria-busy={busy}
-            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FEE500] px-6 text-[0.9375rem] font-medium text-[#191919] pressable [--press-scale:0.98] select-none hover:bg-[#F6DD00] active:bg-[#EDD500] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#FEE500] px-6 text-[0.9375rem] font-medium text-[#191919] pressable [--press-scale:0.98] select-none hover:bg-[#F6DD00] active:bg-[#EDD500] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
           >
             <KakaoBubble />
             {share.buttonLabel}
