@@ -73,6 +73,7 @@ export default function Location() {
   const { event, location } = wedding
   const { transport } = location
   const { venueName, hall, address, addressJibun, coords } = event
+  const singleLineAddress = address.replace(/\s+/g, ' ')
   const toast = useToast()
   const [mapFailed, setMapFailed] = useState(false)
   const onMapError = useCallback(() => setMapFailed(true), [])
@@ -83,7 +84,7 @@ export default function Location() {
   const appName = useMemo(() => hostOf(siteUrl()) || window.location.host, [])
   const kakaoHref = kakaoNaviUrl(place)
   const naverHref = naverAppUrl(place, appName)
-  const naverWebHref = event.naverMapUrl || naverWebUrl(address)
+  const naverWebHref = event.naverMapUrl || naverWebUrl(singleLineAddress)
   const tmapHref = tmapUrl(place)
   const entries = transportEntries(transport)
 
@@ -121,21 +122,21 @@ export default function Location() {
         </Bleed>
       }
     >
-      <Reveal>
-        <p className="font-serif text-[1.375rem] leading-snug text-ink">{venueName}</p>
-        {hall.trim() && <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>}
-        <p className="mt-4 text-[0.9375rem] leading-[1.8] text-ink-muted">{address}</p>
-        {addressJibun && <p className="mt-0.5 text-[0.9375rem] leading-[1.8] text-ink-muted">(지번) {addressJibun}</p>}
-        <div className="mt-4 flex">
-          <CopyButton text={address} label="주소 복사" successMessage="주소가 복사되었습니다" />
+      <Reveal className="flex items-center gap-3">
+        <div className="min-w-max flex-1 break-keep">
+          <p className="font-serif text-[1.375rem] leading-snug whitespace-nowrap text-ink">{venueName}</p>
+          {hall.trim() && <p className="mt-1 text-[0.9375rem] text-ink">{hall}</p>}
+          <p className="mt-4 text-[0.9375rem] leading-[1.8] whitespace-pre text-ink-muted">{address}</p>
+          {addressJibun && <p className="mt-0.5 text-[0.9375rem] leading-[1.8] whitespace-nowrap text-ink-muted">(지번) {addressJibun}</p>}
+          <div className="mt-4 flex">
+            <CopyButton text={singleLineAddress} label="주소 복사" successMessage="주소가 복사되었습니다" />
+          </div>
         </div>
-      </Reveal>
-
-      {location.images.length > 0 && (
-        <Reveal className="mt-8 space-y-5">
-          {location.images.map((image) => (
-            <figure key={image.src}>
+        {location.images.length > 0 && (
+          <div className="w-[32%] min-w-0 space-y-3">
+            {location.images.map((image) => (
               <img
+                key={image.src}
                 src={image.src}
                 width={image.width}
                 height={image.height}
@@ -144,11 +145,10 @@ export default function Location() {
                 decoding="async"
                 className="block h-auto w-full"
               />
-              <figcaption className="mt-2 text-[0.9375rem] text-ink-muted">{image.alt}</figcaption>
-            </figure>
-          ))}
-        </Reveal>
-      )}
+            ))}
+          </div>
+        )}
+      </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-10">
         <div

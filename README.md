@@ -2,6 +2,8 @@
 
 한국 예비 신랑·신부를 위한 모바일 청첩장. 정형화된 템플릿이 아닌 두 사람의 취향이 드러나는 청첩장을 직접 개발하는 것이 목표이며, 링크 하나로 Android·iOS·웹에 전달한다.
 
+**[배포된 청첩장 바로 보기](https://hyogeon-lee.github.io/Mobile-Wedding-Invitation-KR/)**
+
 - 개발 계획서: [docs/PLAN.md](docs/PLAN.md)
 - 결정 기록: [docs/DECISIONS.md](docs/DECISIONS.md)
 - 현재 내용: 이효건·박민경, 2027년 6월 27일 일요일 오후 1시, 노블발렌티 삼성. 실제 사진 10장과 자연광 디자인을 적용했다. [디자인·검증 기록](docs/SOFT-DESIGN.md)을 참고한다.

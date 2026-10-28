@@ -18,7 +18,7 @@
     "datePlaceholder": false,
     "venueName": "노블발렌티 삼성",
     "hall": "",
-    "address": "서울특별시 강남구 봉은사로 637",
+    "address": "서울특별시 강남구\n봉은사로 637",
     "addressJibun": "삼성동 109-6",
     "naverMapUrl": "https://naver.me/5uIYZdsZ",
     "coords": { "lat": 37.5153463, "lng": 127.0648868, "placeholder": false }
