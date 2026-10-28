@@ -45,7 +45,7 @@ function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
           loading="lazy"
           decoding="async"
           style={{ aspectRatio: `${image.width} / ${image.height}` }}
-          className="photo-feather block h-auto w-full object-cover"
+          className="block h-auto w-full object-cover"
         />
       </button>
     </Reveal>
