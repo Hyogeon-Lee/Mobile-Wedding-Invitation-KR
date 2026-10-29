@@ -9,7 +9,7 @@ import {
   NAME_MAX,
   NOTE_MAX,
   parseCount,
-  rsvpEventLine,
+  rsvpDateLine,
   summaryLine,
   toRsvpInput,
   validateRsvp,
@@ -137,16 +137,21 @@ describe('summaryLine', () => {
   })
 })
 
-describe('rsvpEventLine', () => {
+describe('rsvpDateLine', () => {
   const startsAt = '2027-05-15T12:00:00+09:00'
   it('prints only the year while the date is a placeholder', () => {
-    expect(rsvpEventLine({ startsAt, datePlaceholder: true, venueName: '노블발렌티 삼성' })).toBe(
-      '2027년 OO월 OO일 · 노블발렌티 삼성',
+    expect(rsvpDateLine({ startsAt, datePlaceholder: true })).toBe(
+      '2027년 OO월 OO일 OO요일\n오후 OO시',
     )
   })
-  it('prints the full Korean date once confirmed', () => {
-    expect(rsvpEventLine({ startsAt, datePlaceholder: false, venueName: '노블발렌티 삼성' })).toBe(
-      '2027년 5월 15일 토요일 · 노블발렌티 삼성',
+  it('prints the confirmed date and time on separate lines', () => {
+    expect(rsvpDateLine({ startsAt, datePlaceholder: false })).toBe(
+      '2027년 5월 15일 토요일\n오후 12시',
+    )
+  })
+  it('preserves minutes and formats UTC instants in Korea time', () => {
+    expect(rsvpDateLine({ startsAt: '2027-06-27T04:30:00Z', datePlaceholder: false })).toBe(
+      '2027년 6월 27일 일요일\n오후 1시 30분',
     )
   })
 })

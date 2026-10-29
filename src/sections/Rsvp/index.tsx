@@ -22,7 +22,7 @@ import {
   NAME_MAX,
   NOTE_MAX,
   parseCount,
-  rsvpEventLine,
+  rsvpDateLine,
   SIDE_OPTIONS,
   summaryLine,
   toRsvpInput,
@@ -131,7 +131,7 @@ export default function Rsvp() {
     if (round > 0) nameRef.current?.focus({ preventScroll: true })
   }, [round])
 
-  const { event, rsvp } = wedding
+  const { couple, event, rsvp } = wedding
 
   return (
     <Section id="rsvp" eyebrow={rsvp.eyebrow} title={rsvp.title} top="md" bottom="sm">
@@ -144,7 +144,14 @@ export default function Rsvp() {
             </Fragment>
           ))}
         </p>
-        <p className="mt-4 font-serif text-[1rem] leading-relaxed text-ink">{rsvpEventLine(event)}</p>
+        <dl className="mt-6 grid grid-cols-[4.5rem_minmax(0,1fr)] gap-x-3 gap-y-3 border-y border-line py-5 text-[0.9375rem] leading-[1.8]">
+          <dt className="text-ink-muted">신랑·신부</dt>
+          <dd className="text-ink">{couple.groom.name} · {couple.bride.name}</dd>
+          <dt className="text-ink-muted">일시</dt>
+          <dd className="whitespace-pre-line text-ink">{rsvpDateLine(event)}</dd>
+          <dt className="text-ink-muted">장소</dt>
+          <dd className="text-ink">{event.venueName}</dd>
+        </dl>
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-12">

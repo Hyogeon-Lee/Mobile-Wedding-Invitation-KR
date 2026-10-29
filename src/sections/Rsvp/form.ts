@@ -1,5 +1,5 @@
 import type { WeddingConfig } from '@/config/types'
-import { formatDateKo, toKstParts } from '@/lib/date'
+import { formatDateKo, formatTimeKo, toKstParts } from '@/lib/date'
 import type { RsvpInput } from '@/lib/sheets'
 
 export type Side = RsvpInput['side']
@@ -118,10 +118,9 @@ export function summaryLine(input: RsvpInput): string {
   return parts.join(' · ')
 }
 
-type EventInfo = Pick<WeddingConfig['event'], 'startsAt' | 'datePlaceholder' | 'venueName'>
+type EventInfo = Pick<WeddingConfig['event'], 'startsAt' | 'datePlaceholder'>
 
-/** Date and venue on one line, only the year is printed while the date is a placeholder */
-export function rsvpEventLine(event: EventInfo): string {
-  const date = event.datePlaceholder ? `${toKstParts(event.startsAt).year}년 OO월 OO일` : formatDateKo(event.startsAt)
-  return `${date} · ${event.venueName}`
+export function rsvpDateLine(event: EventInfo): string {
+  if (event.datePlaceholder) return `${toKstParts(event.startsAt).year}년 OO월 OO일 OO요일\n오후 OO시`
+  return `${formatDateKo(event.startsAt)}\n${formatTimeKo(event.startsAt)}`
 }

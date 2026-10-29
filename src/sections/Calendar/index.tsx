@@ -68,7 +68,7 @@ export default function Calendar() {
                           </span>
                         )}
                         {isWedding && (
-                          <span className="inline-flex aspect-square w-9 max-w-full items-center justify-center rounded-full bg-accent font-medium text-white">
+                          <span className="inline-flex aspect-square w-9 max-w-full items-center justify-center rounded-full bg-accent-tint font-medium text-accent-deep">
                             {day}
                             <span className="sr-only"> 결혼식</span>
                           </span>

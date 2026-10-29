@@ -213,7 +213,7 @@ export default function Location() {
               const Icon = TRANSPORT_ICON[key]
               return (
                 <div key={key} className="py-6">
-                  <dt className="flex items-center gap-2.5 font-serif text-[1rem] text-ink">
+                  <dt className="flex items-center gap-2.5 text-[1rem] font-semibold text-ink">
                     <Icon size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0 text-accent" />
                     {label}
                   </dt>
