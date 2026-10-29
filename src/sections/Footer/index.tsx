@@ -5,14 +5,12 @@ import { useEffect, useState } from 'react'
 import Button from '@/components/Button'
 import Reveal from '@/components/Reveal'
 import { wedding } from '@/config/wedding'
-import { Bleed, Daylight } from '@/effects'
 import { SCROLL_OPTIONS } from '@/lib/motion'
 import { applyTextLg, readTextLg, scrollTopBehavior, writeTextLg } from './textSize'
 
 /** Not wrapped in <Section>: the footer has no heading and a tighter rhythm */
 export default function Footer() {
-  const { groom, bride } = wedding.couple
-  const { credit } = wedding.footer
+  const { credit, message, photo } = wedding.footer
   const reduce = useReducedMotion() === true
   const lenis = useLenis()
   const [textLg, setTextLg] = useState(() => readTextLg())
@@ -39,16 +37,13 @@ export default function Footer() {
   }
 
   return (
-    <footer id="footer" className="relative px-6 pt-6 pb-12 text-center">
-      {/* Light rises from under the Share buttons and never reaches past the page end */}
-      <Bleed top="-14rem" bottom="0" mask="top" fade="14rem">
-        <Daylight />
-      </Bleed>
+    <footer id="footer" className="relative px-6 pt-16 pb-12 text-center">
       <Reveal className="relative z-10">
-        <p className="font-serif text-[1.0625rem] leading-relaxed text-ink">
-          {groom.name} · {bride.name}
-        </p>
-        <p className="mt-2 font-serif font-normal! text-[0.875rem] text-ink-muted">{credit}</p>
+        {photo && (
+          <img src={photo.src} width={photo.width} height={photo.height} alt={photo.alt} loading="lazy" decoding="async" className="mb-8 block h-auto w-full" />
+        )}
+        {message && <p className="font-serif text-[1.0625rem] leading-[2] whitespace-pre-line text-ink">{message}</p>}
+        <p className="mt-5 font-serif font-normal! text-[0.9375rem] text-ink-muted">{credit}</p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
           <Button

@@ -6,7 +6,6 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
-import { Bleed, Daylight } from '@/effects'
 import { asset } from '@/lib/env'
 import { REVEAL_STEP } from '@/lib/motion'
 import { kakaoKey, siteUrl } from '@/lib/kakao'
@@ -116,11 +115,6 @@ export default function Location() {
       title={location.title}
       top="sm"
       bottom="sm"
-      backdrop={
-        <Bleed top="-8rem" bottom="0" mask="y" fade="12rem">
-          <Daylight />
-        </Bleed>
-      }
     >
       <Reveal className="flex items-center gap-3">
         <div className="min-w-max flex-1 break-keep">

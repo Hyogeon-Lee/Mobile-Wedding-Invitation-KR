@@ -2,7 +2,6 @@ import { Fragment } from 'react'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import { wedding } from '@/config/wedding'
-import { Bleed, Daylight } from '@/effects'
 import { REVEAL_STEP } from '@/lib/motion'
 import { splitParagraphs } from './paragraphs'
 
@@ -19,11 +18,6 @@ export default function Greeting() {
       align="center"
       top="lg"
       bottom="sm"
-      backdrop={
-        <Bleed top="-12rem" bottom="0" mask="y" fade="12rem">
-          <Daylight />
-        </Bleed>
-      }
     >
       <div className="py-4">
         <Reveal className="text-center font-serif text-[1.0625rem] leading-[2.2] text-ink">

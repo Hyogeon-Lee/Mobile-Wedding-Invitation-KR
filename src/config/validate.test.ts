@@ -23,6 +23,7 @@ describe('config/wedding.json', () => {
   it('names images that exist on disk with a readable size', () => {
     const content = validateWedding(raw)
     expect(images[content.cover.image]).toBeDefined()
+    if (content.footer.photo) expect(images[content.footer.photo.image]).toBeDefined()
     for (const photo of content.location.images ?? []) expect(images[photo.image]).toBeDefined()
     for (const name of Object.keys(content.gallery.captions ?? {})) expect(images[`gallery/${name}`]).toBeDefined()
     expect(galleryFiles(images).length).toBeGreaterThan(0)
@@ -93,6 +94,24 @@ describe('validateWedding', () => {
     expect(validateWedding(cfg).location.images).toEqual([])
   })
 
+  it('accepts configurations without cover lettering or a closing photo and message', () => {
+    const cfg = clone()
+    delete cfg.cover.title
+    delete cfg.footer.photo
+    delete cfg.footer.message
+    const content = validateWedding(cfg)
+    expect(content.cover.title).toBeUndefined()
+    expect(content.footer.photo).toBeUndefined()
+    expect(content.footer.message).toBeUndefined()
+  })
+
+  it('rejects malformed closing photos and non-text lettering', () => {
+    expectError((c) => (c.footer.photo = { image: '../photo.jpg', alt: '두 사람' }), 'footer.photo.image')
+    expectError((c) => (c.footer.photo = { image: 'photo.jpg', alt: ' ' }), 'footer.photo.alt')
+    expectError((c) => (c.footer.message = []), 'footer.message')
+    expectError((c) => (c.cover.title = []), 'cover.title')
+  })
+
   it('rejects malformed venue photos, unsafe paths and blank descriptions', () => {
     expectError((c) => (c.location.images = 'venue.jpg'), 'location.images')
     expectError((c) => (c.location.images = [{ image: '../venue.jpg', alt: '입구' }]), 'location.images[0].image')
@@ -117,7 +136,7 @@ describe('resolveWedding', () => {
   /** The committed JSON pinned to these fake images, so the owner's own file names and alt text do not matter here. */
   const fixture = () => {
     const cfg = clone()
-    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, location: { ...cfg.location, images: [] } })
+    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, location: { ...cfg.location, images: [] }, footer: { ...cfg.footer, photo: undefined } })
   }
 
   it('orders gallery files naturally and ignores sub-folders', () => {
@@ -157,5 +176,16 @@ describe('resolveWedding', () => {
   it('keeps an explicit share description', () => {
     const content = validateWedding(raw)
     expect(shareDescriptionOf({ ...content, share: { ...content.share, kakaoDescription: '직접 쓴 문구' } })).toBe('직접 쓴 문구')
+  })
+
+  it('resolves a closing photo through the asset pipeline and reports a missing file', () => {
+    const content = fixture()
+    expect(resolveWedding(content, images).footer.photo).toBeUndefined()
+    content.footer.photo = { image: 'gallery/2.png', alt: '함께 걷는 두 사람' }
+    expect(resolveWedding(content, images).footer.photo).toEqual({
+      src: '/a/2.png', width: 2, height: 1, alt: '함께 걷는 두 사람',
+    })
+    content.footer.photo.image = 'missing.jpg'
+    expect(() => resolveWedding(content, images)).toThrow('footer.photo.image')
   })
 })

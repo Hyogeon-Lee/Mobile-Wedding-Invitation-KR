@@ -48,6 +48,15 @@ export function resolveWedding(content: WeddingContent, images: ContentImages): 
 
   const { image: _image, alt: coverAlt, ...cover } = content.cover
   const { alt: _alt, captions: _captions, ...gallery } = content.gallery
+  const { photo: footerPhoto, ...footer } = content.footer
+  let closingImage: GalleryImage | undefined
+  if (footerPhoto) {
+    const photo = images[footerPhoto.image]
+    if (!photo) {
+      throw new Error(`config/wedding.json 오류 — "footer.photo.image": config/images/${footerPhoto.image} 파일이 없습니다.`)
+    }
+    closingImage = { src: photo.url, width: photo.width, height: photo.height, alt: footerPhoto.alt }
+  }
   const locationImages = (content.location.images ?? []).map(({ image, alt }, i) => {
     const photo = images[image]
     if (!photo) {
@@ -61,5 +70,6 @@ export function resolveWedding(content: WeddingContent, images: ContentImages): 
     gallery: { ...gallery, images: galleryImages },
     location: { ...content.location, images: locationImages },
     share: { ...content.share, kakaoDescription: shareDescriptionOf(content) },
+    footer: { ...footer, ...(closingImage ? { photo: closingImage } : {}) },
   }
 }

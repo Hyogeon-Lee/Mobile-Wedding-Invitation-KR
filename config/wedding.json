@@ -26,6 +26,7 @@
   "cover": {
     "enabled": true,
     "eyebrow": "WEDDING INVITATION",
+    "title": "our wedding\nday",
     "image": "gallery/04.webp",
     "alt": "노을이 비치는 창가 테이블에서 마주 보는 이효건과 박민경"
   },
@@ -123,6 +124,8 @@
   },
   "footer": {
     "enabled": true,
-    "credit": "이효건 · 박민경 2027"
+    "credit": "이효건 · 박민경 2027",
+    "message": "함께해 주시는 모든 분들께\n진심으로 감사드립니다.",
+    "photo": { "image": "gallery/06.webp", "alt": "돌담길을 함께 걸으며 웃는 이효건과 박민경" }
   }
 }

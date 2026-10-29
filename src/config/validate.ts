@@ -186,7 +186,7 @@ export function validateWedding(input: unknown): WeddingContent {
   }
   if (c.placeholder !== undefined) coords.placeholder = boolean(c, 'placeholder', 'event.coords')
 
-  const cover = object(root.cover, 'cover', ['enabled', 'eyebrow', 'image', 'alt'])
+  const cover = object(root.cover, 'cover', ['enabled', 'eyebrow', 'title', 'image', 'alt'])
   const greeting = object(root.greeting, 'greeting', ['enabled', 'eyebrow', 'title', 'body', 'quote'])
   const family = object(root.family, 'family', ['enabled', 'eyebrow', 'title'])
   const calendar = object(root.calendar, 'calendar', ['enabled', 'eyebrow'])
@@ -204,7 +204,12 @@ export function validateWedding(input: unknown): WeddingContent {
     'kakaoDescription',
     'buttonLabel',
   ])
-  const footer = object(root.footer, 'footer', ['enabled', 'credit'])
+  const footer = object(root.footer, 'footer', ['enabled', 'credit', 'message', 'photo'])
+  let footerPhoto: WeddingContent['footer']['photo']
+  if (footer.photo !== undefined) {
+    const photo = object(footer.photo, 'footer.photo', ['image', 'alt'])
+    footerPhoto = { image: imageName(photo, 'image', 'footer.photo'), alt: string(photo, 'alt', 'footer.photo', { nonEmpty: true }) }
+  }
 
   let quote: WeddingContent['greeting']['quote']
   if (greeting.quote !== undefined) {
@@ -272,6 +277,7 @@ export function validateWedding(input: unknown): WeddingContent {
     cover: {
       enabled: boolean(cover, 'enabled', 'cover'),
       eyebrow: optionalString(cover, 'eyebrow', 'cover'),
+      title: optionalString(cover, 'title', 'cover'),
       image: imageName(cover, 'image', 'cover'),
       alt: string(cover, 'alt', 'cover', { nonEmpty: true }),
     },
@@ -294,6 +300,11 @@ export function validateWedding(input: unknown): WeddingContent {
       ...(kakaoDescription?.trim() ? { kakaoDescription } : {}),
       buttonLabel: string(share, 'buttonLabel', 'share', { nonEmpty: true }),
     },
-    footer: { enabled: boolean(footer, 'enabled', 'footer'), credit: string(footer, 'credit', 'footer') },
+    footer: {
+      enabled: boolean(footer, 'enabled', 'footer'),
+      credit: string(footer, 'credit', 'footer'),
+      message: optionalString(footer, 'message', 'footer'),
+      ...(footerPhoto ? { photo: footerPhoto } : {}),
+    },
   }
 }

@@ -8,7 +8,6 @@ import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import type { GalleryImage } from '@/config/types'
 import { wedding } from '@/config/wedding'
-import { Bleed, Daylight } from '@/effects'
 import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
 import { hasMore, splitTiles, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
@@ -147,11 +146,6 @@ export default function Gallery() {
       title={title}
       top="lg"
       bottom="sm"
-      backdrop={
-        <Bleed top="-12rem" bottom="-12rem" mask="y" fade="12rem">
-          <Daylight />
-        </Bleed>
-      }
     >
       <div>
         <div>

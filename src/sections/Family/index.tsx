@@ -3,7 +3,6 @@ import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
 import type { Parent, Person } from '@/config/types'
 import { wedding } from '@/config/wedding'
-import { Bleed, Daylight } from '@/effects'
 import { DECEASED_MARK, presentParents, SIDE_LABEL, SIDES, THIN_SPACE, type Side } from './family'
 
 function ParentName({ parent }: { parent: Parent }) {
@@ -56,11 +55,6 @@ export default function Family() {
       align="center"
       top="sm"
       bottom="md"
-      backdrop={
-        <Bleed top="-6rem" bottom="-6rem" mask="y" fade="12rem">
-          <Daylight />
-        </Bleed>
-      }
     >
       <Reveal>
         <div className="grid grid-cols-2 divide-x divide-line">

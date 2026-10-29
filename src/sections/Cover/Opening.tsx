@@ -19,7 +19,7 @@ export default function Opening({ onComplete }: OpeningProps) {
 
   return (
     <motion.div
-      className="absolute inset-0 z-30 flex flex-col items-center justify-center overflow-hidden bg-ink px-6 text-center text-white"
+      className="fixed inset-0 z-30 mx-auto flex max-w-[480px] flex-col items-center justify-center overflow-hidden bg-ink px-6 text-center text-white"
       exit={{ opacity: 0 }}
       transition={{ duration: reduce ? 0 : OPENING_FADE_SECONDS, ease: 'easeInOut' }}
     >

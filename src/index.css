@@ -11,18 +11,12 @@
 
 /* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
 :root {
-  /*
-   * Palette (owner direction 2026-10-25, revision 4 "초록 더 연하게"): fresh, cool greens, one step paler.
-   * Ivory-white with a faint green cast, pastel and mint tints, a fresh green accent for labels and icons,
-   * pale-green primary buttons with deep green text, and a clean orange reserved for large numerals and
-   * tiny decorative marks. No pink, no apricot, no golden warmth, never near-black.
-   */
-  --color-bg: #f8fbf6;
+  --color-bg: #fdfdfc;
   --color-bg-elevated: #ffffff;
-  --color-ink: #36423b; /* deep green-charcoal, 10.0:1 on bg */
-  --color-ink-muted: #5f6f66; /* 5.09:1 on bg, 5.31:1 on white */
+  --color-ink: #36423b;
+  --color-ink-muted: #5f6f66;
   --color-line: #dbe5da;
-  --color-accent: #377656; /* fresh green for labels, links, icons, focus rings: 5.17:1 on bg, 5.40:1 on white; white on it 5.40:1 */
+  --color-accent: #377656;
   --color-accent-deep: #2f6b4f; /* text on the pale primary button: 5.01:1 on accent-tint, 4.62:1 on accent-tint-active */
   --color-accent-tint: #d6ebd7; /* primary button fill (1.26:1 against white, so it still reads as a button) */
   --color-accent-tint-hover: #cfe6d1;
@@ -142,7 +136,7 @@ img {
 }
 @media (min-width: 560px) {
   body {
-    background: linear-gradient(160deg, #f3f6f0 0%, #edf3f0 100%);
+    background: #f2f3f0;
   }
   .app-frame {
     box-shadow: 0 0 80px rgb(54 66 59 / 0.035);

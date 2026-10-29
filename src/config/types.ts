@@ -61,7 +61,7 @@ export interface EventInfo {
 export interface WeddingContent {
   couple: { groom: Person; bride: Person }
   event: EventInfo
-  cover: { enabled: boolean; eyebrow?: string; /** file name under config/images/ */ image: string; alt: string }
+  cover: { enabled: boolean; eyebrow?: string; title?: string; /** file name under config/images/ */ image: string; alt: string }
   /** Keep it secular: no scripture, prayers or religious wording (owner direction 2026-10-25). */
   greeting: SectionHeading & {
     /** One entry per line; "" starts a new paragraph. */
@@ -93,12 +93,13 @@ export interface WeddingContent {
     kakaoDescription?: string
     buttonLabel: string
   }
-  footer: { enabled: boolean; credit: string }
+  footer: { enabled: boolean; credit: string; message?: string; photo?: { image: string; alt: string } }
 }
 
-export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'gallery' | 'location' | 'share'> {
+export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'gallery' | 'location' | 'share' | 'footer'> {
   cover: Omit<WeddingContent['cover'], 'image' | 'alt'> & { image: GalleryImage }
   gallery: Omit<WeddingContent['gallery'], 'alt' | 'captions'> & { images: GalleryImage[] }
   location: Omit<WeddingContent['location'], 'images'> & { images: GalleryImage[] }
   share: WeddingContent['share'] & { kakaoDescription: string }
+  footer: Omit<WeddingContent['footer'], 'photo'> & { photo?: GalleryImage }
 }

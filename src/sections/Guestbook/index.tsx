@@ -82,7 +82,6 @@ export default function Guestbook() {
       title={wedding.guestbook.title}
       top="sm"
       bottom="md"
-      wash="leaf"
     >
       {isPreviewBackend && <PreviewNotice className="-mt-4 mb-8">{PREVIEW_NOTICE}</PreviewNotice>}
 

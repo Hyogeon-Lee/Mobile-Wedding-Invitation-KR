@@ -31,7 +31,7 @@ export default function Section({
   id,
   eyebrow,
   title,
-  align = 'left',
+  align = 'center',
   badge,
   backdrop,
   children,
@@ -51,7 +51,7 @@ export default function Section({
       {(eyebrow || title || badge) && (
         <header className={`relative z-20 mb-8 ${align === 'center' ? 'text-center' : 'text-left'}`}>
           {title && (
-            <h2 id={`${id}-title`} className="font-serif text-[1.625rem] leading-[1.5] text-balance whitespace-pre-line text-ink">
+            <h2 id={`${id}-title`} className="font-serif text-[1.375rem] leading-[1.6] text-balance whitespace-pre-line text-ink">
               {title}
             </h2>
           )}

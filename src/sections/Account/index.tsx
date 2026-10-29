@@ -66,7 +66,6 @@ export default function Account() {
       title={wedding.account.title}
       top="md"
       bottom="md"
-      wash="mint"
       badge={
         isSampleData ? (
           <span className="rounded-full border border-line bg-bg-elevated px-3 py-0.5 text-[0.75rem] tracking-[0.02em] text-accent">
@@ -76,7 +75,7 @@ export default function Account() {
       }
     >
       <Reveal>
-        <p className="text-[0.9375rem] leading-[1.8] text-ink-muted">
+        <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">
           {wedding.account.intro.map((line, i) => (
             <Fragment key={i}>
               {i > 0 && <br />}

@@ -7,10 +7,6 @@ import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
 import { coverDateLine, coverVenueLine } from './format'
 import Opening from './Opening'
 
-// Reserve room for the names, date and scroll control, including large-text mode
-const photoFrame =
-  'block w-[min(100%,calc(54svh*3/4),max(9rem,calc((100svh_-_20rem_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))*3/4)))]'
-
 /** Hero screen. Not wrapped in <Section>. */
 export default function Cover() {
   const reduce = useReducedMotion()
@@ -37,7 +33,7 @@ export default function Cover() {
       alt={cover.image.alt}
       loading="eager"
       fetchPriority="high"
-      className="block aspect-[3/4] h-auto w-full object-cover"
+      className="block h-auto w-full"
     />
   )
 
@@ -56,7 +52,7 @@ export default function Cover() {
       id="cover"
       ref={sectionRef}
       aria-label="표지"
-      className="relative isolate flex min-h-svh flex-col items-center overflow-hidden px-6 pt-[calc(36px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
+      className="relative isolate flex min-h-svh flex-col items-center overflow-hidden px-6 pt-[calc(24px+env(safe-area-inset-top))] pb-[calc(24px+env(safe-area-inset-bottom))]"
     >
       <AnimatePresence onExitComplete={() => setReady(true)}>
         {opening && <Opening key="opening" onComplete={finishOpening} />}
@@ -65,20 +61,27 @@ export default function Cover() {
         inert={!ready}
         className="relative z-10 flex w-full flex-1 flex-col items-center justify-center text-center"
       >
-        <div className="mb-7 w-full">
-          <h1 className="font-serif text-[clamp(1.5rem,8vw,2rem)] leading-snug text-ink">
+        <div className="relative w-full">
+          {photoImg}
+          {cover.title && (
+            <p lang="en" className="absolute inset-x-4 top-4 font-display text-[clamp(2rem,10vw,3.5rem)] leading-[0.95] tracking-[-0.035em] whitespace-pre-line text-ink">
+              {cover.title}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-6 w-full">
+          <h1 className="font-serif text-[1.5rem] leading-snug text-ink">
             {couple.groom.name}
-            <span aria-hidden="true" className="mx-3 font-display text-[1.5rem] italic text-accent">&</span>
+            <span aria-hidden="true" className="mx-3 font-display text-[1.25rem] italic text-accent">&</span>
             <span className="sr-only"> 그리고 </span>
             {couple.bride.name}
           </h1>
         </div>
 
-        <div className={photoFrame}>{photoImg}</div>
-
-        <div className="mt-7">
+        <div className="mt-3">
           <p className="text-[0.9375rem] leading-relaxed text-ink tabular-nums">{coverDateLine(event)}</p>
-          <p className="mt-2 font-serif text-[1rem] leading-relaxed text-ink-muted">{coverVenueLine(event)}</p>
+          <p className="mt-1 font-serif text-[1rem] leading-relaxed text-ink-muted">{coverVenueLine(event)}</p>
         </div>
       </div>
 
@@ -87,7 +90,7 @@ export default function Cover() {
         disabled={!ready}
         onClick={scrollToNext}
         aria-label="초대장 보기, 다음 내용으로 이동"
-        className="pressable z-10 mt-5 inline-flex min-h-11 items-center gap-2 px-3 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+        className="pressable z-10 mt-3 inline-flex min-h-11 items-center gap-2 px-3 text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: ready ? 1 : 0 }}
         transition={{ duration: reduce ? 0 : 0.6, ease: EASE_OUT }}

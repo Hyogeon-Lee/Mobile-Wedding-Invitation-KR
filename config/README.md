@@ -60,7 +60,7 @@ config/
 
 | 섹션 | 추가 항목 | 설명 |
 |---|---|---|
-| `cover` (첫 화면) | `image`, `alt` | `image`는 `config/images/` 기준 상대 경로(`"gallery/04.webp"`), `alt`는 화면 낭독기용 설명. 오프닝과 표지가 같은 사진을 쓴다. 제목 없이 `eyebrow`만 쓴다 |
+| `cover` (첫 화면) | `image`, `alt`, `title` | `image`는 `config/images/` 기준 상대 경로(`"gallery/04.webp"`), `alt`는 화면 낭독기용 설명. 오프닝과 표지가 같은 사진을 쓴다. `title`은 사진 위 영문 제목(선택)이며 `\n`으로 줄을 나눈다. `eyebrow`는 오프닝에 표시한다 |
 | `greeting` (인사말) | `body`, `quote` | `body`는 줄 단위 배열, `""`은 문단 구분. `quote`는 `{ "text": "...", "source": "..." }` (선택). 종교적 표현은 쓰지 않기로 했다 |
 | `family` (혼주) | 없음 | `couple`의 부모님 이름과 관계를 신랑 측·신부 측 두 열로 표시한다 |
 | `calendar` (달력) | 없음 | 제목은 날짜에서 자동으로 만든다. `title` 항목이 없다 |
@@ -70,7 +70,7 @@ config/
 | `rsvp` (참석 의사) | `intro` | 안내 문구 줄 배열 |
 | `guestbook` (방명록) | 없음 | |
 | `share` (공유) | `intro`, `kakaoTitle`, `kakaoDescription`, `buttonLabel` | `kakaoTitle`은 카카오톡 카드 제목이자 브라우저 탭 제목. `kakaoDescription`(선택)을 비우면 "2027년 OO월 OO일 · 노블발렌티 삼성"처럼 날짜와 예식장으로 만든다 |
-| `footer` (맨 아래) | `credit` | 맨 아래 작은 글씨. 이 섹션은 `eyebrow`, `title`이 없다 |
+| `footer` (맨 아래) | `credit`, `message`, `photo` | `credit`은 맨 아래 서명. `message`는 짧은 인사말(선택)이며 `\n`으로 줄을 나눈다. `photo`는 `{ "image": "gallery/06.webp", "alt": "함께 걷는 두 사람" }` 형식의 마무리 사진(선택) |
 
 `kakaoTitle`과 설명 문구는 `index.html`의 `<title>`, 검색 설명, 카카오톡 미리보기(og:title, og:description)에도 들어간다.
 
@@ -89,7 +89,7 @@ config/
 
 | 사진 | 비율 | 크기 | 용량 |
 |---|---|---|---|
-| 첫 화면 사진 | 3:4 세로 (화면에서 3:4로 잘린다) | 1200 x 1600 | 400 KB 이하 |
+| 첫 화면 사진 | 2:3 세로 권장 (원본 비율 유지) | 1067 x 1600 | 400 KB 이하 |
 | 갤러리 세로 사진 | 4:5 | 1200 x 1500 | 300 KB 이하 |
 | 갤러리 가로 사진 | 4:3 | 1200 x 900 | 300 KB 이하 |
 
