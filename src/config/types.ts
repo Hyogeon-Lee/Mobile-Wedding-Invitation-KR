@@ -81,6 +81,8 @@ export interface WeddingContent {
   }
   location: SectionHeading & {
     images?: { image: string; alt: string }[]
+    /** Full-width route map shown under the map and navigation links */
+    route?: { image: string; alt: string }
     transport: TransportInfo
     transportLinks?: Partial<Record<keyof TransportInfo, string>>
   }
@@ -104,7 +106,7 @@ export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'greeting'
   cover: Omit<WeddingContent['cover'], 'image' | 'alt'> & { image: GalleryImage }
   greeting: Omit<WeddingContent['greeting'], 'photo'> & { photo?: GalleryImage }
   gallery: Omit<WeddingContent['gallery'], 'alt' | 'captions'> & { images: GalleryImage[] }
-  location: Omit<WeddingContent['location'], 'images'> & { images: GalleryImage[] }
+  location: Omit<WeddingContent['location'], 'images' | 'route'> & { images: GalleryImage[]; route?: GalleryImage }
   share: WeddingContent['share'] & { kakaoDescription: string }
   footer: Omit<WeddingContent['footer'], 'photo'> & { photo?: GalleryImage }
   interludes: (GalleryImage & { lines: string[] })[]

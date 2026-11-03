@@ -5,6 +5,7 @@ import Button from '@/components/Button'
 import { FIELD, FIELD_INVALID_RING, FIELD_SURFACE } from '@/components/field'
 import PreviewNotice from '@/components/PreviewNotice'
 import Reveal from '@/components/Reveal'
+import LineArt from '@/components/LineArt'
 import Section from '@/components/Section'
 import { wedding } from '@/config/wedding'
 import { haptic } from '@/lib/haptic'
@@ -61,7 +62,7 @@ export default function Rsvp() {
   const [status, setStatus] = useState<Status>('idle')
   const [serverError, setServerError] = useState<string | null>(null)
   const [sent, setSent] = useState<RsvpInput | null>(null)
-  // Incremented by "다시 작성" so the effect below can move focus into the fresh form.
+  // Incremented by "다시 작성" so the effect below can move focus into the fresh form
   const [round, setRound] = useState(0)
   const reduce = useReducedMotion()
 
@@ -134,7 +135,7 @@ export default function Rsvp() {
   const { couple, event, rsvp } = wedding
 
   return (
-    <Section id="rsvp" eyebrow={rsvp.eyebrow} title={rsvp.title} top="md" bottom="md" className="bg-mint">
+    <Section id="rsvp" ornament={<LineArt name="card" />} eyebrow={rsvp.eyebrow} title={rsvp.title} top="md" bottom="md" className="bg-mint">
       <Reveal>
         <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">
           {rsvp.intro.map((line, i) => (

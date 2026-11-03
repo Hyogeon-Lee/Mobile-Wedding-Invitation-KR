@@ -25,8 +25,8 @@ function svg(w, h, label, [c1, c2]) {
   <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>
   <rect width="${w}" height="${h}" fill="url(#g)"/>
   <circle cx="${w * 0.5}" cy="${h * 0.42}" r="${Math.min(w, h) * 0.16}" fill="rgba(255,255,255,0.35)"/>
-  <text x="50%" y="${h * 0.78}" text-anchor="middle" font-family="Georgia, serif" font-size="${Math.round(w * 0.05)}" fill="rgba(40,72,56,0.55)" letter-spacing="4">${label}</text>
-</svg>
+${label ? `  <text x="50%" y="${h * 0.78}" text-anchor="middle" font-family="Georgia, serif" font-size="${Math.round(w * 0.05)}" fill="rgba(40,72,56,0.55)" letter-spacing="4">${label}</text>
+` : ''}</svg>
 `
 }
 
@@ -42,12 +42,12 @@ async function writeJpeg(file, w, h, label, palette) {
 }
 
 await writeJpeg(join(imagesDir, 'cover.jpg'), 1200, 1600, 'MAIN PHOTO', palettes[0])
-// Every third photo is landscape: the gallery grid spans those tiles across both columns.
+// Every third photo is landscape: the gallery grid spans those tiles across both columns
 for (let i = 1; i <= 12; i++) {
   const [w, h] = i % 3 === 0 ? [1200, 900] : [1200, 1500]
   await writeJpeg(join(galleryDir, `${String(i).padStart(2, '0')}.jpg`), w, h, `PHOTO ${i}`, palettes[(i - 1) % palettes.length])
 }
 await browser.close()
 
-writeFileSync(join(publicDir, 'map-fallback.svg'), svg(1200, 800, 'MAP (fallback)', palettes[3]))
+writeFileSync(join(publicDir, 'map-fallback.svg'), svg(1200, 800, '', palettes[3]))
 console.log('public/images/map-fallback.svg')

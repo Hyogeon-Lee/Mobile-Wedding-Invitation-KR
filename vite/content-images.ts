@@ -74,7 +74,7 @@ export default function contentImages(): Plugin {
       jsonPath = path.join(configDir, 'wedding.json')
     },
 
-    // Fail the build (and dev start) with the Korean field message instead of shipping a blank page.
+    // Fail the build (and dev start) with the Korean field message instead of shipping a blank page
     buildStart() {
       resolveWedding(readContent(jsonPath), imageMap())
       this.addWatchFile(jsonPath)
@@ -119,7 +119,7 @@ export default function contentImages(): Plugin {
       order: 'pre',
       handler(html) {
         const content = readContent(jsonPath)
-        // Also check file references here: in dev this runs on every page load, so a missing photo shows the error overlay.
+        // Also check file references here: in dev this runs on every page load, so a missing photo shows the error overlay
         resolveWedding(content, imageMap())
         const values: Record<string, string> = {
           title: content.share.kakaoTitle,

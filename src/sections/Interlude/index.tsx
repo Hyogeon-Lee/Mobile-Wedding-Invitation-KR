@@ -6,7 +6,7 @@ interface InterludeProps {
   index: number
 }
 
-/** Full-width photo between sections with a few lines over its empty upper part. Not wrapped in <Section>: no heading. */
+/** Full-width photo between sections; `lines` sit over its empty upper part */
 export default function Interlude({ index }: InterludeProps) {
   const photo = wedding.interludes[index]
   if (!photo) return null

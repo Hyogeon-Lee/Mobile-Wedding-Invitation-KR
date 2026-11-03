@@ -198,6 +198,17 @@ export default function Location() {
             </a>
           </p>
         )}
+        {location.route && (
+          <img
+            src={location.route.src}
+            width={location.route.width}
+            height={location.route.height}
+            alt={location.route.alt}
+            loading="lazy"
+            decoding="async"
+            className="mt-6 block h-auto w-full rounded-[3px]"
+          />
+        )}
       </Reveal>
 
       {entries.length > 0 && (

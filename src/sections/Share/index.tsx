@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useInView } from 'motion/react'
 import CopyButton from '@/components/CopyButton'
 import Reveal from '@/components/Reveal'
+import LineArt from '@/components/LineArt'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
@@ -72,7 +73,7 @@ export default function Share() {
   }
 
   return (
-    <Section id="share" eyebrow={share.eyebrow} title={share.title} top="md" bottom="md" className="bg-sky">
+    <Section id="share" ornament={<LineArt name="plane" />} eyebrow={share.eyebrow} title={share.title} top="md" bottom="md" className="bg-sky">
       <Reveal>
         <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">{share.intro}</p>
       </Reveal>

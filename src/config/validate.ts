@@ -191,7 +191,7 @@ export function validateWedding(input: unknown): WeddingContent {
   const family = object(root.family, 'family', ['enabled', 'eyebrow', 'title'])
   const calendar = object(root.calendar, 'calendar', ['enabled', 'eyebrow'])
   const gallery = object(root.gallery, 'gallery', ['enabled', 'eyebrow', 'title', 'alt', 'captions'])
-  const location = object(root.location, 'location', ['enabled', 'eyebrow', 'title', 'images', 'transport', 'transportLinks'])
+  const location = object(root.location, 'location', ['enabled', 'eyebrow', 'title', 'images', 'route', 'transport', 'transportLinks'])
   const account = object(root.account, 'account', ['enabled', 'eyebrow', 'title', 'intro'])
   const rsvp = object(root.rsvp, 'rsvp', ['enabled', 'eyebrow', 'title', 'intro'])
   const guestbook = object(root.guestbook, 'guestbook', ['enabled', 'eyebrow', 'title'])
@@ -259,6 +259,12 @@ export function validateWedding(input: unknown): WeddingContent {
     })
   }
 
+  let route: WeddingContent['location']['route']
+  if (location.route !== undefined) {
+    const photo = object(location.route, 'location.route', ['image', 'alt'])
+    route = { image: imageName(photo, 'image', 'location.route'), alt: string(photo, 'alt', 'location.route', { nonEmpty: true }) }
+  }
+
   const transportLinks: WeddingContent['location']['transportLinks'] = {}
   if (location.transportLinks !== undefined) {
     const links = object(location.transportLinks, 'location.transportLinks', TRANSPORT_KEYS)
@@ -306,7 +312,7 @@ export function validateWedding(input: unknown): WeddingContent {
       alt: string(gallery, 'alt', 'gallery', { nonEmpty: true }),
       ...(captions ? { captions } : {}),
     },
-    location: { ...heading(location, 'location'), images: locationImages, transport: transport(present(location, 'transport', 'location'), 'location.transport'), transportLinks },
+    location: { ...heading(location, 'location'), images: locationImages, ...(route ? { route } : {}), transport: transport(present(location, 'transport', 'location'), 'location.transport'), transportLinks },
     account: { ...heading(account, 'account'), intro: lines(account, 'intro', 'account') },
     rsvp: { ...heading(rsvp, 'rsvp'), intro: lines(rsvp, 'intro', 'rsvp') },
     guestbook: heading(guestbook, 'guestbook'),

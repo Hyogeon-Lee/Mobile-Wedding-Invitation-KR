@@ -19,7 +19,7 @@ describe('config/wedding.json', () => {
     expect(() => validateWedding(raw)).not.toThrow()
   })
 
-  // The plugin builds `images` by reading config/images/ and each file's header, so a key here is a file on disk.
+  // The plugin builds `images` by reading config/images/ and each file's header, so a key here is a file on disk
   it('names images that exist on disk with a readable size', () => {
     const content = validateWedding(raw)
     expect(images[content.cover.image]).toBeDefined()
@@ -27,6 +27,7 @@ describe('config/wedding.json', () => {
     if (content.greeting.photo) expect(images[content.greeting.photo.image]).toBeDefined()
     for (const photo of content.interludes ?? []) expect(images[photo.image]).toBeDefined()
     for (const photo of content.location.images ?? []) expect(images[photo.image]).toBeDefined()
+    if (content.location.route) expect(images[content.location.route.image]).toBeDefined()
     for (const name of Object.keys(content.gallery.captions ?? {})) expect(images[`gallery/${name}`]).toBeDefined()
     expect(galleryFiles(images).length).toBeGreaterThan(0)
     for (const [key, { width, height }] of Object.entries(images)) {
@@ -35,7 +36,7 @@ describe('config/wedding.json', () => {
     }
   })
 
-  // Derived from the owner's files, not fixed values, so replacing photos or copy keeps `npm test` (and the deploy) green.
+  // Derived from the owner's files, not fixed values, so replacing photos or copy keeps `npm test` (and the deploy) green
   it('loads through the plugin into sized gallery images in file-name order', () => {
     const content = validateWedding(raw)
     const cover = images[content.cover.image]
@@ -144,7 +145,7 @@ describe('resolveWedding', () => {
   /** The committed JSON pinned to these fake images, so the owner's own file names and alt text do not matter here. */
   const fixture = () => {
     const cfg = clone()
-    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, greeting: { ...cfg.greeting, photo: undefined }, location: { ...cfg.location, images: [] }, footer: { ...cfg.footer, photo: undefined }, interludes: [] })
+    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, greeting: { ...cfg.greeting, photo: undefined }, location: { ...cfg.location, images: [], route: undefined }, footer: { ...cfg.footer, photo: undefined }, interludes: [] })
   }
 
   it('orders gallery files naturally and ignores sub-folders', () => {
@@ -207,6 +208,15 @@ describe('resolveWedding', () => {
     ])
     content.interludes[1].image = 'missing.jpg'
     expect(() => resolveWedding(content, images)).toThrow('interludes[1].image')
+  })
+
+  it('resolves the route map and reports a missing file', () => {
+    const content = fixture()
+    expect(resolveWedding(content, images).location.route).toBeUndefined()
+    content.location.route = { image: 'venue/exterior.webp', alt: '역에서 가는 길' }
+    expect(resolveWedding(content, images).location.route).toEqual({ src: '/a/exterior.webp', width: 3, height: 2, alt: '역에서 가는 길' })
+    content.location.route.image = 'venue/missing.webp'
+    expect(() => resolveWedding(content, images)).toThrow('location.route.image')
   })
 
   it('resolves the greeting photo and reports a missing file', () => {

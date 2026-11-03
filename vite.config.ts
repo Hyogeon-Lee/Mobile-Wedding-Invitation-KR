@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import contentImages from './vite/content-images.ts'
 
-// VITE_BASE: '/' for a custom domain or Vercel, '/<repo>/' for GitHub project pages.
+// VITE_BASE: '/' for a custom domain or Vercel, '/<repo>/' for GitHub project pages
 export default defineConfig({
   base: process.env.VITE_BASE ?? '/',
   plugins: [react(), tailwindcss(), contentImages()],

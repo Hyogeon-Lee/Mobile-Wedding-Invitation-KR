@@ -12,7 +12,7 @@ export function useGuestbook() {
   const [entries, setEntries] = useState<GuestbookEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  // Only the latest request may update state (guards unmount and overlapping retries).
+  // Only the latest request may update state (guards unmount and overlapping retries)
   const requestId = useRef(0)
 
   const request = useCallback(() => {

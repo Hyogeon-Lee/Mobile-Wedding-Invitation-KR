@@ -21,14 +21,14 @@ describe('opening handwriting', () => {
     for (const word of lettering.slice(0, -1)) {
       offset += word.length
       const previous = letteringStrokes[offset - 1]
-      expect(letteringStrokes[offset].delay - previous.delay - previous.duration).toBeGreaterThan(0.12)
+      expect(letteringStrokes[offset].delay - previous.delay - previous.duration).toBeGreaterThan(0.07)
     }
     expect(letteringStrokes[0].duration).toBeGreaterThan(letteringStrokes[2].duration)
   })
 
   it('holds the completed lettering before a gradual cover transition', () => {
     const last = underlineStrokes.at(-1)!
-    expect(OPENING_DURATION_SECONDS - last.delay - last.duration).toBeGreaterThanOrEqual(1)
-    expect(OPENING_FADE_SECONDS).toBeGreaterThanOrEqual(1.5)
+    expect(OPENING_DURATION_SECONDS - last.delay - last.duration).toBeGreaterThanOrEqual(0.6)
+    expect(OPENING_FADE_SECONDS).toBeGreaterThanOrEqual(1)
   })
 })

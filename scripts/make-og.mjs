@@ -13,7 +13,7 @@ const bride = cfg.couple.bride.name
 const venue = cfg.event.venueName
 const desc = shareDescriptionOf(cfg)
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-// Skip the venue line when the description already names it.
+// Skip the venue line when the description already names it
 const venueLine = venue && !desc.includes(venue) ? `<div class="venue">${esc(venue)}</div>` : ''
 
 if (process.argv.includes('--dry-run')) {

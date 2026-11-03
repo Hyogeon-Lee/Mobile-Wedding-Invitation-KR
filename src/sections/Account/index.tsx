@@ -2,6 +2,7 @@ import { ExternalLink } from 'lucide-react'
 import { Fragment } from 'react'
 import CopyButton from '@/components/CopyButton'
 import Reveal from '@/components/Reveal'
+import LineArt from '@/components/LineArt'
 import Section from '@/components/Section'
 import { useToast } from '@/components/toast-context'
 import { wedding } from '@/config/wedding'
@@ -61,7 +62,7 @@ function AccountRow({ account }: { account: Account }) {
 export default function Account() {
   return (
     <Section
-      id="account"
+      id="account" ornament={<LineArt name="envelope" />}
       eyebrow={wedding.account.eyebrow}
       title={wedding.account.title}
       top="md"

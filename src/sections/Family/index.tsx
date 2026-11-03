@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import Reveal from '@/components/Reveal'
+import LineArt from '@/components/LineArt'
 import Section from '@/components/Section'
 import type { Parent, Person } from '@/config/types'
 import { wedding } from '@/config/wedding'
@@ -49,7 +50,7 @@ function FamilyColumn({ side, person }: { side: Side; person: Person }) {
 export default function Family() {
   return (
     <Section
-      id="family"
+      id="family" ornament={<LineArt name="rings" />}
       eyebrow={wedding.family.eyebrow}
       title={wedding.family.title}
       align="center"

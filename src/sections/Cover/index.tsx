@@ -7,7 +7,6 @@ import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
 import { coverDateLine, coverVenueLine } from './format'
 import Opening from './Opening'
 
-/** Hero screen. Not wrapped in <Section>. */
 export default function Cover() {
   const reduce = useReducedMotion()
   const lenis = useLenis()
@@ -39,7 +38,7 @@ export default function Cover() {
 
   const scrollToNext = () => {
     const behavior: ScrollBehavior = reduce ? 'auto' : 'smooth'
-    // Skip decorative siblings (e.g. a BotanicalDivider) so the cue lands on the next section
+    // Skip decorative (aria-hidden) siblings so the cue lands on the next section
     let next = sectionRef.current?.nextElementSibling
     while (next && next.getAttribute('aria-hidden') === 'true') next = next.nextElementSibling
     if (next instanceof HTMLElement && lenis) lenis.scrollTo(next, { ...SCROLL_OPTIONS, immediate: !!reduce })

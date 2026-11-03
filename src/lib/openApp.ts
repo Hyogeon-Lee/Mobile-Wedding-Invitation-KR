@@ -9,7 +9,6 @@ export interface AppSchemeDeps {
   /** An opened app hides the page */
   isVisible: () => boolean
   now: () => number
-  /** Returns a cancel function */
   schedule: (fn: () => void, ms: number) => () => void
   /** Fires when the page is hidden or unloaded, returns an unsubscribe function */
   onHidden: (fn: () => void) => () => void

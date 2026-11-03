@@ -3,6 +3,7 @@ import { AnimatePresence } from 'motion/react'
 import Button from '@/components/Button'
 import PreviewNotice from '@/components/PreviewNotice'
 import Reveal from '@/components/Reveal'
+import LineArt from '@/components/LineArt'
 import Section from '@/components/Section'
 import { wedding } from '@/config/wedding'
 import { REVEAL_STEP } from '@/lib/motion'
@@ -42,7 +43,7 @@ export default function Guestbook() {
   const [shown, setShown] = useState(PAGE_SIZE)
   const [promptId, setPromptId] = useState<string | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
-  // Entry to focus once "더 보기" has rendered the next page (the button may unmount).
+  // Entry to focus once "더 보기" has rendered the next page (the button may unmount)
   const focusAfterMore = useRef<string | null>(null)
 
   useEffect(() => {
@@ -57,13 +58,13 @@ export default function Guestbook() {
     setShown((s) => s + PAGE_SIZE)
   }
 
-  // The retry button unmounts while the skeleton shows; keep focus inside the list.
+  // The retry button unmounts while the skeleton shows; keep focus inside the list
   const retry = () => {
     listRef.current?.focus({ preventScroll: true })
     reload()
   }
 
-  // The deleted card unmounts with the focused prompt inside it; park focus on the list.
+  // The deleted card unmounts with the focused prompt inside it; park focus on the list
   const handleDeleted = useCallback(
     (id: string) => {
       remove(id)
@@ -77,7 +78,7 @@ export default function Guestbook() {
 
   return (
     <Section
-      id="guestbook"
+      id="guestbook" ornament={<LineArt name="couple" />}
       eyebrow={wedding.guestbook.eyebrow}
       title={wedding.guestbook.title}
       top="sm"

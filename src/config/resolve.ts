@@ -73,6 +73,15 @@ export function resolveWedding(content: WeddingContent, images: ContentImages): 
     }
     return { src: photo.url, width: photo.width, height: photo.height, alt }
   })
+  const { route, ...location } = content.location
+  let routeImage: GalleryImage | undefined
+  if (route) {
+    const photo = images[route.image]
+    if (!photo) {
+      throw new Error(`config/wedding.json 오류 — "location.route.image": config/images/${route.image} 파일이 없습니다.`)
+    }
+    routeImage = { src: photo.url, width: photo.width, height: photo.height, alt: route.alt }
+  }
   const interludes = (content.interludes ?? []).map(({ image, alt, lines = [] }, i) => {
     const photo = images[image]
     if (!photo) {
@@ -85,7 +94,7 @@ export function resolveWedding(content: WeddingContent, images: ContentImages): 
     cover: { ...cover, image: { src: coverImage.url, width: coverImage.width, height: coverImage.height, alt: coverAlt } },
     greeting: { ...greeting, ...(greetingImage ? { photo: greetingImage } : {}) },
     gallery: { ...gallery, images: galleryImages },
-    location: { ...content.location, images: locationImages },
+    location: { ...location, images: locationImages, ...(routeImage ? { route: routeImage } : {}) },
     share: { ...content.share, kakaoDescription: shareDescriptionOf(content) },
     footer: { ...footer, ...(closingImage ? { photo: closingImage } : {}) },
     interludes,
