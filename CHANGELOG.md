@@ -37,7 +37,7 @@ First release.
 ### Changed
 
 - Gallery keeps each photo's ratio in justified rows; after the first 12 the rest scroll sideways.
-- Sections alternate flat tints; the greeting and two interludes put text over full-width photos.
+- Sections alternate flat tints; the greeting puts text over a full-width photo and two full-width photos sit between sections.
 - Plainer copy, a red heart favicon, line-art ornaments under section titles, a faster opening.
 - Walking-route map under the location links; the unused ambient-effect layer is removed.
 - Studio photos at 2000 px replace the compressed copies; cover is `gallery/22.webp`.
