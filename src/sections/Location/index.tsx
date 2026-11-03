@@ -28,7 +28,6 @@ import { transportEntries, type TransportKey } from './transport'
 const KakaoMap = lazy(() => import('./KakaoMap'))
 
 const FALLBACK_IMAGE = 'images/map-fallback.svg'
-const NO_KEY_LABEL = '지도 준비 중입니다'
 const MAP_FAILED_LABEL = '지도를 불러오지 못했습니다'
 const LOADING_LABEL = '지도를 불러오는 중'
 const PLACEHOLDER_COORDS_LABEL = '지도 위치는 예식장 확정 후 정확히 표시됩니다'
@@ -145,31 +144,35 @@ export default function Location() {
       </Reveal>
 
       <Reveal delay={REVEAL_STEP} className="mt-10">
-        <div
-          ref={mapBoxRef}
-          className="relative aspect-4/3 overflow-hidden rounded-[3px] bg-mint"
-          data-lenis-prevent
-        >
-          {showMap && mapNear ? (
-            <MapBoundary fallback={<MapFallback label={MAP_FAILED_LABEL} />}>
-              <Suspense fallback={<MapFallback label={LOADING_LABEL} />}>
-                <KakaoMap
-                  appkey={kakaoKey}
-                  lat={coords.lat}
-                  lng={coords.lng}
-                  title={venueName}
-                  placeholder={<MapFallback label={LOADING_LABEL} />}
-                  onError={onMapError}
-                />
-              </Suspense>
-            </MapBoundary>
-          ) : (
-            <MapFallback label={showMap ? LOADING_LABEL : hasKey ? MAP_FAILED_LABEL : NO_KEY_LABEL} />
-          )}
-        </div>
-        {coords.placeholder && <p className="mt-3 text-center text-[0.9375rem] text-ink-muted">{PLACEHOLDER_COORDS_LABEL}</p>}
+        {hasKey && (
+          <>
+            <div
+              ref={mapBoxRef}
+              className="relative mb-4 aspect-4/3 overflow-hidden rounded-[3px] bg-mint"
+              data-lenis-prevent
+            >
+              {showMap && mapNear ? (
+                <MapBoundary fallback={<MapFallback label={MAP_FAILED_LABEL} />}>
+                  <Suspense fallback={<MapFallback label={LOADING_LABEL} />}>
+                    <KakaoMap
+                      appkey={kakaoKey}
+                      lat={coords.lat}
+                      lng={coords.lng}
+                      title={venueName}
+                      placeholder={<MapFallback label={LOADING_LABEL} />}
+                      onError={onMapError}
+                    />
+                  </Suspense>
+                </MapBoundary>
+              ) : (
+                <MapFallback label={showMap ? LOADING_LABEL : MAP_FAILED_LABEL} />
+              )}
+            </div>
+            {coords.placeholder && <p className="-mt-1 mb-4 text-center text-[0.9375rem] text-ink-muted">{PLACEHOLDER_COORDS_LABEL}</p>}
+          </>
+        )}
 
-        <ul className="mt-4 grid grid-cols-3 gap-2" aria-label="길찾기">
+        <ul className="grid grid-cols-3 gap-2" aria-label="길찾기">
           <li>
             <a href={kakaoHref} target="_blank" rel="noopener noreferrer" className={navLinkClass}>
               카카오맵
