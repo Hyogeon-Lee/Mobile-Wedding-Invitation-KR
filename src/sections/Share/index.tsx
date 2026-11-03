@@ -72,7 +72,7 @@ export default function Share() {
   }
 
   return (
-    <Section id="share" eyebrow={share.eyebrow} title={share.title} top="md" bottom="sm">
+    <Section id="share" eyebrow={share.eyebrow} title={share.title} top="md" bottom="md" className="bg-sky">
       <Reveal>
         <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">{share.intro}</p>
       </Reveal>

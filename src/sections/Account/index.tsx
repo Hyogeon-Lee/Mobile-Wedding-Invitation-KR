@@ -66,6 +66,7 @@ export default function Account() {
       title={wedding.account.title}
       top="md"
       bottom="md"
+      className="bg-sand"
       badge={
         isSampleData ? (
           <span className="rounded-full border border-line bg-bg-elevated px-3 py-0.5 text-[0.75rem] tracking-[0.02em] text-accent">

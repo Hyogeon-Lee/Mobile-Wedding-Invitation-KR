@@ -24,6 +24,7 @@ describe('config/wedding.json', () => {
     const content = validateWedding(raw)
     expect(images[content.cover.image]).toBeDefined()
     if (content.footer.photo) expect(images[content.footer.photo.image]).toBeDefined()
+    if (content.greeting.photo) expect(images[content.greeting.photo.image]).toBeDefined()
     for (const photo of content.location.images ?? []) expect(images[photo.image]).toBeDefined()
     for (const name of Object.keys(content.gallery.captions ?? {})) expect(images[`gallery/${name}`]).toBeDefined()
     expect(galleryFiles(images).length).toBeGreaterThan(0)
@@ -136,7 +137,7 @@ describe('resolveWedding', () => {
   /** The committed JSON pinned to these fake images, so the owner's own file names and alt text do not matter here. */
   const fixture = () => {
     const cfg = clone()
-    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, location: { ...cfg.location, images: [] }, footer: { ...cfg.footer, photo: undefined } })
+    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, greeting: { ...cfg.greeting, photo: undefined }, location: { ...cfg.location, images: [] }, footer: { ...cfg.footer, photo: undefined } })
   }
 
   it('orders gallery files naturally and ignores sub-folders', () => {
@@ -187,5 +188,14 @@ describe('resolveWedding', () => {
     })
     content.footer.photo.image = 'missing.jpg'
     expect(() => resolveWedding(content, images)).toThrow('footer.photo.image')
+  })
+
+  it('resolves the greeting photo and reports a missing file', () => {
+    const content = fixture()
+    expect(resolveWedding(content, images).greeting.photo).toBeUndefined()
+    content.greeting.photo = { image: 'gallery/10.jpg', alt: '벽 앞에 선 두 사람' }
+    expect(resolveWedding(content, images).greeting.photo).toEqual({ src: '/a/10.jpg', width: 1, height: 1, alt: '벽 앞에 선 두 사람' })
+    content.greeting.photo.image = 'missing.jpg'
+    expect(() => resolveWedding(content, images)).toThrow('greeting.photo.image')
   })
 })

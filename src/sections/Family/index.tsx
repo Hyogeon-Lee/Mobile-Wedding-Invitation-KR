@@ -53,8 +53,9 @@ export default function Family() {
       eyebrow={wedding.family.eyebrow}
       title={wedding.family.title}
       align="center"
-      top="sm"
+      top="md"
       bottom="md"
+      className="bg-sand"
     >
       <Reveal>
         <div className="grid grid-cols-2 divide-x divide-line">

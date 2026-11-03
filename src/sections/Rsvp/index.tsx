@@ -134,7 +134,7 @@ export default function Rsvp() {
   const { couple, event, rsvp } = wedding
 
   return (
-    <Section id="rsvp" eyebrow={rsvp.eyebrow} title={rsvp.title} top="md" bottom="sm">
+    <Section id="rsvp" eyebrow={rsvp.eyebrow} title={rsvp.title} top="md" bottom="md" className="bg-mint">
       <Reveal>
         <p className="text-center text-[0.9375rem] leading-[1.8] text-ink-muted">
           {rsvp.intro.map((line, i) => (

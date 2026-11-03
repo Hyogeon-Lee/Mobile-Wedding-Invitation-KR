@@ -19,7 +19,7 @@ export default function Opening({ onComplete }: OpeningProps) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-30 mx-auto flex max-w-[480px] flex-col items-center justify-center overflow-hidden bg-ink px-6 text-center text-white"
+      className="fixed inset-0 z-30 mx-auto flex max-w-[480px] flex-col items-center justify-center overflow-hidden bg-bg px-6 text-center text-ink"
       exit={{ opacity: 0 }}
       transition={{ duration: reduce ? 0 : OPENING_FADE_SECONDS, ease: 'easeInOut' }}
     >
@@ -32,7 +32,7 @@ export default function Opening({ onComplete }: OpeningProps) {
         animate={{ opacity: 1, scale: 1, x: 0 }}
         transition={{ duration: 1.2, ease: EASE_SOFT }}
       />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.3),rgb(0_0_0/0.5))]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(255_255_255/0.4),rgb(255_255_255/0.6))]" />
       <div className="relative z-10">
         <motion.p
           className="mb-8 text-[0.75rem] tracking-[0.22em] uppercase"
@@ -80,7 +80,7 @@ export default function Opening({ onComplete }: OpeningProps) {
       <button
         type="button"
         onClick={onComplete}
-        className="pressable absolute bottom-[calc(24px+env(safe-area-inset-bottom))] z-10 min-h-11 rounded-full px-5 text-[0.875rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="pressable absolute bottom-[calc(24px+env(safe-area-inset-bottom))] z-10 min-h-11 rounded-full px-5 text-[0.875rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         바로 보기
       </button>

@@ -32,7 +32,7 @@ export default function Calendar() {
   }, [startsAt])
 
   return (
-    <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)} align="center" top="md" bottom="sm">
+    <Section id="calendar" eyebrow={wedding.calendar.eyebrow} title={calendarTitle(event)} align="center" top="md" bottom="md" className="bg-sky">
       <Reveal className="mx-auto max-w-[340px]">
         <div className="relative px-2.5 pt-6 pb-5">
           <table className="relative z-10 w-full table-fixed border-collapse">

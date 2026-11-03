@@ -187,7 +187,7 @@ export function validateWedding(input: unknown): WeddingContent {
   if (c.placeholder !== undefined) coords.placeholder = boolean(c, 'placeholder', 'event.coords')
 
   const cover = object(root.cover, 'cover', ['enabled', 'eyebrow', 'title', 'image', 'alt'])
-  const greeting = object(root.greeting, 'greeting', ['enabled', 'eyebrow', 'title', 'body', 'quote'])
+  const greeting = object(root.greeting, 'greeting', ['enabled', 'eyebrow', 'title', 'body', 'quote', 'photo'])
   const family = object(root.family, 'family', ['enabled', 'eyebrow', 'title'])
   const calendar = object(root.calendar, 'calendar', ['enabled', 'eyebrow'])
   const gallery = object(root.gallery, 'gallery', ['enabled', 'eyebrow', 'title', 'alt', 'captions'])
@@ -209,6 +209,12 @@ export function validateWedding(input: unknown): WeddingContent {
   if (footer.photo !== undefined) {
     const photo = object(footer.photo, 'footer.photo', ['image', 'alt'])
     footerPhoto = { image: imageName(photo, 'image', 'footer.photo'), alt: string(photo, 'alt', 'footer.photo', { nonEmpty: true }) }
+  }
+
+  let greetingPhoto: WeddingContent['greeting']['photo']
+  if (greeting.photo !== undefined) {
+    const photo = object(greeting.photo, 'greeting.photo', ['image', 'alt'])
+    greetingPhoto = { image: imageName(photo, 'image', 'greeting.photo'), alt: string(photo, 'alt', 'greeting.photo', { nonEmpty: true }) }
   }
 
   let quote: WeddingContent['greeting']['quote']
@@ -281,7 +287,7 @@ export function validateWedding(input: unknown): WeddingContent {
       image: imageName(cover, 'image', 'cover'),
       alt: string(cover, 'alt', 'cover', { nonEmpty: true }),
     },
-    greeting: { ...heading(greeting, 'greeting'), body: lines(greeting, 'body', 'greeting'), ...(quote ? { quote } : {}) },
+    greeting: { ...heading(greeting, 'greeting'), body: lines(greeting, 'body', 'greeting'), ...(quote ? { quote } : {}), ...(greetingPhoto ? { photo: greetingPhoto } : {}) },
     family: heading(family, 'family'),
     calendar: { enabled: boolean(calendar, 'enabled', 'calendar'), eyebrow: string(calendar, 'eyebrow', 'calendar') },
     gallery: {

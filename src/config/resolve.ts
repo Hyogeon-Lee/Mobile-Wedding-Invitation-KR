@@ -49,6 +49,15 @@ export function resolveWedding(content: WeddingContent, images: ContentImages): 
   const { image: _image, alt: coverAlt, ...cover } = content.cover
   const { alt: _alt, captions: _captions, ...gallery } = content.gallery
   const { photo: footerPhoto, ...footer } = content.footer
+  const { photo: greetingPhoto, ...greeting } = content.greeting
+  let greetingImage: GalleryImage | undefined
+  if (greetingPhoto) {
+    const photo = images[greetingPhoto.image]
+    if (!photo) {
+      throw new Error(`config/wedding.json 오류 — "greeting.photo.image": config/images/${greetingPhoto.image} 파일이 없습니다.`)
+    }
+    greetingImage = { src: photo.url, width: photo.width, height: photo.height, alt: greetingPhoto.alt }
+  }
   let closingImage: GalleryImage | undefined
   if (footerPhoto) {
     const photo = images[footerPhoto.image]
@@ -67,6 +76,7 @@ export function resolveWedding(content: WeddingContent, images: ContentImages): 
   return {
     ...content,
     cover: { ...cover, image: { src: coverImage.url, width: coverImage.width, height: coverImage.height, alt: coverAlt } },
+    greeting: { ...greeting, ...(greetingImage ? { photo: greetingImage } : {}) },
     gallery: { ...gallery, images: galleryImages },
     location: { ...content.location, images: locationImages },
     share: { ...content.share, kakaoDescription: shareDescriptionOf(content) },

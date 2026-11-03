@@ -67,6 +67,8 @@ export interface WeddingContent {
     /** One entry per line; "" starts a new paragraph. */
     body: string[]
     quote?: { text: string; source?: string }
+    /** Full-width photo behind the greeting; the text sits over its empty upper part */
+    photo?: { image: string; alt: string }
   }
   family: SectionHeading
   /** The title is derived from the date. */
@@ -96,8 +98,9 @@ export interface WeddingContent {
   footer: { enabled: boolean; credit: string; message?: string; photo?: { image: string; alt: string } }
 }
 
-export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'gallery' | 'location' | 'share' | 'footer'> {
+export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'greeting' | 'gallery' | 'location' | 'share' | 'footer'> {
   cover: Omit<WeddingContent['cover'], 'image' | 'alt'> & { image: GalleryImage }
+  greeting: Omit<WeddingContent['greeting'], 'photo'> & { photo?: GalleryImage }
   gallery: Omit<WeddingContent['gallery'], 'alt' | 'captions'> & { images: GalleryImage[] }
   location: Omit<WeddingContent['location'], 'images'> & { images: GalleryImage[] }
   share: WeddingContent['share'] & { kakaoDescription: string }

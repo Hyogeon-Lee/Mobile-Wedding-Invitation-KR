@@ -15,7 +15,7 @@ import { hasMore, splitTiles, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
 
 const FRAME =
-  'pressable block w-full ' +
+  'pressable block ' +
   'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
 
 // Rows keep each photo's own ratio and fill the width exactly; the row height tracks the width so phones get 3-4 photos per row
@@ -53,6 +53,43 @@ function Album({ images, offset, pending, onOpen, tileRef }: AlbumProps) {
         ),
       }}
     />
+  )
+}
+
+// Horizontal strip for the photos behind "more": one row at a fixed height, each photo at its own ratio, snapping per photo.
+// Native scrolling (Lenis is told to leave the wheel alone) keeps it smooth on touch and trackpad.
+function Strip({ images, offset, pending, onOpen, tileRef }: AlbumProps) {
+  return (
+    <div
+      data-lenis-prevent-wheel
+      className="flex snap-x snap-mandatory gap-0.5 overflow-x-auto overscroll-x-contain scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {images.map((image, i) => {
+        const index = offset + i
+        return (
+          <button
+            key={image.src}
+            type="button"
+            ref={(el) => tileRef(index, el)}
+            onClick={() => onOpen(index)}
+            aria-label={`${image.alt} 크게 보기`}
+            aria-busy={pending === index || undefined}
+            className={`${FRAME} h-55 shrink-0 snap-start ${pending === index ? 'opacity-70' : ''}`}
+          >
+            <img
+              src={image.src}
+              width={image.width}
+              height={image.height}
+              alt={image.alt}
+              loading="lazy"
+              decoding="async"
+              style={{ aspectRatio: `${image.width} / ${image.height}` }}
+              className="block h-full w-auto"
+            />
+          </button>
+        )
+      })}
+    </div>
   )
 }
 
@@ -120,7 +157,7 @@ export default function Gallery() {
 
   if (images.length === 0) return null
 
-  // The tail can run past 1,000px, and collapsing from below would strand the reader in a later section
+  // Collapsing from below would strand the reader in a later section
   const toggle = () => {
     if (expanded) {
       const el = document.getElementById('gallery')
@@ -158,7 +195,7 @@ export default function Gallery() {
                 exit={reduce ? undefined : { opacity: 0 }}
                 transition={{ duration: reduce ? 0 : 0.35, ease: EASE_OUT }}
               >
-                <Album images={tail} offset={head.length} pending={pending} onOpen={open} tileRef={setTileRef} />
+                <Strip images={tail} offset={head.length} pending={pending} onOpen={open} tileRef={setTileRef} />
               </motion.div>
             )}
           </AnimatePresence>
