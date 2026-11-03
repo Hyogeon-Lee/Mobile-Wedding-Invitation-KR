@@ -1,30 +1,48 @@
 # Mobile Wedding Invitation (KR)
 
-한국 예비 신랑·신부를 위한 모바일 청첩장. 정형화된 템플릿이 아닌 두 사람의 취향이 드러나는 청첩장을 직접 개발하는 것이 목표이며, 링크 하나로 Android·iOS·웹에 전달한다.
+이효건·박민경의 모바일 청첩장. 링크 하나로 카카오톡·문자·이메일에 전달하고, 글과 사진은 코드 수정 없이 `config/`에서 바꾼다.
 
-**[배포된 청첩장 바로 보기](https://hyogeon-lee.github.io/Mobile-Wedding-Invitation-KR/)**
+배포 주소: <a href="https://hyogeon-lee.github.io/Mobile-Wedding-Invitation-KR/" target="_blank" rel="noopener noreferrer">https://hyogeon-lee.github.io/Mobile-Wedding-Invitation-KR/</a>
 
-- 개발 계획서: [docs/PLAN.md](docs/PLAN.md)
-- 결정 기록: [docs/DECISIONS.md](docs/DECISIONS.md)
-- 현재 내용: 이효건·박민경, 2027년 6월 27일 일요일 오후 1시, 노블발렌티 삼성. 실제 사진 10장과 자연광 디자인을 적용했다. [디자인·검증 기록](docs/SOFT-DESIGN.md)을 참고한다.
+## 디자인
 
-## 계획 요약
+- 오프닝: 어둡지 않은 표지 사진 위에 "We're getting married" 손글씨가 획 순서대로 그려지고(약 3.5초) 1초에 걸쳐 표지로 바뀐다. 손글씨 획 데이터 출처는 `public/licenses/opening-lettering.txt`.
+- 색: 아이보리 바탕 `#fcfcfc`, 먹색 글자 `#36423b`, 초록 강조 `#377656`, 큰 숫자와 작은 표시에만 주황 `#d9671f`. 섹션마다 sand `#f1f6ef`, sky `#e6f1f2`, mint `#e9f4e8` 단색 틴트를 번갈아 깐다. 분홍·살구·금빛 계열은 쓰지 않는다.
+- 서체: 본문 Pretendard, 제목 Noto Serif KR, 날짜·D-day 숫자 Cormorant Garamond.
+- 사진: 표지와 마무리 사진은 전체 폭. 인사말은 사진 윗부분의 빈 공간에 글을 올린다. 갤러리는 사진별 원본 비율을 지키며 줄마다 폭을 꽉 채우고, 처음 12장 뒤는 가로 스크롤로 본다. 달력 뒤와 참석 의사 뒤에는 짧은 글을 얹은 전체 폭 사진(`interludes`)이 들어간다.
+- 라인아트: 섹션 제목 아래 초록 선 그림 다섯 가지. 반지(혼주), 봉투(마음 전하실 곳), 체크 표시한 답장 카드(참석 의사), 손잡은 신랑 신부(방명록), 종이비행기(공유). `src/components/LineArt.tsx`.
+- 모션: 섹션 내용은 보일 때 0.65초 동안 떠오르고(`Reveal`), Lenis 스무스 스크롤, PhotoSwipe 라이트박스. 모션 감소 설정에서는 즉시 표시한다.
+- 접근성: 본문 15px 이상, 대비 4.5:1 이상, 터치 영역 44px, 큰 글자 모드 토글, 모든 사진에 설명.
 
-- 정보 구성: 표지, 인사말, 혼주·가족, 예식 일시·달력, 갤러리, 오시는 길, 마음 전하실 곳, 참석 여부, 방명록, 공유, 푸터(11개 섹션).
-- 스택: Vite + React 19 + TypeScript + Tailwind CSS v4.
-- 디자인·모션: Motion, Lenis, Swiper, PhotoSwipe를 핵심으로 하고 GSAP·Lottie·tsParticles는 선택.
-- 연동: 카카오맵, 카카오톡 공유, 네비 딥링크, Google Apps Script + Google Sheets(방명록·RSVP).
-- 배포: GitHub Actions → GitHub Pages(1안), Vercel(2안).
-- 개인정보: 계좌번호는 환경 변수로 주입하고 원본 사진은 저장소에 두지 않는다. 연락처 기능은 사용하지 않는다.
+## 구성
+
+표지 → 인사말 → 양가 혼주 → 갤러리 → 달력·D-day → 사진 → 오시는 길 → 마음 전하실 곳 → 참석 의사 → 사진 → 방명록 → 청첩장 전하기 → 마무리. 섹션마다 `config/wedding.json`의 `enabled`로 끄고 켠다.
+
+## 스택
+
+Vite 8, React 19, TypeScript, Tailwind CSS 4, motion/react, Lenis, react-photo-album, PhotoSwipe, lucide-react. 방명록·RSVP는 Google Apps Script + Google Sheets, 지도는 카카오맵, 배포는 GitHub Actions → GitHub Pages.
 
 ## 실행
 
 ```bash
 npm install
-npm run dev            # http://localhost:5173
+npm run dev        # http://localhost:5173
 npm run build && npm run preview
-npm run qa:shots       # vite preview 위에서 기기별 스크린샷 (qa/, Playwright 필요)
-npm run og             # public/og-image.png 생성 (카카오톡 공유 썸네일)
+npm run typecheck && npm run lint && npm test
+npm run og         # public/og-image.png (카카오톡 썸네일, Playwright 필요)
+npm run qa:shots   # 기기별 스크린샷 (qa/, Playwright 필요)
 ```
 
-글은 `config/wedding.json`, 사진은 `config/images/`(첫 화면은 `cover.image`로 지정한 `gallery/04.webp`, 갤러리는 `gallery/` 폴더의 파일 이름 순서)에서 바꾼다. 항목별 설명과 사진 규격은 [config/README.md](config/README.md)에 있다. 계좌는 `.env.local`의 `VITE_ACCOUNTS`(`.env.example` 참고), 방명록·RSVP 백엔드는 `google-apps-script/Code.gs`를 배포한 뒤 `VITE_APPS_SCRIPT_URL`에 설정한다. URL이 비어 있으면 미리보기 모드로 동작한다.
+## 내용과 설정
+
+- 글: `config/wedding.json`. 사진: `config/images/`. 항목 설명과 사진 규격은 [config/README.md](config/README.md).
+- 계좌번호: `.env.local`의 `VITE_ACCOUNTS` (`.env.example` 참고). 저장소에는 넣지 않는다.
+- 카카오 키: `VITE_KAKAO_JS_KEY`. 방명록·RSVP: `google-apps-script/Code.gs`를 배포한 뒤 `VITE_APPS_SCRIPT_URL`. 비어 있으면 미리보기 모드로 동작한다.
+- 배포: `main`에 푸시하면 GitHub Actions가 빌드한다. 위 세 값은 저장소 Secrets에 같은 이름으로 넣는다.
+
+## 문서
+
+- [config/README.md](config/README.md): 글·사진 바꾸는 법
+- [docs/DECISIONS.md](docs/DECISIONS.md): 결정 기록
+- [docs/PLAN.md](docs/PLAN.md): 초기 계획서
+- [CHANGELOG.md](CHANGELOG.md)

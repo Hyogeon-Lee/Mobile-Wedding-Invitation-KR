@@ -2,8 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Format: <a href="https://keepachangelog.com/en/1.1.0/" target="_blank" rel="noopener noreferrer">https://keepachangelog.com/en/1.1.0/</a>. Versioning: <a href="https://semver.org/spec/v2.0.0.html" target="_blank" rel="noopener noreferrer">https://semver.org/spec/v2.0.0.html</a>.
 
 ## [1.0.0] - 2026-10-26
 
@@ -32,3 +31,13 @@ First release.
 - The deploy workflow grants Pages and OIDC write permissions only to the deploy job; the build job has read-only access.
 
 [1.0.0]: https://github.com/Hyogeon-Lee/Mobile-Wedding-Invitation-KR/releases/tag/v1.0.0
+
+## Unreleased
+
+### Changed
+
+- Gallery keeps each photo's ratio in justified rows; after the first 12 the rest scroll sideways.
+- Sections alternate flat tints; the greeting and two interludes put text over full-width photos.
+- Plainer copy, a red heart favicon, line-art ornaments under section titles, a faster opening.
+- Walking-route map under the location links; the unused ambient-effect layer is removed.
+- Studio photos at 2000 px replace the compressed copies; cover is `gallery/22.webp`.

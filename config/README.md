@@ -6,12 +6,12 @@
 config/
   wedding.json        글 (이름, 날짜, 장소, 섹션 제목·안내 문구, 섹션 켜고 끄기)
   images/
-    cover.webp        보관 중인 이전 표지 사진
     gallery/
       01.webp … 31.webp 갤러리 사진 (파일 이름 순서대로 표시)
     venue/
       exterior.webp     예식장 건물 전경
       entrance.webp     예식장 정면 입구
+      route.webp        역에서 예식장까지 약도
 ```
 
 수정한 뒤 `npm run dev`로 확인한다. 개발 서버가 켜져 있으면 저장할 때 화면이 다시 불러와진다. 배포는 `main`에 푸시하면 GitHub Actions가 빌드한다.
@@ -65,7 +65,7 @@ config/
 | `family` (혼주) | 없음 | `couple`의 부모님 이름과 관계를 신랑 측·신부 측 두 열로 표시한다 |
 | `calendar` (달력) | 없음 | 제목은 날짜에서 자동으로 만든다. `title` 항목이 없다 |
 | `gallery` (갤러리) | `alt`, `captions` | `alt` 뒤에 번호가 붙는다("신랑 신부 사진 3"). 특정 사진만 설명을 바꾸려면 `"captions": { "03.jpg": "제주에서" }` |
-| `location` (오시는 길) | `images`, `transport`, `transportLinks` | `images`는 예식장 사진과 설명 목록(선택). `transport`는 `subway`, `bus`, `car`, `parking`, `shuttle` 각각 줄 단위 배열. `transportLinks`는 같은 키에 대응하는 HTTPS 지도 링크(선택). 필요 없는 항목은 지운다 |
+| `location` (오시는 길) | `images`, `route`, `transport`, `transportLinks` | `images`는 예식장 사진과 설명 목록(선택). `route`는 지도 아래에 전체 폭으로 넣는 약도 `{ "image": "venue/route.webp", "alt": "..." }`(선택). `transport`는 `subway`, `bus`, `car`, `parking`, `shuttle` 각각 줄 단위 배열. `transportLinks`는 같은 키에 대응하는 HTTPS 지도 링크(선택). 필요 없는 항목은 지운다 |
 | `account` (마음 전하실 곳) | `intro` | 안내 문구 줄 배열. 계좌번호는 아래 "개인정보"를 본다 |
 | `rsvp` (참석 의사) | `intro` | 안내 문구 줄 배열 |
 | `guestbook` (방명록) | 없음 | |
@@ -94,11 +94,9 @@ config/
 | 갤러리 세로 사진 | 2:3 (원본 비율 유지) | 1334 x 2000 | 350 KB 이하 |
 | 갤러리 가로 사진 | 3:2 (원본 비율 유지) | 2000 x 1334 | 350 KB 이하 |
 
-갤러리는 사진마다 원본 비율을 유지한 채 줄 높이를 맞추고, 화면 폭에 따라 한 줄에 들어가는 장수를 자동으로 정해 폭을 꽉 채운다. 가로·세로 사진을 섞어 넣어도 된다. 사진은 미리 줄여서 넣는다(스마트폰 원본은 수 MB라 청첩장이 느려진다). 처음 12장이 먼저 보이고, "사진 더 보기"를 누르면 나머지는 한 줄로 좌우 스크롤해 본다. 사진을 삭제하거나 이름을 바꾸면 `gallery.captions`의 해당 키도 함께 바꾼다.
+갤러리는 사진마다 원본 비율을 유지한 채 줄마다 폭을 꽉 채우고, 가로·세로 사진을 섞어도 된다. 처음 12장이 먼저 보이고 "사진 더 보기"를 누르면 나머지는 좌우 스크롤로 본다. 사진을 지우거나 이름을 바꾸면 `gallery.captions`의 키도 함께 바꾼다.
 
-이 저장소가 공개 저장소라면 여기 넣은 사진도 공개된다. 원본 사진은 저장소 밖에 보관한다.
-
-현재 사진은 긴 변 최대 2000px(일부 이전 사진은 1600px)의 WebP로 저장했고 EXIF를 제거했다. 원본은 저장소 밖에 보관한다. `npm run placeholders`는 개발용 임시 사진 생성 명령이므로 실제 사진을 적용한 상태에서는 실행하지 않는다.
+사진은 미리 줄여서 넣는다(긴 변 2000px WebP, EXIF 제거). 공개 저장소이므로 원본은 저장소 밖에 보관한다. `npm run placeholders`는 임시 사진 생성 명령이라 실제 사진을 넣은 뒤에는 실행하지 않는다.
 
 ## 개인정보 (계좌번호)
 
