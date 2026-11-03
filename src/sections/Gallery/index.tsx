@@ -2,6 +2,8 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useLenis } from 'lenis/react'
 import type PhotoSwipe from 'photoswipe'
+import { RowsPhotoAlbum, type Photo } from 'react-photo-album'
+import 'react-photo-album/rows.css'
 import Button from '@/components/Button'
 import Reveal from '@/components/Reveal'
 import Section from '@/components/Section'
@@ -12,40 +14,45 @@ import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
 import { hasMore, splitTiles, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
 
-// Edge-to-edge: cancels the section gutter; columns fill the width at >= 118px each, so a 375px phone gets 3 and 480px gets 4
-const GRID = '-mx-6 grid grid-cols-[repeat(auto-fill,minmax(118px,1fr))] gap-0.5'
 const FRAME =
   'pressable block w-full ' +
   'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
 
-interface TileProps {
-  image: GalleryImage
-  index: number
-  busy: boolean
+// Rows keep each photo's own ratio and fill the width exactly; the row height tracks the width so phones get 3-4 photos per row
+const rowHeight = (width: number) => width / 2.4
+
+const toPhotos = (images: readonly GalleryImage[]): Photo[] =>
+  images.map(({ src, width, height, alt }) => ({ src, width, height, alt, label: `${alt} 크게 보기` }))
+
+interface AlbumProps {
+  images: readonly GalleryImage[]
+  /** Index of the first photo in the full gallery */
+  offset: number
+  pending: number | null
   onOpen: (index: number) => void
   tileRef: (index: number, el: HTMLButtonElement | null) => void
 }
 
-function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
+function Album({ images, offset, pending, onOpen, tileRef }: AlbumProps) {
+  const photos = useMemo(() => toPhotos(images), [images])
   return (
-    <button
-      type="button"
-      ref={(el) => tileRef(index, el)}
-      onClick={() => onOpen(index)}
-      aria-label={`${image.alt} 크게 보기`}
-      aria-busy={busy || undefined}
-      className={`${FRAME} ${busy ? 'opacity-70' : ''}`}
-    >
-      <img
-        src={image.src}
-        width={image.width}
-        height={image.height}
-        alt={image.alt}
-        loading="lazy"
-        decoding="async"
-        className="block aspect-3/4 w-full object-cover"
-      />
-    </button>
+    <RowsPhotoAlbum
+      photos={photos}
+      spacing={2}
+      targetRowHeight={rowHeight}
+      rowConstraints={{ maxPhotos: 4 }}
+      onClick={({ index }) => onOpen(offset + index)}
+      render={{
+        button: (props, { index }) => (
+          <button
+            {...props}
+            ref={(el) => tileRef(offset + index, el)}
+            aria-busy={pending === offset + index || undefined}
+            className={`${props.className} ${FRAME} ${pending === offset + index ? 'opacity-70' : ''}`}
+          />
+        ),
+      }}
+    />
   )
 }
 
@@ -78,7 +85,7 @@ export default function Gallery() {
       try {
         const pswp = await openLightbox({
           // `element` lets PhotoSwipe zoom out of the tapped tile, and hidden tiles fall back to a fade
-          dataSource: slides.map((s, i) => ({ ...s, element: tilesRef.current[i] ?? undefined, thumbCropped: true })),
+          dataSource: slides.map((s, i) => ({ ...s, element: tilesRef.current[i] ?? undefined })),
           index,
           onDestroy: () => {
             pswpRef.current = null
@@ -125,18 +132,6 @@ export default function Gallery() {
     setExpanded((v) => !v)
   }
 
-  const tiles = (list: GalleryImage[], offset: number) =>
-    list.map((image, i) => (
-      <Tile
-        key={image.src}
-        image={image}
-        index={offset + i}
-        busy={pending === offset + i}
-        onOpen={open}
-        tileRef={setTileRef}
-      />
-    ))
-
   return (
     <Section
       id="gallery"
@@ -146,21 +141,24 @@ export default function Gallery() {
       bottom="sm"
     >
       <div>
-        <div>
-          <Reveal className={GRID}>{tiles(head, 0)}</Reveal>
+        <div className="-mx-6">
+          <Reveal>
+            <Album images={head} offset={0} pending={pending} onOpen={open} tileRef={setTileRef} />
+          </Reveal>
 
           <AnimatePresence initial={false}>
             {expanded && tail.length > 0 && (
               <motion.div
                 id={tailId}
                 key="tail"
+                className="mt-0.5"
                 // Opacity/transform only, since animating height would relayout every section below on each frame
                 initial={reduce ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduce ? undefined : { opacity: 0 }}
                 transition={{ duration: reduce ? 0 : 0.35, ease: EASE_OUT }}
               >
-                <div className={`${GRID} mt-0.5`}>{tiles(tail, head.length)}</div>
+                <Album images={tail} offset={head.length} pending={pending} onOpen={open} tileRef={setTileRef} />
               </motion.div>
             )}
           </AnimatePresence>
