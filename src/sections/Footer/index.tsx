@@ -40,7 +40,7 @@ export default function Footer() {
     <footer id="footer" className="relative px-6 pt-16 pb-12 text-center">
       <Reveal className="relative z-10">
         {photo && (
-          <img src={photo.src} width={photo.width} height={photo.height} alt={photo.alt} loading="lazy" decoding="async" className="mb-8 block h-auto w-full" />
+          <img src={photo.src} width={photo.width} height={photo.height} alt={photo.alt} loading="lazy" decoding="async" className="-mx-6 mb-8 block h-auto w-[calc(100%+3rem)] max-w-none" />
         )}
         {message && <p className="font-serif text-[1.0625rem] leading-[2] whitespace-pre-line text-ink">{message}</p>}
         <p className="mt-5 font-serif font-normal! text-[0.9375rem] text-ink-muted">{credit}</p>

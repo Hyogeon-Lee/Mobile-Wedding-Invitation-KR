@@ -12,7 +12,8 @@ import { EASE_OUT, SCROLL_OPTIONS } from '@/lib/motion'
 import { hasMore, splitTiles, toSlides, toggleLabel } from './layout'
 import { openLightbox } from './lightbox'
 
-const GRID = 'grid grid-cols-2 gap-2.5'
+// Edge-to-edge: cancels the section gutter; columns fill the width at >= 118px each, so a 375px phone gets 3 and 480px gets 4
+const GRID = '-mx-6 grid grid-cols-[repeat(auto-fill,minmax(118px,1fr))] gap-0.5'
 const FRAME =
   'pressable block w-full ' +
   'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
@@ -27,27 +28,24 @@ interface TileProps {
 
 function Tile({ image, index, busy, onOpen, tileRef }: TileProps) {
   return (
-    <Reveal className={image.width > image.height ? 'col-span-2' : undefined}>
-      <button
-        type="button"
-        ref={(el) => tileRef(index, el)}
-        onClick={() => onOpen(index)}
-        aria-label={`${image.alt} 크게 보기`}
-        aria-busy={busy || undefined}
-        className={`${FRAME} ${busy ? 'opacity-70' : ''}`}
-      >
-        <img
-          src={image.src}
-          width={image.width}
-          height={image.height}
-          alt={image.alt}
-          loading="lazy"
-          decoding="async"
-          style={{ aspectRatio: `${image.width} / ${image.height}` }}
-          className="block h-auto w-full object-cover"
-        />
-      </button>
-    </Reveal>
+    <button
+      type="button"
+      ref={(el) => tileRef(index, el)}
+      onClick={() => onOpen(index)}
+      aria-label={`${image.alt} 크게 보기`}
+      aria-busy={busy || undefined}
+      className={`${FRAME} ${busy ? 'opacity-70' : ''}`}
+    >
+      <img
+        src={image.src}
+        width={image.width}
+        height={image.height}
+        alt={image.alt}
+        loading="lazy"
+        decoding="async"
+        className="block aspect-3/4 w-full object-cover"
+      />
+    </button>
   )
 }
 
@@ -149,7 +147,7 @@ export default function Gallery() {
     >
       <div>
         <div>
-          <div className={GRID}>{tiles(head, 0)}</div>
+          <Reveal className={GRID}>{tiles(head, 0)}</Reveal>
 
           <AnimatePresence initial={false}>
             {expanded && tail.length > 0 && (
@@ -162,7 +160,7 @@ export default function Gallery() {
                 exit={reduce ? undefined : { opacity: 0 }}
                 transition={{ duration: reduce ? 0 : 0.35, ease: EASE_OUT }}
               >
-                <div className={`${GRID} pt-2.5`}>{tiles(tail, head.length)}</div>
+                <div className={`${GRID} mt-0.5`}>{tiles(tail, head.length)}</div>
               </motion.div>
             )}
           </AnimatePresence>

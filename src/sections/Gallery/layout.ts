@@ -1,6 +1,6 @@
 import type { GalleryImage } from '@/config/types'
 
-export const COLLAPSED_COUNT = 5
+export const COLLAPSED_COUNT = 12
 
 export function hasMore(total: number): boolean {
   return total > COLLAPSED_COUNT

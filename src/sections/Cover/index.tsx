@@ -61,7 +61,7 @@ export default function Cover() {
         inert={!ready}
         className="relative z-10 flex w-full flex-1 flex-col items-center justify-center text-center"
       >
-        <div className="relative w-full">
+        <div className="relative -mx-6 w-[calc(100%+3rem)]">
           {photoImg}
           {cover.title && (
             <p lang="en" className="absolute inset-x-4 top-4 font-display text-[clamp(2rem,10vw,3.5rem)] leading-[0.95] tracking-[-0.035em] whitespace-pre-line text-ink">

@@ -1,13 +1,13 @@
 import lettering from './opening-lettering.json'
 
 const totalLength = lettering.flat().reduce((sum, stroke) => sum + stroke.length, 0)
-let elapsed = 0.5
+let elapsed = 0.35
 
 export const letteringStrokes = lettering.flatMap((word) => {
   const strokes = word.map(({ d, length }) => {
-    const duration = Math.max(0.04, (length / totalLength) * 3)
+    const duration = Math.max(0.04, (length / totalLength) * 2.2)
     const stroke = { d, delay: elapsed, duration }
-    elapsed += duration + 0.025
+    elapsed += duration + 0.02
     return stroke
   })
   elapsed += 0.12
@@ -15,10 +15,10 @@ export const letteringStrokes = lettering.flatMap((word) => {
 })
 
 export const underlineStrokes = ['M73 226 Q150 228 247 214', 'M89 236 Q170 234 237 226'].map((d) => {
-  const stroke = { d, delay: elapsed, duration: 0.24 }
-  elapsed += 0.28
+  const stroke = { d, delay: elapsed, duration: 0.2 }
+  elapsed += 0.24
   return stroke
 })
 
 export const OPENING_DURATION_SECONDS = elapsed + 1
-export const OPENING_FADE_SECONDS = 1.8
+export const OPENING_FADE_SECONDS = 1.5

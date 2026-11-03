@@ -38,8 +38,8 @@ export default function App() {
             {s.cover && <Cover />}
             {s.greeting && <Greeting />}
             {s.family && <Family />}
-            {s.calendar && <Calendar />}
             {s.gallery && <Gallery />}
+            {s.calendar && <Calendar />}
             {s.location && <Location />}
             {s.account && <Account />}
             {s.rsvp && <Rsvp />}

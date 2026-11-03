@@ -11,7 +11,7 @@
 
 /* ---- Design tokens (single source of truth; Tailwind theme maps onto these) ---- */
 :root {
-  --color-bg: #fdfdfc;
+  --color-bg: #fcfcfc;
   --color-bg-elevated: #ffffff;
   --color-ink: #36423b;
   --color-ink-muted: #5f6f66;
@@ -136,7 +136,7 @@ img {
 }
 @media (min-width: 560px) {
   body {
-    background: #f2f3f0;
+    background: #f4f4f4;
   }
   .app-frame {
     box-shadow: 0 0 80px rgb(54 66 59 / 0.035);

@@ -32,7 +32,7 @@ export default function Opening({ onComplete }: OpeningProps) {
         animate={{ opacity: 1, scale: 1, x: 0 }}
         transition={{ duration: 1.2, ease: EASE_SOFT }}
       />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(160deg,rgb(21_32_25/0.6),rgb(21_32_25/0.68)_55%,rgb(21_32_25/0.6))]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.3),rgb(0_0_0/0.5))]" />
       <div className="relative z-10">
         <motion.p
           className="mb-8 text-[0.75rem] tracking-[0.22em] uppercase"
