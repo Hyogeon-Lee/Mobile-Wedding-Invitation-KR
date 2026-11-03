@@ -161,7 +161,7 @@ const SECTION_KEYS = [
 
 /** Validate parsed config/wedding.json and return it typed; throws ContentError naming the first bad field. */
 export function validateWedding(input: unknown): WeddingContent {
-  const root = object(input, '', SECTION_KEYS)
+  const root = object(input, '', [...SECTION_KEYS, 'interludes'])
   for (const key of SECTION_KEYS) present(root, key, '')
 
   const couple = object(root.couple, 'couple', ['groom', 'bride'])
@@ -248,6 +248,17 @@ export function validateWedding(input: unknown): WeddingContent {
     })
   }
 
+  const interludes: NonNullable<WeddingContent['interludes']> = []
+  if (root.interludes !== undefined) {
+    if (!Array.isArray(root.interludes)) fail('interludes', '사진 목록은 배열이어야 합니다.')
+    root.interludes.forEach((value, i) => {
+      const path = `interludes[${i}]`
+      const photo = object(value, path, ['image', 'alt', 'lines'])
+      const text = optionalLines(photo, 'lines', path)
+      interludes.push({ image: imageName(photo, 'image', path), alt: string(photo, 'alt', path, { nonEmpty: true }), ...(text ? { lines: text } : {}) })
+    })
+  }
+
   const transportLinks: WeddingContent['location']['transportLinks'] = {}
   if (location.transportLinks !== undefined) {
     const links = object(location.transportLinks, 'location.transportLinks', TRANSPORT_KEYS)
@@ -312,5 +323,6 @@ export function validateWedding(input: unknown): WeddingContent {
       message: optionalString(footer, 'message', 'footer'),
       ...(footerPhoto ? { photo: footerPhoto } : {}),
     },
+    interludes,
   }
 }

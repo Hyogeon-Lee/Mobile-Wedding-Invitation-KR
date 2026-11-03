@@ -5,7 +5,7 @@ import { dateLineOf, galleryFiles, resolveWedding, shareDescriptionOf } from './
 import { ContentError, validateWedding } from './validate'
 import { wedding } from './wedding'
 
-const clone = () => structuredClone(raw) as Record<string, Record<string, unknown>>
+const clone = () => structuredClone(raw) as unknown as Record<string, Record<string, unknown>>
 
 function expectError(mutate: (cfg: Record<string, Record<string, unknown>>) => void, path: string) {
   const cfg = clone()
@@ -25,6 +25,7 @@ describe('config/wedding.json', () => {
     expect(images[content.cover.image]).toBeDefined()
     if (content.footer.photo) expect(images[content.footer.photo.image]).toBeDefined()
     if (content.greeting.photo) expect(images[content.greeting.photo.image]).toBeDefined()
+    for (const photo of content.interludes ?? []) expect(images[photo.image]).toBeDefined()
     for (const photo of content.location.images ?? []) expect(images[photo.image]).toBeDefined()
     for (const name of Object.keys(content.gallery.captions ?? {})) expect(images[`gallery/${name}`]).toBeDefined()
     expect(galleryFiles(images).length).toBeGreaterThan(0)
@@ -113,6 +114,12 @@ describe('validateWedding', () => {
     expectError((c) => (c.cover.title = []), 'cover.title')
   })
 
+  it('rejects malformed interludes', () => {
+    expectError((c) => (c.interludes = { image: 'x.jpg' } as never), 'interludes')
+    expectError((c) => (c.interludes = [{ image: 'gallery/08.webp', alt: '', lines: [] }] as never), 'interludes[0].alt')
+    expectError((c) => (c.interludes = [{ image: 'gallery/08.webp', alt: '옥상', lines: '한 줄' }] as never), 'interludes[0].lines')
+  })
+
   it('rejects malformed venue photos, unsafe paths and blank descriptions', () => {
     expectError((c) => (c.location.images = 'venue.jpg'), 'location.images')
     expectError((c) => (c.location.images = [{ image: '../venue.jpg', alt: '입구' }]), 'location.images[0].image')
@@ -137,7 +144,7 @@ describe('resolveWedding', () => {
   /** The committed JSON pinned to these fake images, so the owner's own file names and alt text do not matter here. */
   const fixture = () => {
     const cfg = clone()
-    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, greeting: { ...cfg.greeting, photo: undefined }, location: { ...cfg.location, images: [] }, footer: { ...cfg.footer, photo: undefined } })
+    return validateWedding({ ...cfg, cover: { ...cfg.cover, image: 'cover.jpg' }, gallery: { ...cfg.gallery, alt: '사진', captions: {} }, greeting: { ...cfg.greeting, photo: undefined }, location: { ...cfg.location, images: [] }, footer: { ...cfg.footer, photo: undefined }, interludes: [] })
   }
 
   it('orders gallery files naturally and ignores sub-folders', () => {
@@ -188,6 +195,18 @@ describe('resolveWedding', () => {
     })
     content.footer.photo.image = 'missing.jpg'
     expect(() => resolveWedding(content, images)).toThrow('footer.photo.image')
+  })
+
+  it('resolves interludes in order with their lines and reports a missing file', () => {
+    const content = fixture()
+    expect(resolveWedding(content, images).interludes).toEqual([])
+    content.interludes = [{ image: 'gallery/2.png', alt: '옥상', lines: ['한 줄'] }, { image: 'gallery/10.jpg', alt: '창가' }]
+    expect(resolveWedding(content, images).interludes).toEqual([
+      { src: '/a/2.png', width: 2, height: 1, alt: '옥상', lines: ['한 줄'] },
+      { src: '/a/10.jpg', width: 1, height: 1, alt: '창가', lines: [] },
+    ])
+    content.interludes[1].image = 'missing.jpg'
+    expect(() => resolveWedding(content, images)).toThrow('interludes[1].image')
   })
 
   it('resolves the greeting photo and reports a missing file', () => {

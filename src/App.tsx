@@ -13,6 +13,7 @@ import Rsvp from '@/sections/Rsvp'
 import Guestbook from '@/sections/Guestbook'
 import Share from '@/sections/Share'
 import Footer from '@/sections/Footer'
+import Interlude from '@/sections/Interlude'
 
 const s = {
   cover: wedding.cover.enabled,
@@ -40,9 +41,11 @@ export default function App() {
             {s.family && <Family />}
             {s.gallery && <Gallery />}
             {s.calendar && <Calendar />}
+            <Interlude index={0} />
             {s.location && <Location />}
             {s.account && <Account />}
             {s.rsvp && <Rsvp />}
+            <Interlude index={1} />
             {s.guestbook && <Guestbook />}
             {s.share && <Share />}
             {s.footer && <Footer />}

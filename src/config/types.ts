@@ -96,13 +96,16 @@ export interface WeddingContent {
     buttonLabel: string
   }
   footer: { enabled: boolean; credit: string; message?: string; photo?: { image: string; alt: string } }
+  /** Full-width photos between sections, in order; `lines` sit over the photo's empty upper part */
+  interludes?: { image: string; alt: string; lines?: string[] }[]
 }
 
-export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'greeting' | 'gallery' | 'location' | 'share' | 'footer'> {
+export interface WeddingConfig extends Omit<WeddingContent, 'cover' | 'greeting' | 'gallery' | 'location' | 'share' | 'footer' | 'interludes'> {
   cover: Omit<WeddingContent['cover'], 'image' | 'alt'> & { image: GalleryImage }
   greeting: Omit<WeddingContent['greeting'], 'photo'> & { photo?: GalleryImage }
   gallery: Omit<WeddingContent['gallery'], 'alt' | 'captions'> & { images: GalleryImage[] }
   location: Omit<WeddingContent['location'], 'images'> & { images: GalleryImage[] }
   share: WeddingContent['share'] & { kakaoDescription: string }
   footer: Omit<WeddingContent['footer'], 'photo'> & { photo?: GalleryImage }
+  interludes: (GalleryImage & { lines: string[] })[]
 }

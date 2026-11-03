@@ -20,7 +20,7 @@ import {
 } from './guestbook'
 
 const ADD_FAILED = '메시지를 남기지 못했습니다. 잠시 후 다시 시도해 주세요.'
-const ADDED = '소중한 마음 감사합니다'
+const ADDED = '메시지를 남겼습니다. 감사합니다.'
 const LABEL = 'mb-2 block text-[0.8125rem] tracking-[0.02em] text-ink-muted'
 const HINT = 'mt-1.5 text-[0.8125rem] text-ink-muted'
 const errorId = (field: GuestbookField) => `guestbook-${field}-error`

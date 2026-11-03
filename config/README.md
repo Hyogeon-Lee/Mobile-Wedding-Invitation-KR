@@ -70,6 +70,7 @@ config/
 | `rsvp` (참석 의사) | `intro` | 안내 문구 줄 배열 |
 | `guestbook` (방명록) | 없음 | |
 | `share` (공유) | `intro`, `kakaoTitle`, `kakaoDescription`, `buttonLabel` | `kakaoTitle`은 카카오톡 카드 제목이자 브라우저 탭 제목. `kakaoDescription`(선택)을 비우면 "2027년 OO월 OO일 · 노블발렌티 삼성"처럼 날짜와 예식장으로 만든다 |
+| `interludes` (사진 쉼표) | 배열(선택) | `[{ "image": "gallery/08.webp", "alt": "...", "lines": ["첫 줄", "둘째 줄"] }]`. 섹션 사이에 전체 폭으로 놓는 사진. 첫 번째는 달력 뒤, 두 번째는 참석 의사 뒤에 나온다(세 번째부터는 표시하지 않는다). `lines`는 사진 윗부분에 올리는 짧은 글(선택)이므로 위쪽이 비어 있는 사진이 맞다 |
 | `footer` (맨 아래) | `credit`, `message`, `photo` | `credit`은 맨 아래 서명. `message`는 짧은 인사말(선택)이며 `\n`으로 줄을 나눈다. `photo`는 `{ "image": "gallery/06.webp", "alt": "함께 걷는 두 사람" }` 형식의 마무리 사진(선택) |
 
 `kakaoTitle`과 설명 문구는 `index.html`의 `<title>`, 검색 설명, 카카오톡 미리보기(og:title, og:description)에도 들어간다.
